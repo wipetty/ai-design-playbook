@@ -24,3 +24,6 @@ pnpm dev
 - `pnpm preview` - Preview production build
 - `pnpm lint` - Run TypeScript and ESLint checks
 
+## Support
+
+For questions and support, join the [#adp-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) Slack channel.
