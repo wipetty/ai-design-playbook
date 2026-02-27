@@ -9,6 +9,26 @@
       "args": [
         "@playwright/mcp@latest"
       ]
+    },
+    "adobe-express-add-on": {
+      "command": "npx",
+      "args": ["@adobe/express-developer-mcp@latest", "--yes"]
+    },
+    "adobe-photoshop-mcp": {
+      "command": "npx",
+      "args": ["@adobe/photoshop-mcp@latest"]
+    },
+    "adobe-photoshop-agentic": {
+      "url": "https://di-agent-stage.adobe.io/mcp",
+      "headers": {}
+    },
+    "adobe-acrobat": {
+      "url": "https://acrobat-mcp.adobe.io/mcp/call",
+      "headers": {}
+    },
+    "adobe-express-remote": {
+      "url": "https://express-mcp-service-stage.adobe.io/mcp",
+      "headers": {}
     }
   }
 }
