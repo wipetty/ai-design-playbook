@@ -1,8 +1,7 @@
 {
   "mcpServers": {
     "figma": {
-      "url": "http://127.0.0.1:3845/mcp",
-      "headers": {}
+      "url": "http://127.0.0.1:3845/mcp"
     },
     "playwright": {
       "command": "npx",
@@ -19,16 +18,13 @@
       "args": ["@adobe/photoshop-mcp@latest"]
     },
     "adobe-photoshop-agentic": {
-      "url": "https://di-agent-stage.adobe.io/mcp",
-      "headers": {}
+      "url": "https://di-agent-stage.adobe.io/mcp"
     },
     "adobe-acrobat": {
-      "url": "https://acrobat-mcp.adobe.io/mcp/call",
-      "headers": {}
+      "url": "https://acrobat-mcp.adobe.io/mcp/call"
     },
     "adobe-express-remote": {
-      "url": "https://express-mcp-service-stage.adobe.io/mcp",
-      "headers": {}
+      "url": "https://express-mcp-service-stage.adobe.io/mcp"
     }
   }
 }
