@@ -1,6 +1,6 @@
 # PPK Template Starter
 
-React + Vite prototype template with React Spectrum S2 and Adobe services.
+React + Vite prototype template with Adobe services.
 
 ## Commands
 
@@ -13,7 +13,7 @@ React + Vite prototype template with React Spectrum S2 and Adobe services.
 - **Client-only application** - No backend/server code; hosted on an internal deployment platform
 - Entry: src/main.tsx → src/App.tsx
 - Auth: IMS singleton via `useIMS()` hook from src/contexts/useIMS.ts
-- UI: React Spectrum S2 only (import from @react-spectrum/s2)
+- UI: Plain React (no component library pre-installed)
 
 ## Services (IMPORTANT)
 
@@ -54,5 +54,4 @@ Do NOT use separate API key environment variables.
 ## Key Rules
 
 - Use sentence case for all text (not Title Case)
-- Follow S2 design system patterns (see .agents/rules/)
 - Vite only (no webpack/parcel)
