@@ -11,7 +11,7 @@ Use this skill when a user asks about available Adobe services or needs help int
 
 ## Package overview
 
-The primary package is `@adtech/protopack-services-all`, which provides a unified `apis` object for accessing Adobe services.
+The primary package is `@adtech/protopack-services-all`, which provides a unified `apis` object for accessing Adobe services. You may need to install the package if it's not already installed.
 
 ```typescript
 import { apis } from '@adtech/protopack-services-all';
