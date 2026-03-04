@@ -4,7 +4,7 @@
     {
       "label": "Check if node_modules exists and install",
       "type": "shell",
-      "command": "if [ ! -d \"node_modules\" ]; then npm install; fi",
+      "command": "if [ ! -d \"node_modules\" ]; then pnpm install; fi",
       "presentation": {
         "reveal": "always",
         "panel": "shared",
@@ -15,9 +15,9 @@
       }
     },
     {
-      "label": "Terminal with npm run dev",
+      "label": "Terminal with pnpm dev",
       "type": "shell",
-      "command": "npm run dev",
+      "command": "pnpm dev",
       "presentation": {
         "reveal": "always",
         "panel": "new",
@@ -29,16 +29,16 @@
       "dependsOn": ["Check if node_modules exists and install"]
     },
     {
-      "type": "npm",
-      "script": "install",
+      "type": "shell",
+      "command": "pnpm install",
       "problemMatcher": [],
       "label": "install",
       "detail": "install dependencies from package",
       "group": { "kind": "build", "isDefault": true }
     },
     {
-      "type": "npm",
-      "script": "dev",
+      "type": "shell",
+      "command": "pnpm dev",
       "problemMatcher": [],
       "label": "run",
       "detail": "run the application",
