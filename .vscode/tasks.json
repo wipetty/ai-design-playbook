@@ -4,7 +4,7 @@
     {
       "label": "Check if node_modules exists and install",
       "type": "shell",
-      "command": "if [ ! -d \"node_modules\" ]; then pnpm install; fi",
+      "command": "[ -s \"$HOME/.nvm/nvm.sh\" ] && . \"$HOME/.nvm/nvm.sh\"; if [ ! -d \"node_modules\" ]; then pnpm install; fi",
       "presentation": {
         "reveal": "always",
         "panel": "shared",
@@ -17,7 +17,7 @@
     {
       "label": "Terminal with pnpm dev",
       "type": "shell",
-      "command": "pnpm dev",
+      "command": "[ -s \"$HOME/.nvm/nvm.sh\" ] && . \"$HOME/.nvm/nvm.sh\"; pnpm dev",
       "presentation": {
         "reveal": "always",
         "panel": "new",
@@ -30,7 +30,7 @@
     },
     {
       "type": "shell",
-      "command": "pnpm install",
+      "command": "[ -s \"$HOME/.nvm/nvm.sh\" ] && . \"$HOME/.nvm/nvm.sh\"; pnpm install",
       "problemMatcher": [],
       "label": "install",
       "detail": "install dependencies from package",
@@ -38,7 +38,7 @@
     },
     {
       "type": "shell",
-      "command": "pnpm dev",
+      "command": "[ -s \"$HOME/.nvm/nvm.sh\" ] && . \"$HOME/.nvm/nvm.sh\"; pnpm dev",
       "problemMatcher": [],
       "label": "run",
       "detail": "run the application",
