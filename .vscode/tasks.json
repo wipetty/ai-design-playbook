@@ -4,7 +4,10 @@
     {
       "label": "Check if node_modules exists and install",
       "type": "shell",
-      "command": "[ -s \"$HOME/.nvm/nvm.sh\" ] && . \"$HOME/.nvm/nvm.sh\"; if [ ! -d \"node_modules\" ]; then pnpm install; fi",
+      "command": "source ~/.nvm/nvm.sh && nvm use && bash -c 'if [ ! -d \"node_modules\" ]; then npm install -g corepack && corepack enable && pnpm install; fi'",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "presentation": {
         "reveal": "always",
         "panel": "shared",
@@ -15,9 +18,9 @@
       }
     },
     {
-      "label": "Terminal with pnpm dev",
+      "label": "Terminal with pnpm run dev",
       "type": "shell",
-      "command": "[ -s \"$HOME/.nvm/nvm.sh\" ] && . \"$HOME/.nvm/nvm.sh\"; pnpm dev",
+      "command": "source ~/.nvm/nvm.sh && nvm use && pnpm run dev",
       "presentation": {
         "reveal": "always",
         "panel": "new",
@@ -30,7 +33,7 @@
     },
     {
       "type": "shell",
-      "command": "[ -s \"$HOME/.nvm/nvm.sh\" ] && . \"$HOME/.nvm/nvm.sh\"; pnpm install",
+      "command": "source ~/.nvm/nvm.sh && nvm use && npm install -g corepack && corepack enable && pnpm install",
       "problemMatcher": [],
       "label": "install",
       "detail": "install dependencies from package",
@@ -38,7 +41,7 @@
     },
     {
       "type": "shell",
-      "command": "[ -s \"$HOME/.nvm/nvm.sh\" ] && . \"$HOME/.nvm/nvm.sh\"; pnpm dev",
+      "command": "source ~/.nvm/nvm.sh && nvm use && pnpm run dev",
       "problemMatcher": [],
       "label": "run",
       "detail": "run the application",
