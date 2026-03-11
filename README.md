@@ -1,6 +1,6 @@
 # PPK Template Starter
 
-A React + Vite starter template with React Spectrum S2.
+A React + Vite starter template.
 
 ## Prerequisites
 
