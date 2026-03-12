@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@adtech/protopack-services-all": "^2.1.0",
+    "@adtech/protopack-services-all": "latest",
     "@identity/imslib": "^0.47.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
