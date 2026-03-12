@@ -4,6 +4,7 @@ import { IEnvironment } from "@identity/imslib/adobe-id/IEnvironment";
 import { type ITokenInformation } from "@identity/imslib/adobe-id/custom-types/CustomTypes";
 import { IErrorType } from "@identity/imslib/adobe-id/IErrorType";
 import { v4 } from "uuid";
+import { IMS_CLIENT_ID, IMS_ENV, IMS_SCOPE } from "./IMSConstants";
 
 declare global {
   interface Window {
@@ -43,9 +44,9 @@ export class Ims {
   // the actual IMS settings
   adobeIMS: AdobeIMS;
   adobeid: IAdobeIdData = {
-    client_id: import.meta.env.VITE_IMS_CLIENT_ID,
-    scope: import.meta.env.VITE_IMS_SCOPE,
-    environment: import.meta.env.VITE_IMS_ENV as IEnvironment,
+    client_id: IMS_CLIENT_ID,
+    scope: IMS_SCOPE,
+    environment: IMS_ENV as IEnvironment,
     locale: "en_US",
     useLocalStorage: true,
     autoValidateToken: true,
