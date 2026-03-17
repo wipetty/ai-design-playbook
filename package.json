@@ -13,6 +13,7 @@
   "dependencies": {
     "@adtech/protopack-services-all": "latest",
     "@identity/imslib": "^0.47.0",
+    "@react-spectrum/s2": "latest",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "uuid": "^13.0.0"
