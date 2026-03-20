@@ -19,6 +19,8 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "lightningcss": "^1.28.0",
+    "unplugin-parcel-macros": "^0.2.0",
     "@eslint/js": "^9.21.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
