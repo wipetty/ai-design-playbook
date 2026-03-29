@@ -1,57 +1,94 @@
 # PPK Template Starter
 
-React + Vite prototype template with Adobe services.
+React + Vite prototype template with Adobe services. See CLAUDE.md for full documentation.
 
 ## Commands
 
 - `pnpm dev` - Start dev server (HTTPS)
 - `pnpm build` - Production build
 - `pnpm lint` - TypeScript + ESLint
+- `pnpm playwright:auth` - Set up Adobe IMS authentication for testing
 
 ## Architecture
 
-- **Client-only application** - No backend/server code; hosted on an internal deployment platform
+- **Client-only application** - No backend/server code; hosted on Awesome Hosting
 - Entry: src/main.tsx → src/App.tsx
-- Auth: IMS singleton via `useIMS()` hook from src/contexts/useIMS.ts
-- UI: Plain React (no component library pre-installed)
+- Auth: Framework-agnostic IMS singleton (src/utils/IMS.ts), React hook via `useIMS()`
+- UI: **Adobe React Spectrum S2** (mandatory for all interactive components)
 
-## Services (IMPORTANT)
+## UI Components (CRITICAL)
 
-**Always explore `@adtech/protopack-services-all` first for service requests.**
+**⛔ Use Adobe React Spectrum S2 for ALL interactive UI:**
 
-Available services, more may be added, please inspect for full listing:
+- Import from `@react-spectrum/s2`: `Button`, `TextField`, `Picker`, `TextArea`, `Heading`, `Text`
+- **NEVER use plain HTML** for `<button>`, `<input>`, `<select>`, `<textarea>`
+- Use plain `<div>` for layouts (Spectrum S2 doesn't include layout components)
+- Wrap app in `<Provider>` from `@react-spectrum/s2`
 
-- `firefly` - Firefly API (image generation, upscaling)
-- `ps` - Photoshop API
-- `lightroom` - Lightroom API
-- `digitalImaging` - Digital imaging services
-- `adobe3p` - Third-party Adobe services
+## Adobe Services (IMPORTANT)
+
+**Always explore `@adtech/protopack-services-all` first for Adobe API requests.**
+
+Available: `firefly`, `ps`, `lightroom`, `digitalImaging`, `adobe3p`, and more (inspect package for full list)
 
 Usage:
 
 ```typescript
 import { apis } from '@adtech/protopack-services-all';
+import { useIMS } from './contexts/useIMS';
 
-// Access services
-const result = await apis.firefly.generate(...);
-const psResult = await apis.ps.someMethod(...);
+function MyComponent() {
+  const ims = useIMS();
+
+  const handleGenerate = async () => {
+    const result = await apis.firefly.generate({
+      prompt: "a mountain landscape",
+      token: ims.token,        // Bearer token
+      apiKey: ims.apiKey       // x-api-key
+    });
+  };
+}
 ```
 
-If a service doesn't exist in @adtech packages, check the Services MCP server, then inform the user.
+If a service doesn't exist in @adtech packages, check the Services MCP server.
 
 ## Authentication
 
-For all Adobe API calls, get credentials from IMS:
+**Get credentials from IMS singleton:**
 
 ```typescript
+import { useIMS } from './contexts/useIMS';
+
 const ims = useIMS();
-const token = ims.tokenData?.token; // Bearer token
-const apiKey = ims.adobeid.client_id; // x-api-key
+const token = ims.token;        // Bearer token
+const apiKey = ims.apiKey;      // x-api-key
+
+// Check auth status
+if (ims.isAuthenticated) {
+  // User is logged in
+}
+
+// Sign in/out
+ims.signIn();
+ims.logout();
 ```
 
-Do NOT use separate API key environment variables.
+**Framework-agnostic usage:**
+
+```typescript
+import { IMS } from './utils/IMS';
+
+await IMS.ready;
+const token = IMS.token;
+const apiKey = IMS.apiKey;
+```
+
+**NEVER use separate API key environment variables.**
 
 ## Key Rules
 
+- Spectrum S2 components mandatory for interactive UI
+- Get all credentials from IMS (never env vars)
 - Use sentence case for all text (not Title Case)
-- Vite only (no webpack/parcel)
+- HTTPS required for IMS (Vite configured)
+- See CLAUDE.md for complete guidelines
