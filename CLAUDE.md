@@ -1,5 +1,35 @@
 # Protopack Base Template
 
+## First-Time Setup
+
+**⚠️ IMPORTANT: If SETUP.md exists in this project, setup is incomplete.**
+
+When SETUP.md is present, Claude will automatically start a setup interview to configure this template. The interview takes ~5 minutes and covers:
+
+1. Template vs Project choice
+2. Framework selection (React/Lit)
+3. Project requirements (routing, state, services)
+4. Dependency installation and file generation
+
+After setup completes:
+- SETUP.md is deleted
+- Your choices are documented in "Project Configuration" below
+- The template is ready to use
+
+---
+
+## Project Configuration
+
+_This section is populated after the setup interview completes._
+
+**Project Type:** [Not yet configured]
+**Framework:** React (default - will be updated after setup)
+**Status:** ⚠️ Setup required - run the interview to configure
+
+---
+
+## About This Template
+
 This is a **minimal base template** for creating Protopack applications with Adobe services. It provides essential Adobe integrations (IMS authentication, Spectrum S2, Adobe Services) while remaining unopinionated about architecture, routing, and state management.
 
 **Target audience:** Designers, PMs, and developers who want a clean starting point with Adobe essentials pre-configured.
