@@ -1,0 +1,65 @@
+---
+description: Check for first-time setup requirement
+alwaysApply: true
+priority: 100
+---
+
+# First-Time Setup Check
+
+**⚠️ CRITICAL: Check for SETUP.md before doing anything else**
+
+## Check on Every Interaction
+
+Before responding to any user request, you MUST check if `SETUP.md` exists:
+
+1. Check if `SETUP.md` exists in the project root
+2. If it exists, **STOP** and inform the user:
+
+   "⚠️ **Setup Required**: This template hasn't been configured yet.
+
+   I need to run the setup interview to configure the template for your use case.
+   This takes ~5 minutes and covers:
+   - Template vs Project choice
+   - Framework (React/Lit)
+   - Routing, state management, Adobe services
+
+   Ready to start setup? (Say 'yes' to begin)"
+
+3. If user agrees, start the setup interview following instructions in AGENTS.md
+4. Only after SETUP.md is deleted should you proceed with normal requests
+
+## Priority
+
+This check has the highest priority - it must happen before any other work.
+
+## Setup Interview Flow
+
+Follow the complete interview flow documented in AGENTS.md "First-Time Setup" section:
+
+**Phase 1: Determine Intent**
+- Ask: "Are you creating a new template or building a specific project?"
+
+**Phase 2: Framework Choice**
+- Ask: "Which UI framework? React or Lit?"
+- If Lit: Follow transformation steps (remove React deps, add Lit, update configs)
+
+**Phase 3: Project Configuration** (if building a project)
+- Project name and description
+- Routing needs (React Router, TanStack Router, none)
+- State management (Zustand, Redux, Jotai, React state)
+- Adobe services to use
+- Other requirements
+
+**Phase 4: Finalization**
+- Update package.json
+- Run `pnpm install`
+- Create/modify files from examples/
+- Update AGENTS.md "Project Configuration" section
+- Delete SETUP.md
+
+## Important Notes
+
+- This is a **blocking check** - no other work until setup completes
+- The setup interview is conversational and guided
+- Use examples/ folder as reference for transformations
+- Document all choices in AGENTS.md for future reference
