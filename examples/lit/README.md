@@ -118,11 +118,12 @@ private accessor authenticated = false;
 
 ## TypeScript Configuration
 
-Lit requires specific TypeScript settings:
+Lit requires specific TypeScript settings (all three are REQUIRED):
 
-- `useDefineForClassFields: false` - **Critical for decorators to work**
-- `target: "ES2022"` - Modern JavaScript features
-- No `jsx` configuration needed (Lit doesn't use JSX)
+1. `useDefineForClassFields: false` - **Critical for decorators to work**
+2. `experimentalDecorators: true` - **Required for @customElement, @state, @property**
+3. `target: "ES2022"` - Modern JavaScript features
+4. No `jsx` configuration needed (Lit doesn't use JSX)
 
 ## Using in the Main Template
 

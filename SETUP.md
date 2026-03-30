@@ -25,6 +25,7 @@ When you see this file, Claude/Cursor will automatically start a conversational 
 4. **Installation & finalization**
    - Install chosen dependencies
    - Create starter files based on your choices
+   - Validate configuration (lint + build)
    - Update CLAUDE.md with configuration details
    - Delete this SETUP.md file
 

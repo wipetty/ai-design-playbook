@@ -10,8 +10,10 @@ When SETUP.md is present, your AI assistant will automatically start a setup int
 2. Framework selection (React/Lit)
 3. Project requirements (routing, state, services)
 4. Dependency installation and file generation
+5. Configuration validation (lint + build)
 
 After setup completes:
+- Configuration is validated (lint and build pass)
 - SETUP.md is deleted
 - Your choices are documented in "Project Configuration" below
 - The template is ready to use

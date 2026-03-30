@@ -84,8 +84,12 @@ Follow the complete interview flow documented in AGENTS.md "First-Time Setup" se
 - Update package.json
 - Run `pnpm install`
 - Create/modify files from examples/
+- **Validate configuration:**
+  1. Run `pnpm run lint` - Verifies TypeScript config, ESLint setup, and type checking
+  2. Run `pnpm run build` - Verifies Vite build, dependencies, and imports
+  3. **If either fails, STOP** - Report errors, do NOT delete SETUP.md, fix issues first
 - Update AGENTS.md "Project Configuration" section
-- Delete SETUP.md
+- Delete SETUP.md (only after successful validation)
 
 ## Important Notes
 
