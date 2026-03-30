@@ -41,7 +41,37 @@ Follow the complete interview flow documented in AGENTS.md "First-Time Setup" se
 
 **Phase 2: Framework Choice**
 - Ask: "Which UI framework? React or Lit?"
-- If Lit: Follow transformation steps (remove React deps, add Lit, update configs)
+
+- **If React selected:**
+  1. Read `examples/react/package.json` for dependencies
+  2. Copy files from `examples/react/` to root (see examples/README.md)
+  3. Update root `package.json` with dependencies from example
+  4. Keep default setup (already React)
+  5. Run `pnpm install`
+
+- **If Lit selected:**
+  1. Read `examples/lit/package.json` for dependencies
+  2. **Copy ALL files from `examples/lit/` to root:**
+     - `examples/lit/vite.config.ts` → `vite.config.ts` (overwrites)
+     - `examples/lit/tsconfig.app.json` → `tsconfig.app.json` (overwrites)
+     - `examples/lit/eslint.config.js` → `eslint.config.js` (overwrites)
+     - `examples/lit/index.html` → `index.html` (overwrites)
+     - `examples/lit/src/*` → `src/*` (overwrites src/main.tsx, src/App.tsx)
+  3. **Delete React-specific files:**
+     - `src/contexts/` directory (entire directory)
+     - Any remaining `.tsx` files in src/ (except if explicitly needed)
+  4. **Update root `package.json`:**
+     - Remove ALL React dependencies (react, react-dom, @react-spectrum/s2)
+     - Remove ALL React devDependencies (@types/react, @types/react-dom, @vitejs/plugin-react, eslint-plugin-react-hooks, eslint-plugin-react-refresh, unplugin-parcel-macros)
+     - Add dependencies from `examples/lit/package.json`
+  5. Run `pnpm install`
+  6. **Verify transformation:**
+     - No `.tsx` files exist in `src/`
+     - `tsconfig.app.json` has `useDefineForClassFields: false`
+     - `vite.config.ts` has no React plugin
+     - `package.json` has no React dependencies
+
+**CRITICAL: Follow the complete file list in examples/README.md - missing files cause build errors.**
 
 **Phase 3: Project Configuration** (if building a project)
 - Project name and description

@@ -278,6 +278,51 @@ IMS.logout();
 - **Text style:** Use sentence case for all text (not Title Case)
 - **Build tool:** Vite recommended (HTTPS required for IMS)
 - **Framework flexibility:** Core IMS is framework-agnostic, adapt as needed
+- **Lit decorators:** When using Lit, do NOT use `accessor` keyword with decorators (not supported by build tools)
+  - ✅ Correct: `@state() private authenticated = false;`
+  - ❌ Wrong: `@state() private accessor authenticated = false;`
+
+### Lit Decorator Patterns
+
+When writing Lit components:
+
+- **Do NOT use `accessor` keyword** with decorators (not supported by build tools)
+  - ✅ Correct: `@state() private authenticated = false;`
+  - ❌ Wrong: `@state() private accessor authenticated = false;`
+
+- **Use `useDefineForClassFields: false`** in tsconfig (required for decorators)
+
+- **Import decorators from** `lit/decorators.js`:
+  ```typescript
+  import { customElement, state, property } from 'lit/decorators.js';
+  ```
+
+- **Example Lit component:**
+  ```typescript
+  import { LitElement, html, css } from 'lit';
+  import { customElement, state } from 'lit/decorators.js';
+
+  @customElement('my-component')
+  export class MyComponent extends LitElement {
+    @state()
+    private count = 0;
+
+    static styles = css`
+      :host {
+        display: block;
+        padding: 16px;
+      }
+    `;
+
+    render() {
+      return html`
+        <button @click=${() => this.count++}>
+          Count: ${this.count}
+        </button>
+      `;
+    }
+  }
+  ```
 
 ## Customization Guide
 

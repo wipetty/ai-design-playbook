@@ -1,100 +1,136 @@
-# Reference Examples
+# Framework Examples
 
-These examples show common patterns for the setup agent to adapt based on user choices.
+This directory contains complete, working example projects for each supported framework.
 
-## Lit Framework Setup
+## Structure
 
-When switching to Lit, you must:
+- `react/` - Complete React + React Spectrum S2 project
+- `lit/` - Complete Lit + Spectrum Web Components project
 
-1. **Update tsconfig.app.json** - Copy from `examples/lit-tsconfig.app.json`
-   - Set `target: "ES2022"` (not ES2020)
-   - Set `useDefineForClassFields: false` (critical for decorators)
-   - Remove `jsx` configuration
+Each example is a **fully functional project** that can be run standalone:
 
-2. **Update eslint.config.js** - Copy from `examples/lit-eslint.config.js`
-   - Remove React plugins (`eslint-plugin-react-hooks`, `eslint-plugin-react-refresh`)
-   - Remove React-specific rules
+```bash
+cd examples/react  # or examples/lit
+pnpm install
+pnpm dev
+```
 
-3. **Use accessor syntax** - All `@state()` decorators need `accessor`:
-   ```typescript
-   @state()
-   private accessor myProperty = initialValue;
-   ```
+The dev server will start at `https://localhost:5173` (or the next available port).
 
-4. **Lifecycle methods**:
-   - `connectedCallback()` - Initial setup, component mounting
-   - `updated(changedProperties)` - React to state/prop changes
-   - Use `updated()` for auth-dependent initialization (not `connectedCallback()`)
+## What's Included in Examples
 
-5. **Update vite.config.ts** - Copy from `examples/lit-vite.config.ts`
-   - Remove `@vitejs/plugin-react`
-   - Remove `unplugin-parcel-macros`
-   - Keep HTTPS and other Vite settings
+Each example project contains:
 
-6. **Update index.html** - Copy from `examples/lit-index.html`
-   - Replace `<div id="root">` with `<app-root></app-root>`
+- ✅ Application source files (`src/`)
+- ✅ Build configuration (`vite.config.ts`, `tsconfig.app.json`)
+- ✅ Linting configuration (`eslint.config.js`)
+- ✅ Dependencies (`package.json`)
+- ✅ Entry HTML (`index.html`)
+- ✅ Framework-specific README
+- ✅ IMS authentication utilities (`src/utils/IMS.ts`, `src/utils/IMSConstants.ts`)
 
-## Files
+## What's NOT Included (Stays in Root)
 
-### Lit + Spectrum Web Components
+These files are framework-agnostic and live in the project root (not duplicated in examples):
 
-- **lit-app-root.ts** - Lit component with Spectrum Web Components and IMS integration
-  - Uses `@customElement` decorator for component registration
-  - Uses `accessor` keyword with `@state()` decorators
-  - Integrates with IMS singleton for authentication
-  - Shows Spectrum Web Components theme setup
-  - Demonstrates `updated()` lifecycle for auth-dependent logic
-  - Example: `<sp-button>`, `<sp-theme>`
+- ❌ AI agent configuration (`.agents/`, `CLAUDE.md`)
+- ❌ Setup files (`SETUP.md`)
+- ❌ Playwright auth (`.auth/`, auth scripts, `playwright.auth.setup.ts`)
+- ❌ Git configuration (`.git/`, `.gitignore`)
+- ❌ Package manager files (`pnpm-lock.yaml`)
 
-- **lit-main.ts** - Lit entry point
-  - Simple import pattern for web components
-  - Self-registering components via decorators
+## Setup Process
 
-- **lit-tsconfig.app.json** - TypeScript configuration for Lit
-  - Correct decorator settings
-  - ES2022 target
-  - No JSX configuration
+When a user runs the setup interview and selects a framework:
 
-- **lit-eslint.config.js** - ESLint configuration for Lit
-  - No React plugins
-  - TypeScript-only linting
+1. **Read the chosen example's package.json** to get the dependency list
+2. **Copy files from the example to root:**
+   - `examples/<framework>/vite.config.ts` → `vite.config.ts`
+   - `examples/<framework>/tsconfig.app.json` → `tsconfig.app.json`
+   - `examples/<framework>/eslint.config.js` → `eslint.config.js`
+   - `examples/<framework>/index.html` → `index.html`
+   - `examples/<framework>/src/*` → `src/*` (overwrites existing files)
+3. **Update root package.json** with dependencies from example's package.json
+4. **Run** `pnpm install`
+5. **Delete** SETUP.md
 
-- **lit-vite.config.ts** - Vite configuration for Lit
-  - No React plugin
-  - HTTPS enabled for IMS
-  - Simpler than React config
+## Important Notes
 
-- **lit-index.html** - HTML entry for Lit
-  - Uses custom element `<app-root></app-root>`
+### React Example
 
-### React + Routing
+- Uses `@react-spectrum/s2` for UI components
+- Requires `unplugin-parcel-macros` for CSS bundling
+- Uses React Context for IMS state (`IMSProvider`, `useIMS` hook)
+- TypeScript: `useDefineForClassFields: true`, `jsx: "react-jsx"`
 
-- **react-with-router.tsx** - React Router integration
-  - Shows BrowserRouter setup with IMSProvider and Spectrum Provider
-  - Navigation component with auth state
-  - Route definitions pattern
-  - Proper provider nesting order
+### Lit Example
 
-### State Management
+- Uses `@spectrum-web-components/*` for UI components
+- **Does NOT use `accessor` keyword** with decorators (build tools don't support it)
+- Imports IMS singleton directly (no Context needed)
+- TypeScript: `useDefineForClassFields: false` (**critical for decorators**)
+- No JSX configuration needed
 
-- **zustand-store.ts** - Zustand store pattern
-  - TypeScript interface for store state
-  - Example actions (addImage, clearImages, etc.)
-  - Usage example in comments
-  - Pattern for Adobe services state (generated images, UI state, preferences)
+## Testing Examples Standalone
 
-## Usage
+Both examples can be tested independently:
 
-When the setup agent detects SETUP.md, it will:
-1. Interview the user about their preferences
-2. Read these example files
-3. Adapt them to create the appropriate starter code
-4. Install necessary dependencies
-5. Update configuration files
+**React:**
+```bash
+cd examples/react
+pnpm install
+pnpm dev
+# Visit https://localhost:5173
+pnpm build  # Should build without errors
+```
 
-## Notes
+**Lit:**
+```bash
+cd examples/lit
+pnpm install
+pnpm dev
+# Visit https://localhost:5173
+pnpm build  # Should build without errors
+```
 
-- All examples preserve IMS authentication (framework-agnostic)
-- Spectrum component examples follow accessibility guidelines
-- Examples use TypeScript with strict mode
-- Patterns are production-ready but minimal
+## Key Differences
+
+| Aspect | React | Lit |
+|--------|-------|-----|
+| **UI Library** | React Spectrum S2 | Spectrum Web Components |
+| **IMS Access** | Context + useIMS hook | Direct singleton import |
+| **State** | useState, useReducer | @state() decorator |
+| **Templates** | JSX | Tagged template literals |
+| **File Extension** | `.tsx`, `.ts` | `.ts` only |
+| **Build Complexity** | More (macros, CSS bundling) | Simpler |
+
+## Troubleshooting
+
+### React Build Errors
+
+If you see errors about React Spectrum S2 styles:
+- Ensure `unplugin-parcel-macros` is installed
+- Check that `macros.vite()` is first in the Vite plugins array
+
+### Lit Decorator Errors
+
+If you see errors about decorators:
+- Check `useDefineForClassFields: false` in tsconfig.app.json
+- Ensure you're NOT using `accessor` keyword with decorators
+- Verify `experimentalDecorators: true` if using legacy decorators
+
+### IMS Authentication
+
+If IMS authentication doesn't work:
+- Ensure the dev server is running with HTTPS
+- Check browser console for IMS errors
+- Verify `IMSConstants.ts` has the correct client ID and environment
+
+## Architecture Notes
+
+Both examples use the same **IMS singleton pattern** (`src/utils/IMS.ts`) for authentication. This singleton is framework-agnostic and works the same way in both React and Lit:
+
+- **React**: Wraps singleton in Context for React-style consumption
+- **Lit**: Imports singleton directly and uses `@state()` for reactivity
+
+This pattern makes it easy to migrate between frameworks since the core authentication logic is shared.

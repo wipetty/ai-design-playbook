@@ -1,4 +1,4 @@
-// Example: Lit entry point
+// Lit entry point
 import './app-root';
 import './index.css';
 

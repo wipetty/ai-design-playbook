@@ -1,4 +1,4 @@
-// Example: Lit app root with Spectrum Web Components and IMS
+// Lit app root with Spectrum Web Components and IMS
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import '@spectrum-web-components/theme/sp-theme.js';
@@ -9,8 +9,9 @@ import { IMS } from './utils/IMS';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {
+  // FIXED: Removed 'accessor' keyword - not supported by build tools
   @state()
-  private accessor authenticated = false;
+  private authenticated = false;
 
   static styles = css`
     :host {

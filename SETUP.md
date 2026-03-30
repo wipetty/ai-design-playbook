@@ -30,11 +30,19 @@ When you see this file, Claude/Cursor will automatically start a conversational 
 
 ## Reference Examples
 
-The `examples/` folder contains reference implementations that the AI agent will adapt based on your choices:
+The `examples/` folder contains complete example projects that the AI agent will use based on your framework choice:
 
-- **Lit + Spectrum Web Components** - See `examples/lit-app-root.ts` and `examples/lit-main.ts`
-- **React + Routing** - See `examples/react-with-router.tsx`
-- **State Management** - See `examples/zustand-store.ts` for Zustand pattern
+- **React Example** - `examples/react/` - Complete React + React Spectrum S2 project
+  - Full project structure with all configuration files
+  - React Context pattern for IMS authentication
+  - Can be tested standalone: `cd examples/react && pnpm install && pnpm dev`
+
+- **Lit Example** - `examples/lit/` - Complete Lit + Spectrum Web Components project
+  - Full project structure with all configuration files
+  - Direct IMS singleton access (no Context needed)
+  - Can be tested standalone: `cd examples/lit && pnpm install && pnpm dev`
+
+See `examples/README.md` for detailed documentation of the example structure.
 
 ## What's Already Configured
 
