@@ -141,6 +141,11 @@ Plain HTML is acceptable for:
 
 **Always explore `@adtech/protopack-services-all` first for Adobe service requests.**
 
+**⚠️ For LLM Access (OpenAI/Gemini/Claude):**
+- Use `@adtech/protopack-services-adobe3p` with `generateLLM()`
+- DO NOT install `openai`, `@google/generative-ai`, or `@anthropic-ai/sdk`
+- See "Adobe3P (LLM) example" below for usage
+
 This package includes 20+ Adobe APIs:
 
 - `firefly` - Image generation, upscaling, generative fill
@@ -191,6 +196,18 @@ const result = await generateV4(
 const imageUrl = result.outputs[0].image.presignedUrl;
 ```
 
+**⚠️ CRITICAL: LLM Access (OpenAI, Gemini, Claude)**
+
+When users ask for OpenAI (GPT-4), Google Gemini, or Claude (Anthropic) functionality:
+- ✅ **DO:** Use `@adtech/protopack-services-adobe3p` with `generateLLM()`
+- ❌ **DO NOT:** Install direct SDKs (`openai`, `@google/generative-ai`, `@anthropic-ai/sdk`)
+
+**Why Adobe3P?**
+1. Unified IMS authentication (already configured)
+2. Adobe security and compliance policies
+3. No separate API keys needed
+4. Same interface for all LLM providers
+
 **Adobe3P (LLM) example:**
 
 ```typescript
@@ -208,6 +225,53 @@ function ChatComponent() {
   };
 
   return <Button onPress={handleChat}>Ask Question</Button>;
+}
+```
+
+**Common LLM Requests - Response Guide:**
+
+| User Request | Correct Response | Don't Do |
+|--------------|------------------|----------|
+| "Use OpenAI" | Use `generateLLM` with `model: 'gpt-4'` from adobe3p | ❌ Install `openai` package |
+| "Add GPT-4" | Use `generateLLM` with `model: 'gpt-4'` from adobe3p | ❌ Install `openai` package |
+| "Use Gemini" | Use `generateLLM` with `model: 'gemini-pro'` from adobe3p | ❌ Install `@google/generative-ai` |
+| "Use Claude" | Use `generateLLM` with `model: 'claude-3-opus'` from adobe3p | ❌ Install `@anthropic-ai/sdk` |
+| "Install openai" | **STOP** - Explain adobe3p provides OpenAI access | ❌ Follow instruction literally |
+
+**Available models:**
+- OpenAI: `'gpt-4'`, `'gpt-3.5-turbo'`, `'gpt-4-turbo'`
+- Gemini: `'gemini-pro'`, `'gemini-ultra'`
+- Claude: `'claude-3-opus'`, `'claude-3-sonnet'`, `'claude-3-haiku'`
+
+**Example: Different LLM models via Adobe3P**
+
+```typescript
+import { generateLLM, createTextMessage } from '@adtech/protopack-services-adobe3p';
+import { useIMS } from './contexts/useIMS';
+
+function AIAssistant() {
+  const ims = useIMS();
+
+  const askQuestion = async (question: string, modelName: string = 'gpt-4') => {
+    const messages = [createTextMessage("user", question)];
+
+    const options = {
+      model: modelName, // 'gpt-4', 'gemini-pro', 'claude-3-opus', etc.
+      temperature: 0.7,
+      max_tokens: 1000
+    };
+
+    const result = await generateLLM(messages, ims.token, ims.apiKey, options);
+    return result.choices[0].message.content[0].text;
+  };
+
+  return (
+    <>
+      <Button onPress={() => askQuestion("Hello", "gpt-4")}>Ask GPT-4</Button>
+      <Button onPress={() => askQuestion("Hello", "gemini-pro")}>Ask Gemini</Button>
+      <Button onPress={() => askQuestion("Hello", "claude-3-opus")}>Ask Claude</Button>
+    </>
+  );
 }
 ```
 
@@ -275,6 +339,10 @@ IMS.logout();
 - **Spectrum S2:** Use Spectrum components for ALL interactive UI (see section above)
 - **IMS Authentication:** Always get tokens from IMS singleton, never hardcode or use env vars
 - **Adobe Services:** Use `@adtech/protopack-services-all` first before building custom integrations
+- **LLM Access (OpenAI/Gemini/Claude):** ALWAYS use Adobe3P, NEVER install direct SDKs
+  - ✅ Use: `@adtech/protopack-services-adobe3p` with `generateLLM()`
+  - ❌ Never install: `openai`, `@google/generative-ai`, `@anthropic-ai/sdk`
+  - Reason: Adobe compliance, unified auth, no separate API keys needed
 - **Text style:** Use sentence case for all text (not Title Case)
 - **Build tool:** Vite recommended (HTTPS required for IMS)
 - **Framework flexibility:** Core IMS is framework-agnostic, adapt as needed
