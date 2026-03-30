@@ -10,7 +10,7 @@ import { IMS } from './utils/IMS';
 @customElement('app-root')
 export class AppRoot extends LitElement {
   @state()
-  private authenticated = false;
+  private accessor authenticated = false;
 
   static styles = css`
     :host {
@@ -47,6 +47,14 @@ export class AppRoot extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('imsReady', this.updateAuth);
+  }
+
+  protected updated(changedProperties: Map<string, unknown>) {
+    // Use this lifecycle method for auth-dependent initialization
+    // e.g., router initialization that requires authentication
+    if (changedProperties.has('authenticated') && this.authenticated) {
+      // Initialize router or any auth-dependent logic here
+    }
   }
 
   private updateAuth() {

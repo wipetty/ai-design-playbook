@@ -153,19 +153,20 @@ This package includes 20+ Adobe APIs:
 **Usage pattern:**
 
 ```typescript
-import { apis } from '@adtech/protopack-services-all';
+import { generateV4 } from '@adtech/protopack-services-firefly';
 import { useIMS } from './contexts/useIMS';
 
 function MyComponent() {
   const ims = useIMS();
 
   const handleGenerate = async () => {
-    const result = await apis.firefly.generate({
-      prompt: "a mountain landscape",
-      token: ims.token,        // Bearer token from IMS
-      apiKey: ims.apiKey       // x-api-key from IMS
-    });
-    console.log(result);
+    const result = await generateV4(
+      "a mountain landscape",
+      ims.token,        // Bearer token from IMS
+      ims.apiKey        // x-api-key from IMS
+    );
+    const imageUrl = result.outputs[0].image.presignedUrl;
+    console.log('Generated image:', imageUrl);
   };
 
   return <Button onPress={handleGenerate}>Generate</Button>;
@@ -176,17 +177,38 @@ function MyComponent() {
 
 ```typescript
 import { IMS } from './utils/IMS';
-import { apis } from '@adtech/protopack-services-all';
+import { generateV4 } from '@adtech/protopack-services-firefly';
 
 // Wait for IMS to be ready
 await IMS.ready;
 
 // Make API call
-const result = await apis.firefly.generate({
-  prompt: "a mountain landscape",
-  token: IMS.token,
-  apiKey: IMS.apiKey
-});
+const result = await generateV4(
+  "a mountain landscape",
+  IMS.token,
+  IMS.apiKey
+);
+const imageUrl = result.outputs[0].image.presignedUrl;
+```
+
+**Adobe3P (LLM) example:**
+
+```typescript
+import { generateLLM, createTextMessage } from '@adtech/protopack-services-adobe3p';
+import { useIMS } from './contexts/useIMS';
+
+function ChatComponent() {
+  const ims = useIMS();
+
+  const handleChat = async () => {
+    const messages = [createTextMessage("user", "Tell me about Adobe Firefly")];
+    const result = await generateLLM(messages, ims.token, ims.apiKey);
+    const text = result.choices[0].message.content[0].text;
+    console.log('Response:', text);
+  };
+
+  return <Button onPress={handleChat}>Ask Question</Button>;
+}
 ```
 
 If a service doesn't exist in @adtech packages, check the Services MCP server, then inform the user.

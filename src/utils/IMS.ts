@@ -107,6 +107,8 @@ export class Ims {
     if (this.readyResolve) {
       this.readyResolve();
     }
+    // Dispatch event for framework integrations
+    window.dispatchEvent(new CustomEvent('imsReady'));
   }
 
   setProfileData(profileData: unknown) {
@@ -114,8 +116,24 @@ export class Ims {
     console.log(profileData);
   }
 
+  signIn() {
+    this.adobeIMS.signIn();
+  }
+
   logout() {
     this.adobeIMS.signOut();
+  }
+
+  get isAuthenticated(): boolean {
+    return !!this.tokenData?.token;
+  }
+
+  get token(): string {
+    return this.tokenData?.token ?? "";
+  }
+
+  get apiKey(): string {
+    return this.adobeid.client_id;
   }
 }
 

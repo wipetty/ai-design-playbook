@@ -46,7 +46,7 @@ Guide users to import and use the `apis` object:
 import { apis } from '@adtech/protopack-services-all';
 
 // Example: Firefly image generation
-const result = await apis.firefly.generate({
+const result = await apis.firefly.generateV4({
   prompt: 'A sunset over mountains',
   // ... other options
 });
