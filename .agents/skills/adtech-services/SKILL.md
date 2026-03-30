@@ -27,7 +27,67 @@ Known services in the package (inspect the package for the full, up-to-date list
 | `apis.ps` | Photoshop API (actions, smart objects, layer operations) |
 | `apis.lightroom` | Lightroom API (presets, auto-tone, masking) |
 | `apis.digitalImaging` | Digital imaging services |
-| `apis.adobe3p` | Third-party Adobe services |
+| `apis.adobe3p` | Third-party Adobe services (includes LLM access) |
+
+## LLM Models via Adobe3P
+
+**⚠️ IMPORTANT: Do NOT use direct SDKs for OpenAI, Gemini, or Claude**
+
+When users ask for OpenAI, Google Gemini, or Claude (Anthropic) LLM functionality, use the `@adtech/protopack-services-adobe3p` package instead of their individual SDKs.
+
+### Available LLM Models
+
+The adobe3p service provides access to multiple LLM providers:
+
+| Model Provider | Access Via | DO NOT Install |
+|----------------|------------|----------------|
+| OpenAI (GPT-4, GPT-3.5, etc.) | `@adtech/protopack-services-adobe3p` | ❌ `openai` |
+| Google Gemini | `@adtech/protopack-services-adobe3p` | ❌ `@google/generative-ai` |
+| Claude (Anthropic) | `@adtech/protopack-services-adobe3p` | ❌ `@anthropic-ai/sdk` |
+
+### Usage Pattern
+
+```typescript
+import { generateLLM, createTextMessage } from '@adtech/protopack-services-adobe3p';
+import { useIMS } from '../contexts/useIMS';
+
+function ChatComponent() {
+  const ims = useIMS();
+
+  const askQuestion = async (question: string, model: string = 'gpt-4') => {
+    const messages = [
+      createTextMessage("user", question)
+    ];
+
+    const options = {
+      model: model, // 'gpt-4', 'gpt-3.5-turbo', 'gemini-pro', 'claude-3-opus', etc.
+      temperature: 0.7,
+      max_tokens: 1000
+    };
+
+    const result = await generateLLM(messages, ims.token, ims.apiKey, options);
+    const response = result.choices[0].message.content[0].text;
+
+    return response;
+  };
+}
+```
+
+### Why Use Adobe3P Instead of Direct SDKs?
+
+1. **Unified authentication** - Uses IMS credentials (already configured)
+2. **Adobe compliance** - Follows Adobe security and data policies
+3. **No additional API keys** - No need for separate OpenAI/Anthropic/Google API keys
+4. **Consistent interface** - Same API pattern for all LLM providers
+
+### When Users Ask For:
+
+| User Request | Correct Response |
+|--------------|------------------|
+| "Use OpenAI" | Use `generateLLM` with `model: 'gpt-4'` from adobe3p |
+| "Use Gemini" | Use `generateLLM` with `model: 'gemini-pro'` from adobe3p |
+| "Use Claude" | Use `generateLLM` with `model: 'claude-3-opus'` from adobe3p |
+| "Install openai package" | **STOP** - Explain adobe3p provides OpenAI access |
 
 ## Workflow
 
@@ -40,18 +100,25 @@ When a user asks what services are available:
 
 ### 2) Using services
 
-Guide users to import and use the `apis` object:
+Guide users to import and use the appropriate package:
 
 ```typescript
-import { apis } from '@adtech/protopack-services-all';
+// Example: LLM chat (OpenAI via adobe3p)
+import { generateLLM, createTextMessage } from '@adtech/protopack-services-adobe3p';
+
+const messages = [createTextMessage("user", "Explain Firefly API")];
+const result = await generateLLM(messages, token, apiKey, { model: 'gpt-4' });
+const response = result.choices[0].message.content[0].text;
 
 // Example: Firefly image generation
-const result = await apis.firefly.generateV4({
-  prompt: 'A sunset over mountains',
-  // ... other options
-});
+import { generateV4 } from '@adtech/protopack-services-firefly';
 
-// Example: Photoshop operations
+const result = await generateV4('A sunset over mountains', token, apiKey);
+const imageUrl = result.outputs[0].image.presignedUrl;
+
+// Example: Using the unified apis object
+import { apis } from '@adtech/protopack-services-all';
+
 const psResult = await apis.ps.applyActions({
   // ... options
 });
