@@ -6,6 +6,17 @@ import { IErrorType } from "@identity/imslib/adobe-id/IErrorType";
 import { v4 } from "uuid";
 import { IMS_CLIENT_ID, IMS_ENV, IMS_SCOPE } from "./IMSConstants";
 
+/**
+ * IMS Authentication Singleton
+ *
+ * ⚠️ WARNING: This file exists in 3 locations:
+ * - src/utils/IMS.ts (root template)
+ * - examples/react/src/utils/IMS.ts
+ * - examples/lit/src/utils/IMS.ts
+ *
+ * Changes must be synchronized across all copies.
+ */
+
 declare global {
   interface Window {
     adobeIMSAuthToken: string;
@@ -30,15 +41,8 @@ export interface AdobeIMSProfile {
   utcOffset?: string;
 }
 
-// I copied this from the PS Prototype
 export class Ims {
-  testClientId = "AdobeSenseiPredictServiceStageKey";
-
-  // old debug settings, leaving them just in case i need them later
-  useTokenOverride = false;
-  tokenOverrideValue = "";
-
-  // new session ID for each time the app is used
+  // New session ID for each time the app is used
   sessionId = v4();
 
   // the actual IMS settings
@@ -83,12 +87,15 @@ export class Ims {
 
   onAccessToken(data: ITokenInformation) {
     this.setTokenData(data);
-    this.adobeIMS.getProfile().then((data) => this.setProfileData(data));
+    this.adobeIMS
+      .getProfile()
+      .then((data) => this.setProfileData(data))
+      .catch((err) => console.error("Failed to fetch IMS profile:", err));
   }
 
   onReauthAccessToken(data: ITokenInformation) {
     this.setTokenData(data);
-    console.log("reauth", data);
+    // Token refreshed
   }
 
   onImsError(type: IErrorType, message: unknown) {
@@ -96,13 +103,13 @@ export class Ims {
   }
 
   onAccessTokenHasExpired() {
-    console.log("token expired");
+    // Token expired, triggering sign-in
     this.setTokenData(undefined);
     this.adobeIMS.signIn();
   }
 
   onReady() {
-    console.log("ready");
+    // IMS initialized
     // Resolve the ready promise
     if (this.readyResolve) {
       this.readyResolve();
@@ -113,7 +120,7 @@ export class Ims {
 
   setProfileData(profileData: unknown) {
     this.profileData = profileData as AdobeIMSProfile;
-    console.log(profileData);
+    // Profile loaded
   }
 
   signIn() {

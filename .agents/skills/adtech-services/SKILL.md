@@ -73,6 +73,23 @@ function ChatComponent() {
 }
 ```
 
+### Framework-Agnostic Usage
+
+For Lit or vanilla JavaScript, import IMS directly:
+
+```typescript
+import { IMS } from './utils/IMS';
+import { generateLLM, createTextMessage } from '@adtech/protopack-services-adobe3p';
+
+// Wait for IMS to be ready
+await IMS.ready;
+
+// Make API call
+const messages = [createTextMessage("user", "Tell me about Adobe Firefly")];
+const result = await generateLLM(messages, IMS.token, IMS.apiKey, { model: 'gpt-4' });
+const response = result.choices[0].message.content[0].text;
+```
+
 ### Why Use Adobe3P Instead of Direct SDKs?
 
 1. **Unified authentication** - Uses IMS credentials (already configured)

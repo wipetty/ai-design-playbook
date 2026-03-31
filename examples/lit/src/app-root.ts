@@ -9,7 +9,6 @@ import { IMS } from './utils/IMS';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {
-  // FIXED: Removed 'accessor' keyword - not supported by build tools
   @state()
   private authenticated = false;
 
@@ -85,7 +84,7 @@ export class AppRoot extends LitElement {
               `
             : html`
                 <p>Please sign in to continue.</p>
-                <sp-button variant="cta" @click=${this.handleSignIn}>
+                <sp-button variant="accent" @click=${this.handleSignIn}>
                   Sign in with Adobe
                 </sp-button>
               `}

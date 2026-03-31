@@ -177,7 +177,7 @@ playwright-cli state-load .auth/playwright-state.json
 playwright-cli open https://localhost:5173
 ```
 
-See CLAUDE.md for full Playwright integration details.
+See AGENTS.md for full Playwright integration details.
 
 ## Using Spectrum Components
 

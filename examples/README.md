@@ -33,7 +33,7 @@ Each example project contains:
 
 These files are framework-agnostic and live in the project root (not duplicated in examples):
 
-- ❌ AI agent configuration (`.agents/`, `CLAUDE.md`)
+- ❌ AI agent configuration (`.agents/`, `AGENTS.md`)
 - ❌ Setup files (`SETUP.md`)
 - ❌ Playwright auth (`.auth/`, auth scripts, `playwright.auth.setup.ts`)
 - ❌ Git configuration (`.git/`, `.gitignore`)
@@ -52,7 +52,12 @@ When a user runs the setup interview and selects a framework:
    - `examples/<framework>/src/*` → `src/*` (overwrites existing files)
 3. **Update root package.json** with dependencies from example's package.json
 4. **Run** `pnpm install`
-5. **Delete** SETUP.md
+5. **Validate configuration:**
+   - Run `pnpm run lint` - Verify TypeScript config and type checking
+   - Run `pnpm run build` - Verify build succeeds
+   - **If either fails, STOP** - Do NOT delete SETUP.md until fixed
+6. **Update AGENTS.md** "Project Configuration" section with choices
+7. **Delete** SETUP.md (only after successful validation)
 
 ## Important Notes
 
