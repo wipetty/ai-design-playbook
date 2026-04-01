@@ -4,9 +4,13 @@ Welcome! This template needs to be configured for your use case.
 
 ## Setup Interview
 
-When you see this file, Claude/Cursor will automatically start a conversational interview to configure this template for you. The process takes about 5 minutes.
+When you see this file, Claude/Cursor will automatically start a conversational interview to configure this template for you.
 
-### What the interview covers
+The AI will ask if you want to use recommended defaults:
+- **Yes** - Quick start with React (add routing, state, services later as needed)
+- **No** - Custom interview (~5 minutes) to choose framework (React/Lit), routing, state management, and Adobe services
+
+### What the custom interview covers (if you choose "No")
 
 1. **Determine intent**
    - Are you creating a reusable template or building a specific project?
