@@ -8,7 +8,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "tsc --noEmit && eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "playwright:auth": "tsx playwright.auth.setup.ts",
+    "playwright:test": "playwright test",
+    "playwright:clean": "node -e \"require('fs').rmSync('.auth/playwright-state.json', { force: true });\""
   },
   "dependencies": {
     "@adtech/protopack-services-all": "latest",

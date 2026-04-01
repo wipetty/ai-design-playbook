@@ -2,7 +2,21 @@
 
 Welcome! This template needs to be configured for your use case.
 
-## Setup Interview
+## Quick Setup (Recommended)
+
+For the fastest setup, just run:
+
+```bash
+./scripts/setup.sh
+```
+
+This installs React with all Adobe essentials (IMS, Spectrum S2, Services SDK). You can add routing, state management, and other features later as needed.
+
+**Want Lit instead?** Run `./scripts/setup.sh lit`
+
+---
+
+## Custom Setup (AI Interview)
 
 When you see this file, Claude/Cursor will automatically start a conversational interview to configure this template for you.
 

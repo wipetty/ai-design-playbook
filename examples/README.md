@@ -41,23 +41,22 @@ These files are framework-agnostic and live in the project root (not duplicated 
 
 ## Setup Process
 
-When a user runs the setup interview and selects a framework:
+When a user runs setup (via script or AI interview):
 
-1. **Read the chosen example's package.json** to get the dependency list
-2. **Copy files from the example to root:**
-   - `examples/<framework>/vite.config.ts` → `vite.config.ts`
-   - `examples/<framework>/tsconfig.app.json` → `tsconfig.app.json`
-   - `examples/<framework>/eslint.config.js` → `eslint.config.js`
-   - `examples/<framework>/index.html` → `index.html`
-   - `examples/<framework>/src/*` → `src/*` (overwrites existing files)
-3. **Update root package.json** with dependencies from example's package.json
-4. **Run** `pnpm install`
-5. **Validate configuration:**
+1. **Choose framework:** React (default/quick) or Lit (custom interview)
+2. **Run script:** `./scripts/setup.sh [react|lit]`
+3. **Script copies files** from `examples/<framework>/` to root using rsync
+   - Copies all files including: vite.config.ts, tsconfig.app.json, eslint.config.js, index.html, src/*, package.json
+   - Preserves root-only files: .git/, .gitignore, pnpm-lock.yaml, .auth/, .worktrees/
+4. **Script updates CLAUDE.md** with chosen framework using sed
+5. **Script runs** `pnpm install`
+6. **Script validates:**
    - Run `pnpm run lint` - Verify TypeScript config and type checking
    - Run `pnpm run build` - Verify build succeeds
-   - **If either fails, STOP** - Do NOT delete SETUP.md until fixed
-6. **Update AGENTS.md** "Project Configuration" section with choices
-7. **Delete** SETUP.md (only after successful validation)
+7. **On success:** Delete SETUP.md
+8. **On failure:** Keep SETUP.md, show error, user can fix and retry
+
+**Key difference:** All file operations are deterministic and handled by the shell script, eliminating potential AI errors in copying/merging files.
 
 ## Important Notes
 
