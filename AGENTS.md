@@ -231,16 +231,46 @@ function ChatComponent() {
 
 | User Request | Correct Response | Don't Do |
 |--------------|------------------|----------|
-| "Use OpenAI" | Use `generateLLM` with `model: 'gpt-4'` from adobe3p | ❌ Install `openai` package |
-| "Add GPT-4" | Use `generateLLM` with `model: 'gpt-4'` from adobe3p | ❌ Install `openai` package |
-| "Use Gemini" | Use `generateLLM` with `model: 'gemini-pro'` from adobe3p | ❌ Install `@google/generative-ai` |
-| "Use Claude" | Use `generateLLM` with `model: 'claude-3-opus'` from adobe3p | ❌ Install `@anthropic-ai/sdk` |
+| "Use OpenAI" | Use `generateLLM` with `modelId: 'gpt', modelVersion: 'gpt-4o'` from adobe3p | ❌ Install `openai` package |
+| "Add GPT-4" | Use `generateLLM` with `modelId: 'gpt', modelVersion: 'gpt-4o'` from adobe3p | ❌ Install `openai` package |
+| "Use Gemini" | Use `generateLLM` with `modelId: 'gemini', modelVersion: 'gemini-pro'` from adobe3p | ❌ Install `@google/generative-ai` |
+| "Use Claude" | Use `generateLLM` with `modelId: 'claude', modelVersion: 'claude-3-opus'` from adobe3p | ❌ Install `@anthropic-ai/sdk` |
 | "Install openai" | **STOP** - Explain adobe3p provides OpenAI access | ❌ Follow instruction literally |
 
 **Available models:**
-- OpenAI: `'gpt-4'`, `'gpt-3.5-turbo'`, `'gpt-4-turbo'`
-- Gemini: `'gemini-pro'`, `'gemini-ultra'`
-- Claude: `'claude-3-opus'`, `'claude-3-sonnet'`, `'claude-3-haiku'`
+
+**IMPORTANT:** The API requires `modelId` (family) and `modelVersion` (specific version) as separate fields, not a single `model` field.
+
+- OpenAI (`modelId: 'gpt'`): `'gpt-4'`, `'gpt-4o'`, `'gpt-3.5-turbo'`, `'gpt-4-turbo'`
+- Gemini (`modelId: 'gemini'`): `'gemini-pro'`, `'gemini-2.5-flash'`, `'gemini-ultra'`
+- Claude (`modelId: 'claude'`): `'claude-3-opus'`, `'claude-3-sonnet'`, `'claude-3-haiku'`
+
+**API Reference:**
+
+```typescript
+const options = {
+  modelId: string,       // Required: 'gpt', 'gemini', or 'claude'
+  modelVersion: string,  // Required: Specific version (see available models above)
+  temperature?: number,  // Optional: 0.0 to 1.0 (default varies by model)
+  // Note: max_tokens is NOT supported in the current API
+};
+```
+
+**Common Migration Errors:**
+
+❌ **Wrong** (will fail):
+```typescript
+const options = { model: 'gpt-4', temperature: 0.7 };  // 'model' field doesn't exist
+```
+
+✅ **Correct**:
+```typescript
+const options = {
+  modelId: 'gpt',
+  modelVersion: 'gpt-4o',
+  temperature: 0.7
+};
+```
 
 **Example: Different LLM models via Adobe3P**
 
@@ -251,13 +281,17 @@ import { useIMS } from './contexts/useIMS';
 function AIAssistant() {
   const ims = useIMS();
 
-  const askQuestion = async (question: string, modelName: string = 'gpt-4') => {
+  const askQuestion = async (
+    question: string,
+    modelId: string = 'gpt',
+    modelVersion: string = 'gpt-4o'
+  ) => {
     const messages = [createTextMessage("user", question)];
 
     const options = {
-      model: modelName, // 'gpt-4', 'gemini-pro', 'claude-3-opus', etc.
-      temperature: 0.7,
-      max_tokens: 1000
+      modelId,        // 'gpt', 'gemini', or 'claude'
+      modelVersion,   // Specific version like 'gpt-4o', 'gemini-pro', 'claude-3-opus'
+      temperature: 0.7
     };
 
     const result = await generateLLM(messages, ims.token, ims.apiKey, options);
@@ -266,9 +300,9 @@ function AIAssistant() {
 
   return (
     <>
-      <Button onPress={() => askQuestion("Hello", "gpt-4")}>Ask GPT-4</Button>
-      <Button onPress={() => askQuestion("Hello", "gemini-pro")}>Ask Gemini</Button>
-      <Button onPress={() => askQuestion("Hello", "claude-3-opus")}>Ask Claude</Button>
+      <Button onPress={() => askQuestion("Hello", "gpt", "gpt-4o")}>Ask GPT-4o</Button>
+      <Button onPress={() => askQuestion("Hello", "gemini", "gemini-pro")}>Ask Gemini</Button>
+      <Button onPress={() => askQuestion("Hello", "claude", "claude-3-opus")}>Ask Claude</Button>
     </>
   );
 }

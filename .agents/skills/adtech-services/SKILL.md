@@ -54,15 +54,19 @@ import { useIMS } from '../contexts/useIMS';
 function ChatComponent() {
   const ims = useIMS();
 
-  const askQuestion = async (question: string, model: string = 'gpt-4') => {
+  const askQuestion = async (
+    question: string,
+    modelId: string = 'gpt',
+    modelVersion: string = 'gpt-4o'
+  ) => {
     const messages = [
       createTextMessage("user", question)
     ];
 
     const options = {
-      model: model, // 'gpt-4', 'gpt-3.5-turbo', 'gemini-pro', 'claude-3-opus', etc.
-      temperature: 0.7,
-      max_tokens: 1000
+      modelId,        // 'gpt', 'gemini', or 'claude'
+      modelVersion,   // Specific version like 'gpt-4o', 'gemini-pro', 'claude-3-opus'
+      temperature: 0.7
     };
 
     const result = await generateLLM(messages, ims.token, ims.apiKey, options);
@@ -71,6 +75,43 @@ function ChatComponent() {
     return response;
   };
 }
+```
+
+### API Reference
+
+**CRITICAL: The API requires separate `modelId` and `modelVersion` fields.**
+
+```typescript
+const options = {
+  modelId: string,       // Required: 'gpt', 'gemini', or 'claude'
+  modelVersion: string,  // Required: Specific version (see table below)
+  temperature?: number,  // Optional: 0.0 to 1.0 (default varies by model)
+  // Note: max_tokens is NOT supported in the current API
+};
+```
+
+**Model Family and Version Mapping:**
+
+| modelId | modelVersion Options |
+|---------|---------------------|
+| `'gpt'` | `'gpt-4'`, `'gpt-4o'`, `'gpt-3.5-turbo'`, `'gpt-4-turbo'` |
+| `'gemini'` | `'gemini-pro'`, `'gemini-2.5-flash'`, `'gemini-ultra'` |
+| `'claude'` | `'claude-3-opus'`, `'claude-3-sonnet'`, `'claude-3-haiku'` |
+
+**Common Migration Errors:**
+
+❌ **Wrong** (will fail):
+```typescript
+const options = { model: 'gpt-4', temperature: 0.7 };  // 'model' field doesn't exist
+```
+
+✅ **Correct**:
+```typescript
+const options = {
+  modelId: 'gpt',
+  modelVersion: 'gpt-4o',
+  temperature: 0.7
+};
 ```
 
 ### Framework-Agnostic Usage
@@ -86,7 +127,10 @@ await IMS.ready;
 
 // Make API call
 const messages = [createTextMessage("user", "Tell me about Adobe Firefly")];
-const result = await generateLLM(messages, IMS.token, IMS.apiKey, { model: 'gpt-4' });
+const result = await generateLLM(messages, IMS.token, IMS.apiKey, {
+  modelId: 'gpt',
+  modelVersion: 'gpt-4o'
+});
 const response = result.choices[0].message.content[0].text;
 ```
 
@@ -101,9 +145,9 @@ const response = result.choices[0].message.content[0].text;
 
 | User Request | Correct Response |
 |--------------|------------------|
-| "Use OpenAI" | Use `generateLLM` with `model: 'gpt-4'` from adobe3p |
-| "Use Gemini" | Use `generateLLM` with `model: 'gemini-pro'` from adobe3p |
-| "Use Claude" | Use `generateLLM` with `model: 'claude-3-opus'` from adobe3p |
+| "Use OpenAI" | Use `generateLLM` with `modelId: 'gpt', modelVersion: 'gpt-4o'` from adobe3p |
+| "Use Gemini" | Use `generateLLM` with `modelId: 'gemini', modelVersion: 'gemini-pro'` from adobe3p |
+| "Use Claude" | Use `generateLLM` with `modelId: 'claude', modelVersion: 'claude-3-opus'` from adobe3p |
 | "Install openai package" | **STOP** - Explain adobe3p provides OpenAI access |
 
 ## Workflow
@@ -124,7 +168,10 @@ Guide users to import and use the appropriate package:
 import { generateLLM, createTextMessage } from '@adtech/protopack-services-adobe3p';
 
 const messages = [createTextMessage("user", "Explain Firefly API")];
-const result = await generateLLM(messages, token, apiKey, { model: 'gpt-4' });
+const result = await generateLLM(messages, token, apiKey, {
+  modelId: 'gpt',
+  modelVersion: 'gpt-4o'
+});
 const response = result.choices[0].message.content[0].text;
 
 // Example: Firefly image generation
