@@ -13,6 +13,15 @@ import { test, expect } from '@playwright/test';
  * 3. Run tests: pnpm playwright:test
  */
 
+interface WindowWithIMS extends Window {
+  adobeIMSAuthToken?: string;
+  IMS?: {
+    profileData?: {
+      email?: string;
+    };
+  };
+}
+
 test.describe('Adobe IMS Authentication', () => {
   test('should load app with authenticated user', async ({ page }) => {
     // Navigate to the app
@@ -20,12 +29,12 @@ test.describe('Adobe IMS Authentication', () => {
 
     // Wait for IMS to initialize
     await page.waitForFunction(
-      () => typeof (window as any).adobeIMSAuthToken !== 'undefined',
+      () => typeof (window as WindowWithIMS).adobeIMSAuthToken !== 'undefined',
       { timeout: 10000 }
     );
 
     // Verify auth token is present in window
-    const token = await page.evaluate(() => (window as any).adobeIMSAuthToken);
+    const token = await page.evaluate(() => (window as WindowWithIMS).adobeIMSAuthToken);
     expect(token).toBeTruthy();
     expect(typeof token).toBe('string');
     expect(token.length).toBeGreaterThan(0);
@@ -54,7 +63,7 @@ test.describe('Adobe IMS Authentication', () => {
     // Wait for IMS to be ready and profile to load
     await page.waitForFunction(
       () => {
-        const ims = (window as any).IMS;
+        const ims = (window as WindowWithIMS).IMS;
         return ims && ims.profileData && ims.profileData.email;
       },
       { timeout: 15000 }
@@ -62,7 +71,7 @@ test.describe('Adobe IMS Authentication', () => {
 
     // Get profile data
     const profileEmail = await page.evaluate(() => {
-      const ims = (window as any).IMS;
+      const ims = (window as WindowWithIMS).IMS;
       return ims?.profileData?.email;
     });
 
@@ -89,13 +98,13 @@ test.describe('Authentication State Persistence', () => {
   test('auth state persists across page reloads', async ({ page }) => {
     // First load
     await page.goto('/');
-    await page.waitForFunction(() => (window as any).adobeIMSAuthToken);
-    const token1 = await page.evaluate(() => (window as any).adobeIMSAuthToken);
+    await page.waitForFunction(() => (window as WindowWithIMS).adobeIMSAuthToken);
+    const token1 = await page.evaluate(() => (window as WindowWithIMS).adobeIMSAuthToken);
 
     // Reload the page
     await page.reload();
-    await page.waitForFunction(() => (window as any).adobeIMSAuthToken);
-    const token2 = await page.evaluate(() => (window as any).adobeIMSAuthToken);
+    await page.waitForFunction(() => (window as WindowWithIMS).adobeIMSAuthToken);
+    const token2 = await page.evaluate(() => (window as WindowWithIMS).adobeIMSAuthToken);
 
     // Token should be the same (loaded from saved state)
     expect(token1).toBe(token2);

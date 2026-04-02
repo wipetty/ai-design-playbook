@@ -44,20 +44,27 @@ fi
 echo "✅ Files copied successfully"
 echo ""
 
-# Update CLAUDE.md configuration section
-echo "📝 Updating CLAUDE.md..."
-if [ -f CLAUDE.md ]; then
+# Update CLAUDE.md configuration section (or AGENTS.md if it's a symlink)
+echo "📝 Updating configuration..."
+CONFIG_FILE="CLAUDE.md"
+if [ -L "$CONFIG_FILE" ]; then
+  # CLAUDE.md is a symlink, update the target instead
+  CONFIG_FILE=$(readlink "$CONFIG_FILE")
+  echo "   (CLAUDE.md is a symlink to $CONFIG_FILE)"
+fi
+
+if [ -f "$CONFIG_FILE" ]; then
   # macOS sed requires -i with backup extension, Linux doesn't
   if [[ "$OSTYPE" == "darwin"* ]]; then
-    sed -i '' "s/\*\*Framework:\*\* .*/\*\*Framework:\*\* $FRAMEWORK/" CLAUDE.md
-    sed -i '' "s/\*\*Status:\*\* .*/\*\*Status:\*\* ✅ Setup complete/" CLAUDE.md
+    sed -i '' "s/\*\*Framework:\*\* .*/\*\*Framework:\*\* $FRAMEWORK/" "$CONFIG_FILE"
+    sed -i '' "s/\*\*Status:\*\* .*/\*\*Status:\*\* ✅ Setup complete/" "$CONFIG_FILE"
   else
-    sed -i "s/\*\*Framework:\*\* .*/\*\*Framework:\*\* $FRAMEWORK/" CLAUDE.md
-    sed -i "s/\*\*Status:\*\* .*/\*\*Status:\*\* ✅ Setup complete/" CLAUDE.md
+    sed -i "s/\*\*Framework:\*\* .*/\*\*Framework:\*\* $FRAMEWORK/" "$CONFIG_FILE"
+    sed -i "s/\*\*Status:\*\* .*/\*\*Status:\*\* ✅ Setup complete/" "$CONFIG_FILE"
   fi
-  echo "✅ CLAUDE.md updated"
+  echo "✅ Configuration updated"
 else
-  echo "⚠️  Warning: CLAUDE.md not found, skipping update"
+  echo "⚠️  Warning: Configuration file not found, skipping update"
 fi
 echo ""
 

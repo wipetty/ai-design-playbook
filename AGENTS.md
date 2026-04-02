@@ -22,8 +22,8 @@ After setup completes:
 
 ## Project Configuration
 
-**Framework:** react
-**Status:** ✅ Setup complete
+**Framework:** React (default - will be updated after setup)
+**Status:** ⚠️ Setup required - run the interview to configure
 
 ---
 

@@ -15,9 +15,9 @@ function App() {
             width: "100vw",
           }}
         >
+          <h2>Welcome to the Clean Slate template</h2>
           <div>
-            This will be replaced with the main app. Use the AI agent to
-            generate code for the app.
+            Start by asking the agent to <code>Set up the project</code>.
           </div>
         </div>
       </IMSProvider>

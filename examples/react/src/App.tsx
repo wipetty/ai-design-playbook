@@ -16,8 +16,8 @@ function App() {
           }}
         >
           <div>
-            This will be replaced with the main app. Use the AI agent to
-            generate code for the app.
+            Your app is now running. Describe the kind of application you want
+            to make piece by piece to the agent.
           </div>
         </div>
       </IMSProvider>
