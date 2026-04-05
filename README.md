@@ -375,6 +375,22 @@ pnpm playwright:test # Run Playwright tests
 pnpm playwright:clean # Clear auth state
 ```
 
+## AI Coding Platform Support
+
+This template works with Claude Code, Cursor, and Codex:
+
+**File Discovery:**
+- **Claude Code**: Reads `CLAUDE.md` (symlink → `AGENTS.md`) + loads `.claude/rules/*.mdc` files
+- **Cursor**: Loads `.cursor/rules/*.mdc` files directly (especially `setup-check.mdc`)
+- **Codex**: Reads `AGENTS.md` only, does NOT automatically load `.mdc` files
+
+**Setup Interview:**
+The setup interview is triggered by `SETUP.md` presence and works across all platforms:
+- **Claude Code/Codex**: Read setup instructions from `AGENTS.md` (which references `setup-check.mdc`)
+- **Cursor**: Load setup instructions directly from `.cursor/rules/setup-check.mdc`
+
+This multi-platform approach ensures the template works consistently across different AI coding assistants.
+
 ## Resources
 
 - [Spectrum S2 Documentation](https://react-spectrum.adobe.com/react-spectrum/)

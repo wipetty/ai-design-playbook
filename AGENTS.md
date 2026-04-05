@@ -2,7 +2,11 @@
 
 ## First-Time Setup
 
-**⚠️ IMPORTANT: If SETUP.md exists in this project, setup is incomplete.**
+**⚠️ IMPORTANT: Before responding to any user request, you MUST read and follow the instructions in `.agents/rules/setup-check.mdc`.**
+
+This file contains the complete setup check logic. Here's a summary:
+
+**If SETUP.md exists in this project, setup is incomplete.**
 
 When SETUP.md is present, your AI assistant will automatically start a setup interview to configure this template. The interview takes ~5 minutes and covers:
 
