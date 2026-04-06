@@ -1,14 +1,18 @@
 {
-  "name": "protopack-template-default",
+  "name": "protopack-base-template",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "packageManager": "pnpm@10.17.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "tsc --noEmit && eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "duplicate": "bash -c 'BASE_NAME=${1:-$(basename \"$PWD\")-copy}; NAME=$BASE_NAME; COUNTER=2; while [ -d \"../$NAME\" ]; do NAME=\"${BASE_NAME}-${COUNTER}\"; COUNTER=$((COUNTER + 1)); done; rsync -av --exclude=node_modules --exclude=.git --exclude=dist --exclude=build --exclude=.cache --exclude=.turbo --exclude=coverage --exclude=.auth --exclude=.worktrees --exclude=pnpm-lock.yaml --exclude=\"*.log\" . \"../$NAME\" && echo \"\\n✓ Duplicated to ../$NAME\\n\\nNext steps:\\n  cd ../$NAME\\n  pnpm install\\n  pnpm dev\"' _ ",
+    "playwright:auth": "tsx playwright.auth.setup.ts",
+    "playwright:test": "playwright test",
+    "playwright:clean": "node -e \"require('fs').rmSync('.auth/playwright-state.json', { force: true });\""
   },
   "dependencies": {
     "@adtech/protopack-services-all": "latest",
@@ -19,7 +23,10 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "lightningcss": "^1.28.0",
+    "unplugin-parcel-macros": "^0.2.0",
     "@eslint/js": "^9.21.0",
+    "@playwright/test": "^1.58.2",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",

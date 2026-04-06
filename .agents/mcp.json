@@ -1,30 +1,18 @@
 {
   "mcpServers": {
-    "figma": {
-      "url": "http://127.0.0.1:3845/mcp"
+    "Figma": {
+      "url": "https://mcp.figma.com/mcp",
+      "headers": {}
     },
     "playwright": {
       "command": "npx",
       "args": [
         "@playwright/mcp@latest"
-      ]
-    },
-    "adobe-express-add-on": {
-      "command": "npx",
-      "args": ["@adobe/express-developer-mcp@latest", "--yes"]
-    },
-    "adobe-photoshop-mcp": {
-      "command": "npx",
-      "args": ["@adobe/photoshop-mcp@latest"]
-    },
-    "adobe-photoshop-agentic": {
-      "url": "https://di-agent-stage.adobe.io/mcp"
-    },
-    "adobe-acrobat": {
-      "url": "https://acrobat-mcp.adobe.io/mcp/call"
-    },
-    "adobe-express-remote": {
-      "url": "https://express-mcp-service-stage.adobe.io/mcp"
+      ],
+      "env": {
+        "PLAYWRIGHT_STORAGE_STATE": ".auth/playwright-state.json",
+        "PLAYWRIGHT_IGNORE_HTTPS_ERRORS": "true"
+      }
     }
   }
 }
