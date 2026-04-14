@@ -43,7 +43,11 @@ pnpm dev
 pnpm playwright:auth
 ```
 
-Visit `https://localhost:5173` and sign in with your Adobe credentials.
+The auth script will:
+1. Try to extract authentication from your Chrome browser (if already logged in)
+2. If that fails, open a browser for you to sign in with Adobe credentials
+
+Most users are already logged into Adobe, so authentication happens automatically!
 
 ## Project Structure
 

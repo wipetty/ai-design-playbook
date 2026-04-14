@@ -509,36 +509,38 @@ ls -la .auth/playwright-state.json
 
 ### Setting Up Authentication
 
-**One-time setup (or when tokens expire):**
+**Quick Setup (Recommended):**
 
-1. Start the dev server (HTTPS required for IMS):
-   ```bash
-   pnpm dev
-   ```
-
-2. Run the auth setup script:
-   ```bash
-   pnpm playwright:auth
-   ```
-
-   This opens a browser where you log in with Adobe credentials. The script automatically detects when authentication completes and saves the state.
-
-**Using a custom port:**
-
-If your dev server runs on a different port, specify it:
-
+Simply run:
 ```bash
-# Method 1: Pass port as argument
-pnpm playwright:auth 3000
-
-# Method 2: Use environment variable
-PORT=3000 pnpm playwright:auth
-
-# Method 3: Use VITE_PORT
-VITE_PORT=3000 pnpm playwright:auth
+pnpm playwright:auth
 ```
 
-The script will automatically check that the server is running on the specified port.
+This uses a **smart two-tier approach**:
+
+1. **First:** Tries to extract authentication from your existing browser (Chrome)
+   - If you're already logged into Adobe in Chrome → Done in ~2 seconds!
+   - No manual login needed
+
+2. **Fallback:** If extraction fails, opens a browser for manual login
+   - Log in with your Adobe credentials
+   - Script automatically detects when authentication completes
+   - Saves the state for future use
+
+**Most users (already logged into Adobe) never need to manually authenticate!**
+
+**Alternative Commands:**
+
+```bash
+# Direct extraction only (skip manual fallback)
+pnpm playwright:extract-auth
+
+# Skip extraction, go straight to manual login
+pnpm playwright:auth-manual
+
+# Clean and re-authenticate
+pnpm playwright:clean && pnpm playwright:auth
+```
 
 ### Using playwright-cli
 
