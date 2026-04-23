@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import macros from "unplugin-parcel-macros";
 import mkcert from "vite-plugin-mkcert";
 import checker from "vite-plugin-checker";
+import { consoleForwardPlugin } from "vite-console-forward-plugin";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, isPreview }) => {
@@ -12,7 +13,7 @@ export default defineConfig(({ command, isPreview }) => {
       macros.vite(), // Must be first for S2 style macros
       react(),
       mkcert(),
-      command === "serve" && !isPreview && checker({ typescript: true, enableBuild: false }),
+      ...(command === "serve" && !isPreview ? [checker({ typescript: true, enableBuild: false }), consoleForwardPlugin()] : []),
     ],
     build: {
       target: ["es2022"],
