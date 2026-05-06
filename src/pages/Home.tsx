@@ -66,7 +66,7 @@ export function Home() {
   ];
 
   return (
-    <>
+    <div className="page-enter">
       {/* HERO */}
       <section className="hero hero-grid">
         <div className="hero-bg" aria-hidden="true">
@@ -100,9 +100,8 @@ export function Home() {
 
           <div className="hero-bottom">
             <p className="hero-lede">
-              A field guide for using AI as a craft tool, not a magic trick.
-              Mindset, setup, and craft for designers who want to stay
-              opinionated.
+              A field guide to vibe coding, shipping, and everything between.
+              For designers who want to stay opinionated.
             </p>
             <Link
               to={`/${featuredPart.id}/${featured.id}`}
@@ -353,7 +352,7 @@ export function Home() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }
 
