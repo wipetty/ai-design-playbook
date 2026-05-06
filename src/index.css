@@ -2603,17 +2603,72 @@ em {
    ============================================================ */
 
 .page-enter {
-  animation: page-enter 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: page-enter 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transform-origin: 50% 0%;
 }
 
 @keyframes page-enter {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(10px) scale(0.992);
+    filter: blur(8px);
+  }
+  60% {
+    filter: blur(0);
   }
   to {
     opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/*
+ * Stagger the major regions of a chapter article so the page resolves
+ * top-down instead of all at once.
+ */
+.page-enter .breadcrumb,
+.page-enter .chapter-eyebrow,
+.page-enter .chapter-page-title,
+.page-enter .chapter-page-summary,
+.page-enter .chapter-body,
+.page-enter .chapter-pager {
+  animation: page-rise 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform, filter;
+}
+
+.page-enter .breadcrumb {
+  animation-delay: 80ms;
+}
+.page-enter .chapter-eyebrow {
+  animation-delay: 180ms;
+}
+.page-enter .chapter-page-title {
+  animation-delay: 260ms;
+}
+.page-enter .chapter-page-summary {
+  animation-delay: 420ms;
+}
+.page-enter .chapter-body {
+  animation-delay: 540ms;
+}
+.page-enter .chapter-pager {
+  animation-delay: 720ms;
+}
+
+@keyframes page-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(28px);
+    filter: blur(10px);
+  }
+  55% {
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
   }
 }
 
@@ -2839,7 +2894,8 @@ em {
   .seal-svg,
   .marquee-track,
   .hero-status-dot,
-  .page-enter {
+  .page-enter,
+  .page-enter * {
     animation: none !important;
   }
   .reading-progress-bar {

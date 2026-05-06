@@ -270,7 +270,7 @@ export const playbook: Part[] = [
                     icon: "layers",
                     eyebrow: "Adobe",
                     title: "The infrastructure is in place",
-                    text: "Protopack, Spectrum, the Firefly Platform repo, and the MCP servers that wire agents into the real codebase. The Image Frontier Team is already shipping features into production this way. It's not theoretical.",
+                    text: "The infrastructure is in place at Adobe. Protopack, Spectrum, the Firefly Platform repo, the MCP servers that wire agents into the real codebase. Cross-functional AI pods like the Image Frontier Team — small groups of designers, engineers, and PMs working tightly together with AI as a shared tool — are already shipping features into production this way. It's not theoretical.",
                     image: {
                       src: "/images/protopack-community.png",
                       alt: "Protopack community page showing a grid of starter projects from Adobe teams.",
