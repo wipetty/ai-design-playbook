@@ -262,7 +262,210 @@ function Block({ block }: { block: SectionBlock }) {
 
     case "slope":
       return <SlopeChart block={block} />;
+
+    case "stageStack":
+      return <StageStack block={block} />;
+
+    case "roomDiagram":
+      return <RoomDiagram block={block} />;
+
+    case "mirror":
+      return <MirrorDiagram block={block} />;
   }
+}
+
+function StageStack({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "stageStack" }>;
+}) {
+  const stages = [...block.stages].reverse();
+  const top = stages[0];
+  const attentionLabel = block.attentionLabel ?? "Where your attention is";
+
+  return (
+    <figure className="cb-stack-diagram">
+      <ol className="cb-stack-layers" role="list">
+        {stages.map((s, i) => {
+          const isTop = i === 0;
+          return (
+            <li
+              key={s.number}
+              className={`cb-stack-layer${isTop ? " cb-stack-layer-top" : ""}`}
+            >
+              <div className="cb-stack-layer-row">
+                <span className="cb-stack-layer-num">{s.number}</span>
+                <div className="cb-stack-layer-body">
+                  <p className="cb-stack-layer-name">{s.name}</p>
+                  <p className="cb-stack-layer-verb">{s.verb}</p>
+                </div>
+                {isTop && top && (
+                  <span className="cb-stack-pin" aria-hidden="true">
+                    <span className="cb-stack-pin-dot" />
+                    <span className="cb-stack-pin-label">{attentionLabel}</span>
+                  </span>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+      {block.caption && (
+        <figcaption className="cb-stack-diagram-caption">{block.caption}</figcaption>
+      )}
+    </figure>
+  );
+}
+
+function RoomDiagram({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "roomDiagram" }>;
+}) {
+  return (
+    <figure className="cb-room">
+      <div className="cb-room-stage">
+        <div className="cb-room-center" aria-hidden="true">
+          <span className="cb-room-pulse cb-room-pulse-1" />
+          <span className="cb-room-pulse cb-room-pulse-2" />
+          <span className="cb-room-center-label">{block.center}</span>
+        </div>
+        <ul className="cb-room-chips" role="list">
+          {block.chips.map((chip, i) => (
+            <li
+              key={i}
+              className="cb-room-chip"
+              style={{ ["--i" as string]: String(i) }}
+            >
+              {chip}
+            </li>
+          ))}
+        </ul>
+      </div>
+      {block.caption && (
+        <figcaption className="cb-room-caption">{block.caption}</figcaption>
+      )}
+    </figure>
+  );
+}
+
+function MirrorDiagram({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "mirror" }>;
+}) {
+  const self = block.self ?? "You";
+  const center = block.center ?? "Model";
+  const forwardLabel = block.forwardLabel ?? "thought";
+  const returnLabel = block.returnLabel ?? "reflection";
+
+  /*
+   * One shared coordinate system. viewBox 800×260, aspect-ratio applied
+   * to the wrapping figure so SVG scales uniformly without distortion.
+   */
+  return (
+    <figure className="cb-mirror">
+      <svg
+        className="cb-mirror-svg"
+        viewBox="0 0 800 260"
+        role="img"
+        aria-label="Diagram showing thought going from you to the model and reflection coming back"
+      >
+        <defs>
+          <marker
+            id="cb-mirror-arrow-fwd"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+          <marker
+            id="cb-mirror-arrow-back"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+        </defs>
+
+        <text
+          x="400"
+          y="36"
+          className="cb-mirror-arc-label cb-mirror-arc-label-fwd"
+          textAnchor="middle"
+        >
+          {forwardLabel}
+        </text>
+        <path
+          className="cb-mirror-arc cb-mirror-arc-fwd"
+          d="M 200 110 Q 400 30 600 110"
+          markerEnd="url(#cb-mirror-arrow-fwd)"
+        />
+
+        <path
+          className="cb-mirror-arc cb-mirror-arc-back"
+          d="M 600 150 Q 400 230 200 150"
+          markerEnd="url(#cb-mirror-arrow-back)"
+        />
+        <text
+          x="400"
+          y="248"
+          className="cb-mirror-arc-label cb-mirror-arc-label-back"
+          textAnchor="middle"
+        >
+          {returnLabel}
+        </text>
+
+        <g className="cb-mirror-node cb-mirror-node-self">
+          <rect
+            className="cb-mirror-node-rect"
+            x="60"
+            y="98"
+            width="180"
+            height="64"
+            rx="18"
+          />
+          <text x="150" y="130" textAnchor="middle">
+            {self}
+          </text>
+        </g>
+
+        <g className="cb-mirror-node cb-mirror-node-center">
+          <rect
+            className="cb-mirror-node-halo"
+            x="548"
+            y="86"
+            width="204"
+            height="88"
+            rx="26"
+          />
+          <rect
+            className="cb-mirror-node-rect"
+            x="560"
+            y="98"
+            width="180"
+            height="64"
+            rx="18"
+          />
+          <text x="650" y="130" textAnchor="middle">
+            {center}
+          </text>
+        </g>
+      </svg>
+
+      {block.caption && (
+        <figcaption className="cb-mirror-caption">{block.caption}</figcaption>
+      )}
+    </figure>
+  );
 }
 
 function SlopeChart({

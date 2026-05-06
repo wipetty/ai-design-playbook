@@ -87,6 +87,30 @@ export type SectionBlock =
         context: number;
         dependencies: number;
       }[];
+    }
+  | {
+      kind: "stageStack";
+      caption?: string;
+      attentionLabel?: string;
+      stages: {
+        number: string;
+        name: string;
+        verb: string;
+      }[];
+    }
+  | {
+      kind: "roomDiagram";
+      caption?: string;
+      center: string;
+      chips: string[];
+    }
+  | {
+      kind: "mirror";
+      caption?: string;
+      self?: string;
+      center?: string;
+      forwardLabel?: string;
+      returnLabel?: string;
     };
 
 export interface Part {
@@ -616,24 +640,202 @@ export const playbook: Part[] = [
         title: "The AI adoption journey",
         summary:
           "Where most designers start, where they grow into, and which habits compound over months instead of days.",
-        readTime: "2 min",
+        readTime: "7 min",
         sections: [
           {
-            heading: "Stage one: AI as a faster pencil",
-            body: "Most designers begin by using AI to do things they already do, only faster. Drafting copy, generating reference imagery, summarizing research notes. This stage is real work and worth doing well, but it is not where the leverage lives. If you stop here, AI is a productivity boost, not a craft change.",
+            heading: "There is no single starting line",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Some designers reading this have been writing prompts for two years and shipping production code with Claude Code for the last six months. Some haven't opened a chat window outside of asking for a recipe. Most are somewhere in between, and most also feel slightly behind whoever they last talked to about it.",
+              },
+              {
+                kind: "paragraph",
+                text: "That feeling is almost always wrong.",
+              },
+              {
+                kind: "pullquote",
+                text: "The field is younger than the social anxiety around it suggests, and the people who seem furthest ahead are usually behind someone else.",
+              },
+              {
+                kind: "paragraph",
+                text: "The useful question isn't how far along am I. It's what am I currently learning to do with the model. Three things tend to come in sequence, but they overlap, and you can be early on one while being late on another.",
+              },
+            ],
           },
           {
-            heading: "Stage two: AI as a build partner",
-            body: "The next stage starts when you let AI build the thing instead of just describe it. You move from generating mockups to generating components. From writing prompts to running plans. From sending screenshots to opening pull requests. The work feels less like writing a brief and more like pairing with a fast, literal collaborator who needs clear context.",
+            heading: "Stage one: AI as a faster version of what you already do",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "You hand the model a task you already know how to do, and you let it do that task for you. Rewrite this paragraph. Summarize this user interview. Generate three subject lines. Make this list less wordy. The work doesn't change shape — you're producing the same kinds of artifacts you produced before — it just takes less time and less of your finite attention.",
+              },
+              {
+                kind: "paragraph",
+                text: "This stage gets dismissed too easily. People talk about it like it's the kiddie pool, something to graduate out of. But the gains here are real, they compound, and they free up cognitive room for the stages that come next. A designer who saves twenty minutes on every research synthesis has another twenty minutes to think about the actual product, and that's not a small thing.",
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "spark",
+                title: "Cue to push into stage two",
+                text: "You stop discovering new tasks to delegate. You've found your handful, you reach for the model reflexively, and the productivity curve flattens out.",
+              },
+            ],
+          },
+          {
+            heading: "Stage two: AI as a thinking partner",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "This is the shift from \"the model does the task\" to \"the model and I figure out the task together.\" You stop asking it to summarize the interview and start asking what patterns it noticed across the last five — and then arguing with what it says. You stop asking for three subject lines and start asking it to challenge the brief itself. You bring the model in earlier, when the answer isn't obvious yet, the way you'd use a quick conversation with a thoughtful colleague: not to get the answer, but to get unstuck.",
+              },
+              {
+                kind: "mirror",
+                self: "You",
+                center: "Model",
+                forwardLabel: "thought",
+                returnLabel: "reflection",
+                caption:
+                  "The exchange tightens with each turn — half-formed ideas go out, sharper ones come back, and you keep going until the shape of the answer is one you both built.",
+              },
+              {
+                kind: "pullquote",
+                text: "Stop performing decisiveness in your prompts. Start using the model as a mirror for the parts of your thinking that haven't fully formed.",
+              },
+              {
+                kind: "paragraph",
+                text: "The mental adjustment here is harder than it sounds. Designers are trained to walk into rooms with conviction. Showing up to a model in a state of genuine uncertainty — \"I don't know how to think about this yet, help me\" — feels off-script. The designers who break through this stage are the ones who let go of the performance.",
+              },
+              {
+                kind: "wink",
+                text: "Vibe coding starts to matter here — not as a milestone, but because it's a collaboration mode. If you've never used AI as a thinking partner, vibe coding will feel chaotic. If you have, it'll feel like a natural extension of how you already work.",
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "spark",
+                title: "Cue to push into stage three",
+                text: "A static Figma frame stops carrying the concept. The idea is an interaction, a feel, a flow you can't pin to a rectangle. The only way to share it is to build it — and for that to work without re-explaining everything, the model needs your design system, components, and conventions already in the room.",
+              },
+            ],
+          },
+          {
+            heading: "Stage three: AI as a system you shape",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "At some point you notice that the quality of your collaborations with the model depends less on how you prompt and more on what's in the room with you. The model is only as useful as the context it's working inside — the design system docs you've fed it, the conventions you've written down, the components it can see, the canonical examples it can reach for.",
+              },
+              {
+                kind: "paragraph",
+                text: "The work shifts from talking to the model to building the conditions in which the model can do good work without much talking at all. You start writing CLAUDE.md files. You connect MCP servers to your design system and to Figma. You build small skills that encode the things you find yourself explaining over and over. You think about context the way an engineer thinks about caches: what survives across sessions, what goes stale, what you trust the model to reach for unprompted.",
+              },
+              {
+                kind: "roomDiagram",
+                center: "Model",
+                chips: [
+                  "Design system",
+                  "Components",
+                  "MCP servers",
+                  "Figma file",
+                  "CLAUDE.md",
+                  "Conventions",
+                  "Voice",
+                  "Audience",
+                  "Accessibility floor",
+                  "Past prompts",
+                  "Skills",
+                ],
+                caption:
+                  "What's in the room with the model determines what you can do without re-explaining yourself. Stage three is the work of stocking that room.",
+              },
+              {
+                kind: "pullquote",
+                text: "Less you using AI. More you and AI as a system.",
+              },
+              {
+                kind: "paragraph",
+                text: "The boundary between your skill and the model's gets harder to draw, which is uncomfortable until you accept that it doesn't matter. What matters is what the system can produce together that neither could produce alone.",
+              },
+            ],
+          },
+          {
+            heading: "These stages stack",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "You don't graduate from stage one. You keep delegating; you just do it on autopilot while the more interesting work happens elsewhere. You don't leave collaboration behind when you start shaping the environment either — the environment exists to make collaboration cheaper, not to replace it. A designer working at full strength is doing all three at once: handing off the rote tasks, sparring with the model on the hard ones, and continuously sharpening the context the model operates in.",
+              },
+              {
+                kind: "stageStack",
+                attentionLabel: "Where your attention is",
+                stages: [
+                  {
+                    number: "Stage 01",
+                    name: "Faster pencil",
+                    verb: "Delegate the tasks you already know how to do.",
+                  },
+                  {
+                    number: "Stage 02",
+                    name: "Thinking partner",
+                    verb: "Spar with the model on the parts you haven't figured out.",
+                  },
+                  {
+                    number: "Stage 03",
+                    name: "System you shape",
+                    verb: "Build the conditions the model works inside.",
+                  },
+                ],
+                caption:
+                  "Stages don't replace each other. A designer at stage three is still doing one and two; they just happen on autopilot, and attention has moved to the layer above.",
+              },
+              {
+                kind: "paragraph",
+                text: "What changes is where your attention goes. Early on, you're paying attention to the prompts. Later, to the conversation. Eventually, to everything around the conversation — the docs, the components, the examples, the rules, the team workflow the model is participating in.",
+              },
+              {
+                kind: "pullquote",
+                text: "The prompt itself becomes almost incidental.",
+              },
+            ],
           },
           {
             heading: "What actually compounds",
-            body: "A few habits get more valuable the longer you keep them, and they are not the ones most people brag about. The compounding habits are quiet and boring, and that is exactly why they win.",
-            bullets: [
-              "A growing library of prompts, plans, and rules tied to your real projects.",
-              "A clean development environment you can rebuild on a new machine in under an hour.",
-              "A taxonomy of your design system, audience, and constraints that you paste into context.",
-              "A review rhythm that catches AI slop before it ships.",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The habits that pay off are quiet ones. They don't make for good demos and they don't show up in screenshots, which is part of why they get under-invested in.",
+              },
+              {
+                kind: "checklist",
+                items: [
+                  {
+                    positive: true,
+                    title: "A growing library of prompts and plans tied to real projects",
+                    text: "Not generic templates — the actual messy ones that worked, kept somewhere you can find them again.",
+                  },
+                  {
+                    positive: true,
+                    title: "An environment you can rebuild in under an hour",
+                    text: "Cursor or Claude Code installed, MCPs connected, repo access working, the small frictions already solved.",
+                  },
+                  {
+                    positive: true,
+                    title: "Living context for your work",
+                    text: "Your design system, audience, and constraints written in the model's idiom, updated when things change, pasted in at the start of every serious session.",
+                  },
+                  {
+                    positive: true,
+                    title: "A review rhythm that catches drift",
+                    text: "A standing habit for noticing when AI-generated output has wandered from your design system, your voice, or your accessibility floor — and the discipline to push back when it has.",
+                  },
+                ],
+              },
+              {
+                kind: "paragraph",
+                text: "None of these are exciting. All of them are the actual difference, six months in, between a designer whose AI practice has compounded and a designer whose practice is still where it was when they started.",
+              },
             ],
           },
         ],
