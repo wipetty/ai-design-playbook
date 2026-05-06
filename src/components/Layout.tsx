@@ -1,8 +1,26 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import type { ReactNode } from "react";
 import ThemeToggle from "./ThemeToggle";
 
 export function Layout({ children }: { children: ReactNode }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const scrollToId = (id: string) => {
+    document
+      .getElementById(id)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handleHashLink = (id: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (location.pathname === "/") {
+      scrollToId(id);
+    } else {
+      navigate("/", { state: { scrollTo: id } });
+    }
+  };
+
   return (
     <div className="layout">
       <header className="site-header">
@@ -13,16 +31,10 @@ export function Layout({ children }: { children: ReactNode }) {
           </Link>
           <div className="site-header-right">
             <nav className="site-nav" aria-label="Primary">
-              <Link to="/">Contents</Link>
-              <a
-                href="#about"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document
-                    .getElementById("about")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
+              <a href="#contents-heading" onClick={handleHashLink("contents-heading")}>
+                Contents
+              </a>
+              <a href="#about" onClick={handleHashLink("about")}>
                 About
               </a>
             </nav>

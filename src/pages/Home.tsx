@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { playbook, getTotalChapters } from "../data/playbook";
 import Seal from "../components/Seal";
 
@@ -7,6 +7,18 @@ const minutesFromReadTime = (s: string) => parseInt(s.replace(/[^\d]/g, ""), 10)
 
 export function Home() {
   const [marqueePaused, setMarqueePaused] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const state = location.state as { scrollTo?: string } | null;
+    const target = state?.scrollTo;
+    if (!target) return;
+    const el = document.getElementById(target);
+    if (!el) return;
+    requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [location.state]);
   const totalChapters = getTotalChapters();
   const allChapters = playbook.flatMap((p) => p.chapters);
   const totalMinutes = allChapters.reduce(
