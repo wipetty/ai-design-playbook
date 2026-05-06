@@ -2,6 +2,7 @@ import { Link, useParams, Navigate } from "react-router-dom";
 import { getChapter } from "../data/playbook";
 import SectionBlocks from "../components/SectionBlocks";
 import ReadingProgress from "../components/ReadingProgress";
+import ChapterToc from "../components/ChapterToc";
 
 const slugify = (s: string) =>
   s
@@ -99,6 +100,9 @@ export function ChapterPage() {
             ) : (
               <span />
             )}
+            <div className="pager-toc">
+              <ChapterToc />
+            </div>
             {next ? (
               <Link
                 to={`/${next.partId}/${next.chapterId}`}

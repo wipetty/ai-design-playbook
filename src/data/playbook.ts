@@ -39,6 +39,7 @@ export type SectionBlock =
       icon?: IconName;
       title?: string;
       text: string;
+      image?: { src: string; alt: string; caption?: string };
     }
   | { kind: "quote"; text: string; attribution?: string }
   | { kind: "pullquote"; text: string }
@@ -50,6 +51,7 @@ export type SectionBlock =
         eyebrow?: string;
         title: string;
         text: string;
+        meta?: string;
         image?: { src: string; alt: string };
       }[];
     }
@@ -68,7 +70,18 @@ export type SectionBlock =
       kind: "checklist";
       items: { positive: boolean; title: string; text: string }[];
     }
-  | { kind: "steps"; items: { title: string; text: string }[] }
+  | {
+      kind: "steps";
+      items: {
+        title: string;
+        text: string;
+        image?: {
+          src: string;
+          alt: string;
+          variant?: "thumbnail" | "logo";
+        };
+      }[];
+    }
   | {
       kind: "stats";
       items: { value: string; label: string; meta?: string }[];
@@ -111,6 +124,54 @@ export type SectionBlock =
       center?: string;
       forwardLabel?: string;
       returnLabel?: string;
+    }
+  | {
+      kind: "figureGrid";
+      columns?: 2 | 3;
+      caption?: string;
+      items: {
+        eyebrow?: string;
+        caption: string;
+        image: { src: string; alt: string };
+      }[];
+    }
+  | {
+      kind: "figure";
+      image: { src: string; alt: string };
+      eyebrow?: string;
+      caption?: string;
+    }
+  | {
+      kind: "code";
+      label?: string;
+      language?: string;
+      text: string;
+    }
+  | {
+      kind: "anatomy";
+      label?: string;
+      lines: { text: string; mark?: number }[];
+      notes: { mark: number; label: string; text: string }[];
+      caption?: string;
+    }
+  | {
+      kind: "balance";
+      left: { label: string; text: string };
+      right: { label: string; text: string };
+      tilt?: "left" | "right" | "even";
+      caption?: string;
+    }
+  | {
+      kind: "bento";
+      caption?: string;
+      items: {
+        size?: "hero" | "wide" | "tall" | "small";
+        eyebrow?: string;
+        title: string;
+        text: string;
+        icon?: IconName;
+        accent?: boolean;
+      }[];
     };
 
 export interface Part {
@@ -294,7 +355,7 @@ export const playbook: Part[] = [
                     icon: "layers",
                     eyebrow: "Adobe",
                     title: "The infrastructure is in place",
-                    text: "The infrastructure is in place at Adobe. Protopack, Spectrum, the Firefly Platform repo, the MCP servers that wire agents into the real codebase. Cross-functional AI pods like the Image Frontier Team — small groups of designers, engineers, and PMs working tightly together with AI as a shared tool — are already shipping features into production this way. It's not theoretical.",
+                    text: "The infrastructure is in place at Adobe. Protopack, Spectrum, the Firefly Platform repo, the MCP servers that wire agents into the real codebase. Cross-functional AI pods like the Image Frontier Team — small groups of designers, engineers, and PMs working tightly together with AI as a shared tool — are already shipping features this way: designers shaping the build, engineers landing the change, all moving on the same loop. It's not theoretical.",
                     image: {
                       src: "/images/protopack-community.png",
                       alt: "Protopack community page showing a grid of starter projects from Adobe teams.",
@@ -309,7 +370,7 @@ export const playbook: Part[] = [
             blocks: [
               {
                 kind: "pullquote",
-                text: "Designers who learn this in the next year will spend the rest of their careers shipping more, faster, with more direct ownership than any previous generation of designers had.",
+                text: "Designers who learn this in the next year will spend the rest of their careers having a hand in more of what ships, faster, with more direct ownership over the build than any previous generation of designers had.",
               },
               {
                 kind: "paragraph",
@@ -647,7 +708,7 @@ export const playbook: Part[] = [
             blocks: [
               {
                 kind: "paragraph",
-                text: "Some designers reading this have been writing prompts for two years and shipping production code with Claude Code for the last six months. Some haven't opened a chat window outside of asking for a recipe. Most are somewhere in between, and most also feel slightly behind whoever they last talked to about it.",
+                text: "Some designers reading this have been writing prompts for two years and contributing production code through Claude Code for the last six months. Some haven't opened a chat window outside of asking for a recipe. Most are somewhere in between, and most also feel slightly behind whoever they last talked to about it.",
               },
               {
                 kind: "paragraph",
@@ -847,61 +908,562 @@ export const playbook: Part[] = [
     number: 2,
     title: "Setup & Tooling",
     description:
-      "Get the machine ready. Pick the editor, wire up the right MCPs, learn what Adobe gives you out of the box, and put rules and skills in their right place.",
+      "Get the machine ready and the codebase in front of you. Pick the editor, work inside a real repo, see what Adobe gives you, and put rules and skills in their right place.",
     chapters: [
       {
         id: "setting-up-your-environment",
         number: 4,
-        title: "Setting up your environment",
+        title: "What you need in front of you",
         summary:
-          "A designer-friendly setup with Cursor or Claude Code, Figma MCP, and the repo access that makes the rest of the playbook possible.",
-        readTime: "2 min",
+          "The setup that makes vibe coding usable: tooling, repo access, the branch-and-PR loop, and the rhythm that ties them together.",
+        readTime: "8 min",
         sections: [
           {
-            heading: "Pick one editor and stay there for a month",
-            body: "Cursor and Claude Code are both strong starting points. Pick one and use it daily for a month before you compare. Switching tools every week looks like exploration and feels like progress, but it resets your muscle memory and your context every time. Stability beats novelty here.",
-          },
-          {
-            heading: "The minimum designer-friendly setup",
-            body: "You do not need to look like an engineer to work like one. A small, predictable setup is enough to do real work and easy to rebuild when something breaks.",
-            bullets: [
-              "An editor with an AI assistant, configured to use a model you trust.",
-              "Access to the repo for the product you actually work on, including a way to run it locally.",
-              "Figma MCP wired in so the assistant can read the file you're designing against.",
-              "A terminal you are not afraid of, even if you only use five commands.",
+            heading: "The whole setup, in one sentence",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Vibe coding is the editor, the model in it, the codebase it can see, and the version-control loop you ship through. Get those four things right and most of the friction disappears. Get any of them wrong and the assistant starts to feel like a chatbot you happen to keep open while you do the real work somewhere else.",
+              },
+              {
+                kind: "pullquote",
+                text: "If you can't run the real product locally, you're not vibe coding — you're prompting.",
+              },
+              {
+                kind: "paragraph",
+                text: "A designer's setup doesn't need to look like an engineer's. It needs to give you the same loop: see the code, change it, run it, share it. Everything in this chapter is in service of that loop.",
+              },
+              {
+                kind: "paragraph",
+                text: "How much of the setup you actually need depends on the mode you're working in. The three modes from chapter 2 each ask for a different amount of this chapter.",
+              },
+              {
+                kind: "table",
+                columns: ["Mode", "What you need from this chapter"],
+                rows: [
+                  [
+                    "Mode 1: New ideas",
+                    "An editor with a model in it. A blank folder is the whole setup. Skip the rest until the idea wants a real product around it.",
+                  ],
+                  [
+                    "Mode 2: Build in context",
+                    "Editor, plus a real product repo cloned and running locally. The branch-and-PR loop is optional — you may demo without ever merging.",
+                  ],
+                  [
+                    "Mode 3: Production",
+                    "All of it. Editor, repo, branch-and-PR loop, and the daily rhythm. No exceptions.",
+                  ],
+                ],
+              },
             ],
           },
           {
-            heading: "Get unstuck without an engineer in the room",
-            body: "Most setup problems are network, permissions, or missing dependencies, in that order. Read the error, paste it into the assistant, and ask for the most likely cause. You will be right enough of the time that the loop tightens fast. Save the team's time for the rare problem the assistant cannot diagnose for you.",
+            heading: "Pick one editor and stay in it for a month",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "[Cursor](https://cursor.com) and [Claude Code](https://www.anthropic.com/claude-code) are both strong starting points. They differ in feel, but the difference is smaller than the difference between using either of them well and bouncing between them weekly. Pick one. Configure it once. Use it daily. If you go with Cursor, chcek out [Cursor shortcuts guide](https://design.dev/guides/cursor-shortcuts) is worth twenty minutes early on — most of the friction designers hit with Cursor disappears once the keyboard becomes muscle memory.",
+              },
+              {
+                kind: "cards",
+                columns: 2,
+                items: [
+                  {
+                    icon: "code",
+                    eyebrow: "Cursor",
+                    title: "An editor with a model inside it",
+                    text: "Closer to a traditional IDE. Good when you want to see the code, edit by hand, and call the assistant when you need it.",
+                    image: {
+                      src: "/images/editor-cursor.png",
+                      alt: "Cursor wordmark and logo set against a dark code editor backdrop with snippets of TypeScript visible behind it.",
+                    },
+                  },
+                  {
+                    icon: "chat",
+                    eyebrow: "Claude Code",
+                    title: "A model with the editor underneath",
+                    text: "Closer to a chat that can act. Good when you want to describe what should change and let the model carry more of the work.",
+                    image: {
+                      src: "/images/editor-claude-code.png",
+                      alt: "Claude Code terminal welcome screen with the Claude Code wordmark in orange ASCII art on a dark background, showing the research preview greeting.",
+                    },
+                  },
+                ],
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "spark",
+                title: "Cue to switch",
+                text: "You've used the same editor daily for a month and you can name a specific thing it stops you from doing. Not a hunch — a thing. That's a real signal. Anything before that is noise.",
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "figma",
+                title: "Don't forget the Figma MCP",
+                text: "The Figma MCP is the connector that lets the model in your editor see your Figma frames as more than screenshots. With it installed, you can paste a Figma link into a prompt and the model can read the layers, components, and tokens directly. Without it, you're describing your design in words — which works, but throws away most of what Figma is for. Chapter 6 covers MCPs in detail.",
+              },
+            ],
+          },
+          {
+            heading: "Live inside a real repo, not a sandbox",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The biggest jump in usefulness happens the day you stop pasting snippets into a blank file and start working inside the actual product's repo. The assistant suddenly knows your components, your conventions, your API clients, your design tokens — because they're right there.",
+              },
+              {
+                kind: "cards",
+                columns: 2,
+                items: [
+                  {
+                    icon: "x",
+                    eyebrow: "Sandbox",
+                    title: "Fast to start, nothing to reference",
+                    text: "The model has nothing to look at except what you paste in, so anything that needs to match the real product has to be reinvented every session.",
+                    meta: "e.g. a brand-new Protopack scaffold, or a one-off Vite app you spun up to try an idea.",
+                  },
+                  {
+                    icon: "check",
+                    eyebrow: "Real repo",
+                    title: "Higher upfront cost, real payback",
+                    text: "Pays back the first time the model finds a component you forgot existed and uses it correctly without being told.",
+                    meta: "e.g. the codebase your research, prototyping, or product team is already shipping out of.",
+                  },
+                ],
+              },
+              {
+                kind: "paragraph",
+                text: "Get cloned. Get it running locally. Get the dev server up. Until you've done that, you're working in demo mode. Once you've done it, the gap between your prototype and what could ship narrows from a week to an afternoon.",
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "arrow",
+                title: "Prototyping path? There's a shorter route",
+                text: "If most of your work is prototyping rather than landing changes inside a production codebase, Protopack is a faster on-ramp than a full repo clone. It handles the local environment, gives you Spectrum-aligned templates, and makes hosting easy. Chapter 5 walks through it; [#adpt-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) is where the day-to-day questions get answered. Skim the next section and come back to it the day your work starts crossing into a real product repo.",
+              },
+            ],
+          },
+          {
+            heading: "Get the codebase on your machine",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "This is the step designers stall on most often, because it crosses into engineering territory and the docs are written for engineers. The actual work is small. Three things have to be in place, in order.",
+              },
+              {
+                kind: "steps",
+                items: [
+                  {
+                    title: "Ask for repo access",
+                    text: "Find an engineer or tech lead on the team and ask them to add you to the GitHub repo. They'll need your GitHub username; you'll need a corp account linked to GitHub. The first time, this can take a day or two — start the ask before you actually need it.",
+                    image: {
+                      src: "/images/codebase-repo.png",
+                      alt: "GitHub Enterprise view of the Adobe-Firefly/firefly-platform repository, showing the main branch, file list, branches and tags counts, and the About panel.",
+                    },
+                  },
+                  {
+                    title: "Clone the repo",
+                    text: "From the Cursor welcome screen, paste the GitHub URL and pick a folder. From a terminal, it's git clone followed by the URL. Either way, you end up with the whole codebase as a local folder you can open in the editor.",
+                    image: {
+                      src: "/images/codebase-clone.png",
+                      alt: "GitHub Code dropdown open, showing the HTTPS clone URL for the firefly-platform repository alongside SSH and GitHub CLI tabs.",
+                    },
+                  },
+                  {
+                    title: "Read the setup doc",
+                    text: "Almost every repo has a README.md or guidelines.md at the root. Open it first. It tells you which package manager to use, which command starts the dev server, and any environment variables you need. Following that doc is the difference between a working environment and an hour of debugging install errors.",
+                    image: {
+                      src: "/images/codebase-readme.png",
+                      alt: "Rendered Firefly Platform README on GitHub, showing the package description, Demo link, and a numbered Consumer Setup section with npm and pnpm install commands.",
+                    },
+                  },
+                ],
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "spark",
+                title: "A useful first prompt",
+                text: "Once the repo is cloned, paste this into the model: \u201cRead the guidelines doc and walk me through the setup commands one at a time, explaining what each does.\u201d That turns a dense engineering reference into a guided walkthrough you can actually follow, and it teaches you the shape of the project at the same time.",
+              },
+              {
+                kind: "wink",
+                text: "If the dev server runs and the page loads on localhost, you're past the hardest part. Everything after this is iteration.",
+              },
+            ],
+          },
+          {
+            heading: "The branch-and-PR loop",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Engineers work inside a loop they don't have to think about anymore: branch, change, commit, push, PR, review, merge. You want that loop too — not because the ceremony matters, but because it's how work becomes shareable. A branch is a sandbox with a paper trail. A PR is a way to show your thinking, not just your output.",
+              },
+              {
+                kind: "steps",
+                items: [
+                  {
+                    title: "Branch off main",
+                    text: "Name it after the thing you're trying — not the file you're touching. Future-you wants to remember what the branch was for, not which folder it lived in.",
+                    image: {
+                      src: "/images/loop-branches.png",
+                      alt: "Cursor branch picker listing recent feature branches like annotationpf-fix-v1, precision-flux-v3, and new-annotation-tool-bar-v3.",
+                    },
+                  },
+                  {
+                    title: "Work in small commits",
+                    text: "Save state often, with messages a teammate could read. Vibe coding generates a lot of code fast; small commits give you a way back when the model wanders.",
+                    image: {
+                      src: "/images/loop-figma-context.png",
+                      alt: "Cursor chat panel with a prompt asking to add a sub-menu to the Select tool, referencing a Figma URL, with the assistant responding using the figma-implement-design skill.",
+                    },
+                  },
+                  {
+                    title: "Open a draft PR early",
+                    text: "Even when nothing works yet. The PR is the channel — it's where screenshots live, where the conversation happens, and where you start exposing intent.",
+                    image: {
+                      src: "/images/loop-running.png",
+                      alt: "Cursor with the Firefly Image Editor running on localhost in the right pane and a chat with the assistant in the left pane.",
+                    },
+                  },
+                  {
+                    title: "Push for review when the bar fits the mode",
+                    text: "Match the review intensity to the mode you're in. A mode-one prototype gets a quick look. A mode-three change gets the full review pass.",
+                    image: {
+                      src: "/images/loop-repo.png",
+                      alt: "GitHub Enterprise view of the Adobe-Firefly/firefly-platform repository, showing the main branch, file list, and the pull requests tab with hundreds of open PRs.",
+                    },
+                  },
+                ],
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "compass",
+                title: "Out of scope: AI code review",
+                text: "Tools like [Bugbot](https://cursor.com/bugbot), [CodeRabbit](https://www.coderabbit.ai/), and the review bots wired into Adobe repos can read a PR and flag issues before a human ever opens it. They're worth using, but the setup and the judgment around them sit in engineering territory. The fastest way in is to ask an engineering friend to walk you through what their team uses on a real PR of yours.",
+              },
+              {
+                kind: "wink",
+                text: "If you've never opened a PR, the first one is the hard one. Every PR after that is just the same five buttons.",
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "target",
+                title: "First time? Pair with someone",
+                text: "If branches, commits, and PRs are new to you, don't try to set this up alone. Grab thirty minutes with an engineer or a designer on a prototyping team and walk through it together once. You'll watch them do it, do the next one yourself, and after that the loop is yours.",
+              },
+            ],
+          },
+          {
+            heading: "Vocabulary, briefly",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "If any of these terms are new, here's the short version. Skip the ones you already know. If you want a longer walkthrough, [Atlassian's Git tutorials](https://www.atlassian.com/git/tutorials/what-is-version-control) are the most designer-friendly primer on the open web.",
+              },
+              {
+                kind: "table",
+                columns: ["Term", "What it means"],
+                rows: [
+                  [
+                    "main",
+                    "The shared default branch your team ships from. Treat it as read-only.",
+                  ],
+                  [
+                    "branch",
+                    "Your own copy of the work, taken off main. Safe to break things in.",
+                  ],
+                  [
+                    "commit",
+                    "A saved point in time for your changes, with a short message describing what changed.",
+                  ],
+                  [
+                    "push",
+                    "Send your local commits up to the shared remote, like GitHub.",
+                  ],
+                  [
+                    "pull",
+                    "Bring down changes from the remote into your local branch.",
+                  ],
+                  [
+                    "PR (pull request)",
+                    "A proposal to merge your branch into main, with the conversation around it attached.",
+                  ],
+                ],
+              },
+              {
+                kind: "wink",
+                text: "Push sends your work outward. Pull brings the team's work back in. Forget which is which? You're sending or receiving — that's the whole rule.",
+              },
+            ],
+          },
+          {
+            heading: "The rhythm that ties it together",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "A working session has a shape. You don't have to follow it exactly, but you should recognize it. Skipping the start makes the middle feel chaotic. Skipping the end makes tomorrow's start expensive.",
+              },
+              {
+                kind: "table",
+                columns: ["When", "What you do", "Why"],
+                rows: [
+                  [
+                    "Start of a session",
+                    "Pull main, branch, paste in your context primer, name the mode.",
+                    "The model resets between sessions. You don't. Re-ground both of you on purpose.",
+                  ],
+                  [
+                    "Inside the session",
+                    "Commit early, commit often, run it after every meaningful change.",
+                    "Saved state is the only honest signal of progress. Untested code is a guess.",
+                  ],
+                  [
+                    "End of a session",
+                    "Push, write a one-line PR description, drop a screenshot, leave a TODO for next time.",
+                    "Tomorrow-you is a different person with no memory. Leave them a map.",
+                  ],
+                ],
+              },
+              {
+                kind: "wink",
+                text: "Before you push, look at the diff. If you can't explain in one sentence what changed and why, the PR isn't ready. It's the same discipline as reviewing your own Figma file before you share it.",
+              },
+              {
+                kind: "pullquote",
+                text: "The setup isn't done when it works once. It's done when you can rebuild it in under an hour.",
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "compass",
+                title: "What this chapter doesn't cover",
+                text: "Prompting practices, MCPs, skills, and rules live in chapter 6. The Adobe-specific tooling — Protopack, Spectrum, the Adobe MCPs, license access — is chapter 5. How a pod actually works once setup is done is chapter 15. Setup is the part you do once per project and mostly forget about. The rest of the playbook is what you do every day.",
+              },
+            ],
           },
         ],
       },
       {
         id: "ai-tooling-at-adobe",
         number: 5,
-        title: "AI tooling at Adobe",
+        title: "The Adobe AI landscape",
         summary:
-          "What Adobe ships internally that you can build on: Firefly Platform, Protopack, Spectrum, and the broader MCP landscape.",
-        readTime: "2 min",
+          "What Adobe gives you and how to get to it: the tools, the access process, and the community where the actual help lives.",
+        readTime: "6 min",
         sections: [
           {
-            heading: "Start from the platform you already have",
-            body: "Adobe gives you a lot before you install anything. Firefly Platform, Spectrum, Protopack, and a growing internal MCP landscape are all designed to make your assistant smarter about Adobe-shaped work. Reach for these first. External tools are useful, but the internal platform already understands your design system, your auth, and your services.",
-          },
-          {
-            heading: "What each piece is for",
-            body: "A short map of the tools you'll hear about most, so you know which one to reach for when.",
-            bullets: [
-              "Firefly Platform: image, video, and creative model APIs you can call from a prototype.",
-              "Protopack: a base template that wires IMS auth, Spectrum, and Adobe services together.",
-              "Spectrum (S2): the design system, with React Spectrum components for production UI.",
-              "Adobe MCPs: server-side context that lets your assistant read services, designs, and internal docs.",
+            heading: "Start from what's already in the building",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Adobe gives you a lot before you install anything from the outside. The Firefly Platform, Spectrum, Protopack, and a growing internal MCP landscape are all designed to make your assistant smarter about Adobe-shaped work — and to keep what you ship consistent with everything else shipping at the company. The canonical map of what's available lives on the [AI at Adobe Design wiki](https://wiki.corp.adobe.com/display/AdobeDesign/AI+at+Adobe+Design); the company-wide [AI guidelines](https://inside.corp.adobe.com/adobe-and-generative-ai/ai-guidelines.html) sit alongside it.",
+              },
+              {
+                kind: "figure",
+                image: {
+                  src: "/images/ai-at-adobe-design-wiki.png",
+                  alt: "AI at Adobe Design wiki landing page, showing the program mission, page contacts, quick links to AI tools, and a Slack invite to #ai-ad-experimenters.",
+                },
+                eyebrow: "AI at Adobe Design",
+                caption:
+                  "The program hub: mission, quick links, contacts, and the channel where the day-to-day conversation happens.",
+              },
+              {
+                kind: "pullquote",
+                text: "The platform already knows your design system, your auth, and your services. Use it before you build it.",
+              },
+              {
+                kind: "paragraph",
+                text: "External tools are useful and you'll reach for them. But starting with the internal platform means a working prototype on day one, not on day five.",
+              },
             ],
           },
           {
-            heading: "Don't reinvent the auth, the tokens, or the buttons",
-            body: "If you find yourself building login, restyling a button, or hand-rolling a service client, stop. The platform almost certainly already has it, and using the platform piece keeps your work consistent with everything else shipping at the company. You are not just saving time. You are reducing the visual and behavioral drift that makes Adobe products feel like they came from different companies.",
+            heading: "What you actually have",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The Adobe stack you'll touch as a designer breaks into four shapes: the everyday editors (chapter 4 covered those), a prototyping environment, the production codebases you cross into when work goes real, and the model context layer that ties everything to the rest of the company. Treat the cards below as a map, not a checklist — install only what the work in front of you actually needs.",
+              },
+              {
+                kind: "cards",
+                columns: 2,
+                items: [
+                  {
+                    icon: "wand",
+                    eyebrow: "Firefly Platform",
+                    title: "Image, video, and creative model APIs",
+                    text: "Generate, edit, upscale, and composite — callable from a prototype with the same auth you already use. The fastest way to put a real model in a real flow.",
+                  },
+                  {
+                    icon: "layers",
+                    eyebrow: "Protopack",
+                    title: "Built for designers who don't want to think about npm",
+                    text: "The Adobe Design Technology team's answer to \"how do I prototype without spending a day on environment setup.\" Local dev environment, Spectrum-wired templates, and a hosting service so you can share what you've built. The right starting point for new ideas and build-in-context work.",
+                  },
+                  {
+                    icon: "ruler",
+                    eyebrow: "Spectrum (S2)",
+                    title: "The Adobe design system",
+                    text: "React Spectrum components for production UI, plus tokens, motion, and a11y patterns the assistant can pin to. You're not editing Spectrum, you're using it — which is what stops AI-generated UI from drifting away from the rest of Adobe.",
+                  },
+                  {
+                    icon: "compass",
+                    eyebrow: "Adobe MCPs",
+                    title: "Context the assistant can reach for",
+                    text: "Servers that let the model read services, designs, and internal docs without you pasting them in. The Figma MCP is the one most designers install first — it lets the model see your frames as more than screenshots. The canonical list lives on the [AI at Adobe Design wiki](https://wiki.corp.adobe.com/display/AdobeDesign/AI+at+Adobe+Design) and changes faster than this page can.",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            heading: "How to get to it",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Most of the access is gated behind a few standard requests and a couple of Slack channels. None of it is hard. The trick is doing all of it once, up front, instead of stumbling into each step the day you need it.",
+              },
+              {
+                kind: "steps",
+                items: [
+                  {
+                    title: "Get IMS and repo access",
+                    text: "Request access to the product repos you'll actually work in, plus IMS and the dev tooling baseline. This usually means a self-serve request and an approval from your manager.",
+                  },
+                  {
+                    title: "Install Protopack and the templates",
+                    text: "Install the Protopack plugin for Claude Code or Cursor. It pulls in the skills, agents, and templates the rest of the company is already using.",
+                    image: {
+                      src: "/images/logo-protopack.png",
+                      alt: "Protopack app icon.",
+                      variant: "logo",
+                    },
+                  },
+                  {
+                    title: "Wire the MCPs you'll actually use",
+                    text: "Figma MCP, the relevant service MCPs, anything tied to the product you ship. Skip the rest. A wired-in MCP you don't use is a tax on every session.",
+                  },
+                  {
+                    title: "Join the channels where help happens",
+                    text: "There's no central docs site that beats a Slack channel of people doing the same thing today. The starter set: [#ad-ai-collective](https://adobe.enterprise.slack.com/archives/C04MKDW961Z) for AI design across disciplines, [#ai-coding-assistant-users](https://adobe.enterprise.slack.com/archives/C06MW635SD8) for Cursor and Claude Code questions, [#adpt-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) for Protopack, and [#external-ai-coding-cursor](https://adobe.enterprise.slack.com/archives/C07UL8NPFNK) for Cursor-specific chat. Lurk first, then ask.",
+                    image: {
+                      src: "/images/logo-slack.svg",
+                      alt: "Slack logo mark.",
+                      variant: "logo",
+                    },
+                  },
+                ],
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "compass",
+                title: "Use approved tools, watch what you paste",
+                text: "Adobe maintains a list of approved AI tools — the obvious ones (ChatGPT Enterprise, Microsoft 365 Copilot, GitHub Copilot, Adobe's own products) plus a separate set of field-analysis licenses for tools being evaluated against Adobe offerings. Field-analysis tools have extra restrictions; the most important is no Adobe internal data. Read the [AI guidelines](https://inside.corp.adobe.com/adobe-and-generative-ai/ai-guidelines.html) once before you start, and check which list a tool is on before you use it for anything sensitive.",
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "spark",
+                title: "Cue to ask for help",
+                text: "You've spent more than 30 minutes on the same setup error. Stop tweaking, post the error in the right channel, and keep going on something else. Someone almost always answers within the hour, and the answer is almost never written down anywhere yet.",
+              },
+            ],
+          },
+          {
+            heading: "Where the actual help lives",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Adobe is large. Documentation is uneven. The fastest unblock is almost never a wiki page — it's a person who shipped the same thing yesterday. Knowing where those people gather is half the job.",
+              },
+              {
+                kind: "cards",
+                columns: 2,
+                items: [
+                  {
+                    icon: "chat",
+                    eyebrow: "Slack",
+                    title: "The working channels",
+                    text: "[#ad-ai-collective](https://adobe.enterprise.slack.com/archives/C04MKDW961Z) for AI design across disciplines, [#ai-coding-assistant-users](https://adobe.enterprise.slack.com/archives/C06MW635SD8) for Cursor and Claude Code, [#adpt-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) for Protopack, and [#external-ai-coding-cursor](https://adobe.enterprise.slack.com/archives/C07UL8NPFNK) for Cursor's own team. Join all four before you need them.",
+                  },
+                  {
+                    icon: "layers",
+                    eyebrow: "Use Case Library",
+                    title: "The running record of what AD has built",
+                    text: "Figma plugins, internal demo apps, MCP servers, prototypes, content tools — the actual range of what colleagues have shipped is faster than any framework for understanding what's possible. Most entries name the designer who built them; reaching out is one of the highest-return investments you can make early on.",
+                  },
+                  {
+                    icon: "spark",
+                    eyebrow: "Ambassador & Spotlight",
+                    title: "The formal version of community",
+                    text: "Ambassadors get early access to new tools and a monthly forum to share what they're learning. Spotlight sessions are recorded and archived on SharePoint, and watching a designer walk through their actual workflow tells you things no how-to guide will.",
+                  },
+                  {
+                    icon: "target",
+                    eyebrow: "AI pods",
+                    title: "Cross-functional groups already shipping",
+                    text: "Teams like the Image Frontier Team mix designers, engineers, and PMs around a real product surface, with AI as a shared tool. Watching how they work compresses months of guessing.",
+                  },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "The single biggest accelerator at Adobe is sitting next to someone who's a few weeks ahead of you. Find that person — in person or in Slack — and the rest of the playbook gets faster.",
+              },
+            ],
+          },
+          {
+            heading: "Don't reinvent what's already there",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "If you find yourself building login, restyling a button, or hand-rolling a service client, stop. The platform almost certainly already has it. Using the platform piece isn't just faster — it's how your work stays consistent with everything else shipping at the company.",
+              },
+              {
+                kind: "checklist",
+                items: [
+                  {
+                    positive: true,
+                    title: "Use Spectrum components instead of building UI from scratch",
+                    text: "React Spectrum gives you production-ready buttons, fields, dialogs, and tables that already match the rest of Adobe.",
+                  },
+                  {
+                    positive: true,
+                    title: "Use Protopack for IMS auth and the Adobe services kit",
+                    text: "One template covers login, tokens, and a wired-in services SDK. No bespoke auth code in your prototype.",
+                  },
+                  {
+                    positive: true,
+                    title: "Use Adobe3P for any LLM call (OpenAI, Gemini, Claude)",
+                    text: "Same interface, unified auth, no separate API keys. Skips a compliance conversation later.",
+                  },
+                  {
+                    positive: true,
+                    title: "Use the Firefly Platform for image and video generation",
+                    text: "If a model exists internally, use it. External APIs are a fallback, not a default.",
+                  },
+                ],
+              },
+              {
+                kind: "pullquote",
+                text: "Custom auth is a tax. Custom buttons are a tax. The platform exists so you can spend your attention elsewhere.",
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "compass",
+                title: "What this chapter doesn't cover",
+                text: "Step-by-step setup for any single tool — each one has its own canonical doc, and reproducing them here would mean maintaining them in two places, badly. The full inventory of approved AI tools — it changes too fast and Inside Adobe is the source of truth. Discipline-specific workflows — the wiki has dedicated pages for Product Design, Prototyping, Content Strategy, and User Research. Start there if you're trying to figure out how AI fits your specific role.",
+              },
+            ],
           },
         ],
       },
@@ -910,31 +1472,251 @@ export const playbook: Part[] = [
         number: 6,
         title: "Extending your AI: MCPs, skills, and rules",
         summary:
-          "What MCPs, skills, and rules each do, when to reach for which, and how the CLAUDE.md or AGENTS.md patterns hold them together.",
-        readTime: "2 min",
+          "What MCPs, skills, and rules each do, when to reach for which, and how CLAUDE.md or AGENTS.md hold them together.",
+        readTime: "4 min",
         sections: [
           {
             heading: "Three knobs, three jobs",
-            body: "MCPs, skills, and rules look similar from the outside and do very different work. Once you know which is which, you stop reaching for the wrong one.",
-            bullets: [
-              "MCPs add capability: the assistant can now read Figma, query a service, or browse the web.",
-              "Skills add procedure: a packaged way of doing a recurring task, like a design review or an a11y check.",
-              "Rules add policy: standing instructions that apply to every session in this project.",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "MCPs, skills, and rules all extend what the assistant can do, and they all look similar from the outside. They do very different work. Once you know which is which, you stop installing the wrong thing every time something doesn't behave the way you wanted.",
+              },
+              {
+                kind: "table",
+                columns: ["Knob", "What it adds", "When you reach for it", "Where it lives"],
+                rows: [
+                  [
+                    "MCP",
+                    "Capability — a thing the model can now read or do.",
+                    "When the model is missing access to information or an action.",
+                    "Configured per editor, often per project.",
+                  ],
+                  [
+                    "Skill",
+                    "Procedure — a packaged way of doing a recurring task.",
+                    "When you've explained the same multi-step task more than twice.",
+                    "Files in your repo, invoked by name in a session.",
+                  ],
+                  [
+                    "Rule",
+                    "Policy — standing instructions that apply to every session.",
+                    "When something must always be true, regardless of the prompt.",
+                    "CLAUDE.md or AGENTS.md at the repo root.",
+                  ],
+                ],
+              },
             ],
           },
           {
-            heading: "Designer-relevant examples",
-            body: "Concrete picks that earn their keep on real design work. Install the ones that match the work you actually do this quarter, not the ones that sound impressive in a demo.",
-            bullets: [
-              "Figma MCP: read frames, variables, and component metadata directly.",
-              "Design-review skill: run a structured critique against your design system.",
-              "Accessibility-check skill: surface contrast, focus, and semantics issues before review.",
-              "Spectrum rules: pin the assistant to S2 components and sentence-case copy.",
+            heading: "MCPs add capability",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "An MCP is a server that gives the assistant a new ability — to read your Figma file, query a service, browse the web, run a build, look something up in a private system. Without one, the model is guessing about your world. With the right ones wired in, it's working from primary sources.",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    icon: "figma",
+                    eyebrow: "Figma MCP",
+                    title: "Read the design directly",
+                    text: "Frames, variables, components, and metadata. Stops the model from interpreting screenshots and lets it work from the source of truth.",
+                  },
+                  {
+                    icon: "ruler",
+                    eyebrow: "Spectrum / design-system MCP",
+                    title: "Reach into the system",
+                    text: "Look up tokens, components, and patterns by name. The assistant stops inventing close-but-wrong UI and starts using what's already approved.",
+                  },
+                  {
+                    icon: "wand",
+                    eyebrow: "Service MCP",
+                    title: "Call the platform",
+                    text: "Invoke Firefly, Adobe3P, internal APIs without you pasting in clients or tokens. Turns a prototype into something that actually does work.",
+                  },
+                ],
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "spark",
+                title: "Cue to install one",
+                text: "You've explained the same external system in three sessions in a row, and the model still gets it wrong. The right move isn't a longer prompt — it's an MCP that lets the model read it directly.",
+              },
             ],
           },
           {
-            heading: "The 150-line budget for design context",
-            body: "Your CLAUDE.md or AGENTS.md is the always-on brief for every session. It is also expensive: every line is read on every turn, and a bloated file hurts more than it helps. A practical budget is around 150 lines for the things that must always be true. Spend it on audience, voice, design system pointers, the names of your MCPs, and the rules the team has actually agreed to. Move everything else into skills and on-demand context.",
+            heading: "Skills add procedure",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "A skill is a packaged way of doing a task you do often. A design review. An accessibility check. A handoff readiness pass. The skill captures the steps, the prompts, the order, and the criteria, so the next time you need that work done you call it by name instead of remembering. Anthropic's [skills best-practices guide](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/best-practices.md) goes deep on the format if you want the long version.",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    icon: "ruler",
+                    eyebrow: "Design review",
+                    title: "Critique against the system",
+                    text: "Compare the build to Spectrum, your tokens, and your voice. Surface the drift, not just the missing pieces.",
+                  },
+                  {
+                    icon: "check",
+                    eyebrow: "Accessibility check",
+                    title: "Floor before merge",
+                    text: "Contrast, focus, semantics, motion. Run it before you open the PR, not after the QA pass.",
+                  },
+                  {
+                    icon: "loop",
+                    eyebrow: "Handoff pass",
+                    title: "Make the work portable",
+                    text: "Write the README, capture the prompts that worked, snapshot the screens, list the open questions. Future-team-you will be grateful.",
+                  },
+                ],
+              },
+              {
+                kind: "paragraph",
+                text: "Concretely, a skill is a small markdown file the assistant loads on demand. Front matter names it and tells the model when to use it; the body is the procedure. Two examples a designer might write in a week:",
+              },
+              {
+                kind: "code",
+                label: ".claude/skills/design-review.md",
+                language: "markdown",
+                text: `---
+name: design-review
+description: Review the running build against Spectrum, tokens, and the brief. Use before opening a non-draft PR.
+---
+
+1. Read the linked brief or PRD section in the PR description.
+2. Walk every interactive element. Flag any non-Spectrum component as a BLOCKER.
+3. Diff tokens against the design system: color, spacing, type scale, motion.
+4. Open the running app on localhost and compare each screen to the Figma frame.
+5. Post findings as PR comments tagged BLOCKER, MAJOR, MINOR, or NIT.
+`,
+              },
+              {
+                kind: "code",
+                label: ".claude/skills/a11y-floor.md",
+                language: "markdown",
+                text: `---
+name: a11y-floor
+description: Run the accessibility floor before pushing for review. Use any time UI changes ship.
+---
+
+1. Tab through the change with a keyboard only. Note any focus traps or invisible focus states.
+2. Check color contrast on text and icons against WCAG AA.
+3. Verify semantic roles for interactive elements (button vs div, link vs button).
+4. Confirm motion respects prefers-reduced-motion.
+5. Summarize what passed, what failed, and what needs follow-up.
+`,
+              },
+              {
+                kind: "wink",
+                text: "These live in your repo at .claude/skills/ or .cursor/skills/, and Cursor offers [slash commands](https://cursor.com/docs/context/commands) for the lighter version of the same idea. Once they're committed, anyone on the team can call them by name.",
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "spark",
+                title: "Cue to write one",
+                text: "You've walked the same review checklist on three different PRs, or expanded the happy path into empty, loading, and error states by hand on two features in a row. The work is repetitive enough that you'd hand it to a junior designer if you had one. That's a skill.",
+              },
+              {
+                kind: "pullquote",
+                text: "A skill is a thing you stopped explaining.",
+              },
+            ],
+          },
+          {
+            heading: "Rules add policy",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "A rule is a standing instruction. Every session inherits it, whether you remember to mention it or not. Rules are how a project's conventions stop being a Slack thread and start being something the assistant just follows. Cursor's [rules documentation](https://cursor.com/docs/rules) walks through the four flavors — always-applied, file-scoped, agent-selected, and manual — if you want to know exactly which kind of rule fires when.",
+              },
+              {
+                kind: "checklist",
+                items: [
+                  {
+                    positive: true,
+                    title: "Pin to your design system",
+                    text: "\"Use Spectrum S2 components for all interactive UI. Don't introduce raw HTML buttons or inputs.\"",
+                  },
+                  {
+                    positive: true,
+                    title: "Lock the voice",
+                    text: "\"Sentence case for all UI copy. No exclamation points. No emoji.\"",
+                  },
+                  {
+                    positive: true,
+                    title: "Set the auth contract",
+                    text: "\"All Adobe API calls use the IMS token from the useIMS hook. Never hardcode keys.\"",
+                  },
+                  {
+                    positive: true,
+                    title: "Name the verification you expect",
+                    text: "\"After substantive edits, run the linter and the build. Fix anything that breaks before reporting done.\"",
+                  },
+                ],
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "spark",
+                title: "Cue to write one",
+                text: "You've corrected the same drift in three sessions in a row — a hex value where a token should be, a div styled as a button, an exclamation point in copy, a custom card when Spectrum already has one. The right move isn't a sharper prompt or a longer review. It's a rule that says it once, in the place every session reads.",
+              },
+              {
+                kind: "wink",
+                text: "Preferences don't belong in rules. If only one person wants it that way, it's a preference. Put it in a skill or in a session prompt.",
+              },
+            ],
+          },
+          {
+            heading: "CLAUDE.md, AGENTS.md, and the 150-line budget",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "CLAUDE.md and AGENTS.md are the always-on brief at the root of your repo. Every session reads them first. That makes them powerful — and expensive. Every line is paid for on every turn, and a bloated file hurts more than it helps. Anthropic's [Claude Code best practices](https://docs.anthropic.com/en/docs/claude-code/best-practices) is the clearest primer on how teams structure these files in real repos.",
+              },
+              {
+                kind: "paragraph",
+                text: "A practical budget is around 150 lines for the things that must always be true. Spend it carefully. Move everything else into skills (for procedures) or context that gets pasted in only when relevant (for one-off work).",
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "target",
+                title: "What earns a line in the budget",
+                text: "Audience and voice. Design system pointers. Names of installed MCPs. The four or five rules the team has actually agreed to. Anything that should fail loudly if violated. Everything else can wait for a session that needs it.",
+              },
+              {
+                kind: "pullquote",
+                text: "Every line is read on every turn. Spend the budget on what must always be true.",
+              },
+              {
+                kind: "paragraph",
+                text: "The case sharpens in production. With codebase constraints and feature patterns named in the rules file, AI-generated changes match the architecture by default and PRs arrive close to ready. Review is still necessary, but it's spent on judgment instead of the same drift conversation every time.",
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "compass",
+                title: "Production mode: rules earn back the time",
+                text: "In new ideas and build-in-context, sparse rules are fine — drift is cheap. In production, drift compounds. The 150-line budget is the cheapest insurance against it.",
+                image: {
+                  src: "/images/guidelines-md-example.png",
+                  alt: "Excerpt from a CLAUDE.md file in the firefly-platform repo, showing branch creation commands, local dev setup, and the typical contribution workflow.",
+                  caption:
+                    "CLAUDE.md (firefly-platform) — real rules look mundane: branch, run, check.",
+                },
+              },
+            ],
           },
         ],
       },
@@ -945,117 +1727,793 @@ export const playbook: Part[] = [
     number: 3,
     title: "Working with AI",
     description:
-      "The conversation itself. Prompting, planning, learning from your codebase, and managing context so the assistant stays useful past the first turn.",
+      "The day-to-day craft of vibe coding as a designer: how you prompt, how you plan and explore, and how design moves into and out of the build.",
     chapters: [
       {
         id: "prompting-best-practices",
         number: 7,
         title: "Prompting best practices",
         summary:
-          "Specificity, pointers, constraints, and showing the pattern, with examples tuned to UI work.",
-        readTime: "2 min",
+          "Specificity, pointers, constraints, showing the pattern. The per-message craft of getting useful output, with examples tuned to UI work rather than backend code.",
+        readTime: "9 min",
         sections: [
           {
+            heading: "The per-message craft",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Most prompting advice was written for backend work. Build me a function. Write me a query. Add a field to this struct. UI prompts are different. The output is visual, the constraints live in design tokens and components, and the difference between useful and slop is mostly invisible until the page renders. The rules below are tuned for that.",
+              },
+              {
+                kind: "paragraph",
+                text: "If you want the foundational version of this material, [Anthropic's Prompting 101 talk](https://www.youtube.com/watch?v=ysPbXH0LpIE) is a forty-minute primer on the anatomy of a strong prompt, and [OpenAI's prompting guidance](https://developers.openai.com/api/docs/guides/prompt-guidance) covers the same ground in writing. The chapter below is what's left when you've read those and sat down to make a card component.",
+              },
+              {
+                kind: "flow",
+                label: "How a useful UI prompt is built",
+                steps: [
+                  { title: "Specify", meta: "What and why" },
+                  { title: "Point", meta: "References" },
+                  { title: "Constrain", meta: "Rails" },
+                  { title: "Show", meta: "The pattern" },
+                  { title: "Iterate", meta: "Sharpen, don't patch" },
+                ],
+              },
+              {
+                kind: "pullquote",
+                text: "A vague prompt asks for help. A good prompt sets the goal, the audience, the format, and the constraints.",
+              },
+            ],
+          },
+          {
             heading: "Be specific the way a brief is specific",
-            body: "A vague prompt asks for help. A good prompt sets the goal, the audience, the format, and the constraints. The model is fast and literal. Treat it like a teammate who joined yesterday and reads only what you put in front of them.",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The model is fast and literal. Treat it like a teammate who joined yesterday and reads only what you put in front of them. The same level of specificity you'd give a freelance designer for a Tuesday turnaround is the level the model can actually use.",
+              },
+              {
+                kind: "compareFlow",
+                before: {
+                  label: "Vague",
+                  steps: ["Make me a card component for products."],
+                },
+                after: {
+                  label: "Specific",
+                  steps: [
+                    "Generate a Spectrum 2 product card. 16 px padding, 8 px corner radius, 4:3 image at the top, two-line title in spectrum-body-m, price in spectrum-detail-l, a primary Add to cart button at the bottom. Match the spacing rhythm of src/components/ProductCard.tsx and use design tokens, not hex values.",
+                  ],
+                },
+              },
+              {
+                kind: "paragraph",
+                text: "The first prompt gets you a generic Material card with off-brand spacing. The second gets you something close enough to ship after a small polish round. The difference is one minute of writing. Specificity is not the same as adjectives. \"A clean, modern, beautiful card\" doesn't narrow the search space at all — it just sounds like it does. The constraints that distinguish your card from the other ninety-nine valid ones are what move the work.",
+              },
+              {
+                kind: "wink",
+                text: "Test for whether you've been specific enough: imagine the model returns something that satisfies every word of your prompt and is still wrong. What was missing? That's what should have been on the page.",
+              },
+            ],
+          },
+          {
+            heading: "Slice the work, don't dump it",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Big asks produce big mistakes. \"Build me a settings page\" hands the model six decisions at once and rolls them into a single, hard-to-debug commit. The same work split into four prompts — the layout, then the form, then the validation, then the empty and error states — gives you four chances to course-correct and four small commits you can actually read. The model also gets sharper as the slice gets narrower: fewer things to balance, fewer ways to drift. Cursor's [agent best-practices guide](https://cursor.com/blog/agent-best-practices) makes the same case for engineering work, and most of it transfers cleanly to designers driving the build.",
+              },
+              {
+                kind: "compareFlow",
+                before: {
+                  label: "One huge prompt",
+                  steps: [
+                    "Build the entire settings page",
+                    "Receive 600 lines",
+                    "Find three things wrong",
+                    "Patch in place",
+                    "Hope the patches don't conflict",
+                  ],
+                },
+                after: {
+                  label: "Sliced into four",
+                  steps: [
+                    "Lay out the page shell",
+                    "Add the profile form",
+                    "Wire the validation",
+                    "Handle empty and error states",
+                    "Review each slice before the next",
+                  ],
+                },
+              },
+              {
+                kind: "wink",
+                text: "If you can't describe the slice in one sentence, it's still too big.",
+              },
+            ],
           },
           {
             heading: "Point at things, don't describe them",
-            body: "When you can, point. Paste a link to a Figma frame, attach a screenshot, name the component, or quote the file path. Pointers are higher bandwidth than adjectives, and they reduce the room for the model to invent.",
-            bullets: [
-              "Use file paths and component names instead of paraphrasing them.",
-              "Attach a screenshot for visual targets, not a paragraph of style language.",
-              "Quote the existing pattern when you want a new feature to match it.",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Designers, more than most professionals, already know how to communicate by reference. You don't describe a typeface to another designer — you say Söhne, or Inter, or \"the one we used on the marketing page.\" Pointers are denser than descriptions, more accurate, and infinitely cheaper to write. Models respond to pointers the same way.",
+              },
+              {
+                kind: "paragraph",
+                text: "When you can, point. Pointers are higher bandwidth than adjectives, and they reduce the room for the model to invent. Most designers underuse them because pasting a link feels lazy. It's the opposite of lazy. It's the highest-leverage thing you can do in a prompt.",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    icon: "figma",
+                    eyebrow: "Visual",
+                    title: "Figma frames and screenshots",
+                    text: "A frame URL through the Figma MCP carries layers and tokens. A screenshot carries layout and feel. Both beat a paragraph of style language.",
+                  },
+                  {
+                    icon: "code",
+                    eyebrow: "Structural",
+                    title: "File paths and component names",
+                    text: "Quote the file you want the new code to look like. The model is excellent at matching what it can see and bad at inventing what it can't.",
+                  },
+                  {
+                    icon: "target",
+                    eyebrow: "Behavioral",
+                    title: "Existing patterns in the product",
+                    text: "Point at the form, the empty state, or the toast that already ships. New work should look like the product, not like the model's training set.",
+                  },
+                ],
+              },
             ],
           },
           {
             heading: "Constraints, then examples, then ask",
-            body: "A reliable shape for UI prompts: state the constraints up front, show one or two examples of the pattern you want, then ask for the work. Models drift toward generic output when there are no rails. Constraints are how you give them rails without writing the answer for them.",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "A reliable shape for UI prompts: state the constraints up front, show one or two examples of the pattern you want, then ask for the work. Models drift toward generic output when there are no rails. Constraints are how you give them rails without writing the answer for them.",
+              },
+              {
+                kind: "roomDiagram",
+                center: "Ask",
+                chips: [
+                  "Constraints",
+                  "Pointers",
+                  "Examples",
+                  "Reference files",
+                  "Voice",
+                  "Audience",
+                  "Anti-patterns",
+                  "Tokens",
+                  "Acceptance",
+                ],
+                caption:
+                  "A strong prompt is a single ask surrounded by the things that narrow how it can be answered. The ask is the smallest part of the prompt.",
+              },
+              {
+                kind: "anatomy",
+                label: "Prompt template",
+                lines: [
+                  { text: "Constraints:", mark: 1 },
+                  { text: "- Use Spectrum 2 components from @react-spectrum/s2." },
+                  { text: "- Use design tokens for color, type, and spacing. No hex values." },
+                  { text: "- Match the file structure of src/components/ProductCard.tsx." },
+                  { text: "- Keyboard accessible: tab, shift-tab, enter, space all work." },
+                  { text: "" },
+                  { text: "Example to match:", mark: 2 },
+                  { text: "@src/components/ProductCard.tsx" },
+                  { text: "@src/components/CartItem.tsx" },
+                  { text: "" },
+                  { text: "Ask:", mark: 3 },
+                  { text: "Create a SubscriptionCard component with a title, plan name," },
+                  { text: "monthly price, three feature bullets, and a primary Subscribe button." },
+                  { text: "Lay it out the way ProductCard does." },
+                ],
+                notes: [
+                  {
+                    mark: 1,
+                    label: "Constraints",
+                    text: "What's not allowed. The part that rules out the failure modes you've already seen.",
+                  },
+                  {
+                    mark: 2,
+                    label: "Pointers, not descriptions",
+                    text: "Reference real files in your repo. Denser than any paragraph of style language and dramatically more accurate.",
+                  },
+                  {
+                    mark: 3,
+                    label: "The ask",
+                    text: "The smallest part of the prompt. Phrased as a piece of work, not a request for help.",
+                  },
+                ],
+                caption:
+                  "A strong prompt is mostly the rails. The ask itself is short — it's just the thing the model wouldn't have figured out on its own.",
+              },
+              {
+                kind: "wink",
+                text: "If the model ignores a constraint, the constraint was buried. Move it up.",
+              },
+            ],
+          },
+          {
+            heading: "Show the pattern you want",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Most UI prompts are easier to answer with one example than with three paragraphs of description. If you want a card that matches the rest of the product, paste the existing card. If you want a form that follows the team's convention, point at the form down the hall. The model is excellent at matching a pattern it can see and bad at inventing one from a description.",
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "wand",
+                title: "One example beats a paragraph",
+                text: "Before you write a fourth sentence describing the look you want, stop and find one screen, one component, or one block of code that already has it. Paste that instead.",
+              },
+              {
+                kind: "paragraph",
+                text: "A small discipline that pays off later: when you find a prompt that works, save the example with the prompt. The example is half the prompt's value. A library of prompts without the examples that anchored them is a library of generic prompts.",
+              },
+            ],
+          },
+          {
+            heading: "When the output is wrong",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "This is the part of prompting that gets the least attention and matters most. Most prompts don't work the first time. The discipline isn't writing the perfect prompt up front — it's what you do with the imperfect first output. Three responses, in order of how often you should reach for them.",
+              },
+              {
+                kind: "steps",
+                items: [
+                  {
+                    title: "Edit the prompt, not the conversation",
+                    text: "When the first response misses, the temptation is to follow up with \"actually, make the button blue and move it right.\" That works in the short term and rots the conversation in the medium term — the model is now juggling your original prompt, the bad output, and your correction, and its sense of what you wanted gets fuzzier with each turn. When you can, start fresh with a sharper version of the prompt that absorbs what you learned from the first attempt.",
+                  },
+                  {
+                    title: "Ask the model what it understood",
+                    text: "When you can't tell why an output is wrong, \"summarize back what you think I asked for\" is a one-message diagnostic. The summary will reveal which part of your prompt was ambiguous, and you can fix that part specifically. More useful than guessing at which sentence misfired.",
+                  },
+                  {
+                    title: "Push back when you disagree",
+                    text: "Models can be wrong, and they will defer to you confidently when you push, even when their original answer was correct. The skill is telling \"this is wrong and I need to redirect\" from \"this is right and I'm uncomfortable with it for unrelated reasons.\" Mistaking the second for the first slowly trains the model to abandon correct answers, which is a slow-motion failure that's hard to spot.",
+                  },
+                ],
+              },
+              {
+                kind: "balance",
+                tilt: "even",
+                left: {
+                  label: "The model is wrong",
+                  text: "Push back when you can name what was missing or off — the constraint it ignored, the file it invented, the pattern it skipped.",
+                },
+                right: {
+                  label: "You are uncertain",
+                  text: "Yield when your unease isn't backed by anything concrete. The discomfort might just be unfamiliarity with a correct answer.",
+                },
+                caption:
+                  "Confusing the two slowly trains the model to abandon answers it had right. The hard part is knowing which pan should be heavier.",
+              },
+            ],
+          },
+          {
+            heading: "A few prompts worth keeping around",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Most prompts are disposable — the artifact of one task, useful for ten minutes, never needed again. A small fraction are reusable, and the skill is recognizing which is which while you're writing them. A prompt earns a place in the library when it encodes a pattern you'll hit again, when it carries judgment you don't want to re-derive, or when it's long enough that rewriting it from memory would lose something.",
+              },
+              {
+                kind: "paragraph",
+                text: "Three prompts that earn their keep across projects. Save them as snippets, slash commands, or skills. The point is not the exact wording. It's having the prompt ready when you need it instead of writing it from scratch every time.",
+              },
+              {
+                kind: "bento",
+                items: [
+                  {
+                    size: "hero",
+                    accent: true,
+                    icon: "spark",
+                    eyebrow: "What earns a place",
+                    title: "Patterns, not one-offs",
+                    text: "A prompt belongs in your library when it encodes a pattern you'll hit again, carries judgment you don't want to re-derive, or is long enough that rewriting from memory would lose something.",
+                  },
+                  {
+                    size: "small",
+                    icon: "compass",
+                    eyebrow: "Orient",
+                    title: "Walk me through this file",
+                    text: "Summary, exports, and the three places to touch to change behavior.",
+                  },
+                  {
+                    size: "small",
+                    icon: "ruler",
+                    eyebrow: "Audit",
+                    title: "Check this screen",
+                    text: "Compare to Spectrum tokens. Flag every off-token color or non-system control.",
+                  },
+                  {
+                    size: "wide",
+                    icon: "check",
+                    eyebrow: "Verify",
+                    title: "What did you actually change?",
+                    text: "List every file modified, the intent of each change, and the parts of the spec you skipped or interpreted.",
+                  },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "Don't let the impulse to organize everything turn your prompt library into a graveyard of one-off requests. The disposable ones don't belong there.",
+              },
+            ],
+          },
+          {
+            heading: "Two anti-patterns worth naming",
+            blocks: [
+              {
+                kind: "checklist",
+                items: [
+                  {
+                    positive: false,
+                    title: "The kitchen-sink prompt",
+                    text: "Five paragraphs of vibes, four constraints, no pointer to anything that exists. The model averages all of it into something nobody asked for.",
+                  },
+                  {
+                    positive: false,
+                    title: "The polite single sentence",
+                    text: "\"Could you please make this nicer?\" The model has no rails and obliges by smoothing your work into something more generic.",
+                  },
+                  {
+                    positive: true,
+                    title: "The brief that points and constrains",
+                    text: "One sentence of intent, one or two pointers, three constraints, then the ask. Repeat as needed.",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            heading: "No magic words",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "There's no phrase you can append to a prompt that consistently makes the output better. \"Think step by step.\" \"You are an expert designer.\" \"Take a deep breath.\" These helped briefly with older models and have largely been trained out. The skill is in the substance of what you wrote, not in the incantation around it.",
+              },
+              {
+                kind: "paragraph",
+                text: "Prompting also isn't a static skill. Models change every few months, and the things that worked well last year sometimes work less well now, and vice versa. The principles in this chapter — evidence over commands, pointers over descriptions, constraints over instructions, examples over abstractions — have held across model generations. The specific phrasings haven't.",
+              },
+              {
+                kind: "pullquote",
+                text: "Hold the principles tightly and the techniques loosely.",
+              },
+            ],
           },
         ],
       },
       {
-        id: "planning-before-you-build",
+        id: "planning-and-exploring-options",
         number: 8,
-        title: "Planning before you build",
+        title: "Planning and exploring options",
         summary:
-          "Plan Mode, the seven-section plan, socializing with engineering, and the sparring-partner habit.",
-        readTime: "2 min",
+          "Touring unfamiliar codebases and design systems, sparring on decisions, reading product data, generating alternatives, and turning all of it into a plan you can execute. The work that determines whether the build succeeds.",
+        readTime: "7 min",
         sections: [
           {
+            heading: "The work that determines whether the build succeeds",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "By the time the assistant is writing files, most of the important decisions have already been made. What you're building, why, for whom, and against what constraints. The chapter below is the work that earns the build — touring the surface you'll change, sparring on what to change it to, reading the data and the alternatives, then writing it all down as a plan you can hand to the model on turn one.",
+              },
+              {
+                kind: "flow",
+                label: "How the time before the build actually breaks down",
+                steps: [
+                  { title: "Tour", meta: "Read the surface" },
+                  { title: "Spar", meta: "Pressure-test the call" },
+                  { title: "Read", meta: "Data and feedback" },
+                  { title: "Generate", meta: "Alternatives" },
+                  { title: "Plan", meta: "Write it down" },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "Skip these and the build is faster on day one and slower every day after.",
+              },
+            ],
+          },
+          {
+            heading: "Tour guide for unfamiliar surfaces",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Most design work starts on a surface you didn't build. An unfamiliar repo, a design system you've inherited, a feature owned by another team. The model is the fastest tour guide ever invented for this. Ask the same three questions in order and you have a working map in minutes instead of an afternoon.",
+              },
+              {
+                kind: "steps",
+                items: [
+                  {
+                    title: "What is this, in one paragraph?",
+                    text: "Aimed at a teammate who has never seen the file or feature. Forces the model to compress, which surfaces what it actually understands and what it has been guessing.",
+                  },
+                  {
+                    title: "How is it used elsewhere?",
+                    text: "Concrete examples, with file paths. This is where invented-API answers fall apart — if the model can't point at a real call site, you've found the part of its summary you should not trust.",
+                  },
+                  {
+                    title: "What would I change to add a variant or fix a bug?",
+                    text: "Forces the tour to land on the place you actually need. The answer is the shortlist of files you'll spend the rest of the project in.",
+                  },
+                ],
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "compass",
+                title: "Verify the parts that matter",
+                text: "The tour is a starting map, not a finished one. Click through to the files the model references before you commit to its mental model. The wrong map costs more than no map.",
+              },
+            ],
+          },
+          {
+            heading: "Sparring partner for decisions",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Design choices are usually clearer when somebody pushes back on them. The model is a tireless, opinionated sparring partner that doesn't tire of the third version of a question. The trick is asking it to take a position, not asking it what to do.",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    icon: "x",
+                    eyebrow: "Opposition",
+                    title: "Make the case against",
+                    text: "\"Argue against this approach. What's the weakest assumption? What breaks first under load?\" Useful when you're falling in love with your own idea.",
+                  },
+                  {
+                    icon: "ruler",
+                    eyebrow: "Conservative",
+                    title: "The smallest version",
+                    text: "\"What's the version that does half of this and ships in a week?\" Surfaces the cheapest experiment hiding inside the ambitious one.",
+                  },
+                  {
+                    icon: "spark",
+                    eyebrow: "Bold",
+                    title: "The version with no constraints",
+                    text: "\"If we threw out the existing system, what's the version we'd actually want?\" Useful for naming what you're trading away to fit reality.",
+                  },
+                ],
+              },
+              {
+                kind: "pullquote",
+                text: "The point isn't to outsource the choice. It's to surface the trade-offs you'd otherwise miss.",
+              },
+            ],
+          },
+          {
+            heading: "Analyst for product data and feedback",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "When the question is what the work is doing — not what it should look like — the model can read product data, user feedback, and qualitative notes faster than you can scroll through them. Treat the output as a hypothesis you can chase, not a finding you can quote.",
+              },
+              {
+                kind: "checklist",
+                items: [
+                  {
+                    positive: true,
+                    title: "Research transcripts",
+                    text: "Paste the raw transcript, ask for themes, then ask for the strongest counter-evidence inside the same transcript.",
+                  },
+                  {
+                    positive: true,
+                    title: "Usage breakdowns",
+                    text: "Drop in the CSV or table. Ask for the surprises — the rows that don't fit the pattern you expected.",
+                  },
+                  {
+                    positive: true,
+                    title: "Backlogs and bug lists",
+                    text: "Ask for the patterns underneath the tickets. Three bugs that share a root cause are more useful than thirty filed separately.",
+                  },
+                  {
+                    positive: false,
+                    title: "Anything you'd quote in a review",
+                    text: "The model is plausible, not authoritative. If a number ends up on a slide, it should come from the source, not the summary.",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            heading: "Generator for alternatives",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Vague briefs benefit from breadth. Ask the model for ten directions for an empty state, six ways a transition could feel, four visual languages a feature could borrow from. Most of what comes back is unusable, and that is fine — the value is in the one or two threads that nudge your thinking sideways.",
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "wand",
+                title: "Ask for variety, not quality",
+                text: "When you want the model to spread, tell it to spread. \"Give me ten that disagree with each other\" works better than \"give me your best three.\" Pick the threads worth pulling once you can see the field.",
+              },
+            ],
+          },
+          {
             heading: "Plan first, build second",
-            body: "It is tempting to ask the assistant to start writing code on turn one. The work that gets shipped almost always starts with a plan instead. Plan Mode in modern editors is built for exactly this: a read-only conversation that produces an agreed approach before anyone touches the file system.",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "On any task bigger than a single message, resist asking the assistant to start writing code on turn one. The work that gets shipped almost always starts with a plan instead. Plan Mode in modern editors is built for exactly this: a read-only conversation that produces an agreed approach before anyone touches the file system.",
+              },
+              {
+                kind: "compareFlow",
+                before: {
+                  label: "Build first",
+                  steps: [
+                    "Ask for code on turn one",
+                    "Patch what comes back",
+                    "Patch the patches",
+                    "Realize the structure was wrong",
+                    "Start over",
+                  ],
+                },
+                after: {
+                  label: "Plan first",
+                  steps: [
+                    "Tour and explore in Plan Mode",
+                    "Write the seven-section plan",
+                    "Get one round of feedback",
+                    "Hand the plan to the model",
+                    "Build once",
+                  ],
+                },
+              },
+            ],
           },
           {
             heading: "The seven-section plan",
-            body: "A repeatable plan shape that holds up across small features and bigger refactors. Skip a section if it is genuinely not relevant, but skip on purpose, not by accident.",
-            bullets: [
-              "Goal: what success looks like in one sentence.",
-              "Context: the files, components, and constraints that matter.",
-              "Approach: the path you intend to take, in plain language.",
-              "Trade-offs: what you considered and rejected and why.",
-              "Risks: what could go wrong and how you'll catch it.",
-              "Steps: the ordered changes the assistant will make.",
-              "Verification: how you'll know the work is done.",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "A repeatable plan shape that holds up across small features and bigger refactors. Skip a section if it is genuinely not relevant, but skip on purpose, not by accident.",
+              },
+              {
+                kind: "code",
+                label: "Plan template",
+                language: "markdown",
+                text: "## Goal\nWhat success looks like in one sentence.\n\n## Context\nFiles, components, tokens, and constraints that matter.\n\n## Approach\nThe path you intend to take, in plain language.\n\n## Trade-offs\nWhat you considered and rejected, and why.\n\n## Risks\nWhat could go wrong and how you'll catch it.\n\n## Steps\nThe ordered changes the assistant will make.\n\n## Verification\nHow you'll know the work is done.",
+              },
+              {
+                kind: "wink",
+                text: "If the plan fits in a tweet, it isn't a plan. If it fits in a deck, it's the wrong shape. A page of plain text is the right size.",
+              },
             ],
           },
           {
             heading: "Socialize the plan, then build",
-            body: "Send the plan to your engineer, your PM, or a peer designer before you build. Five minutes of feedback on a plan saves a day of feedback on a half-finished implementation. Treat the assistant as a sparring partner during this stage: ask it for the case against your plan, the missing edge cases, and the simplest version that would still be useful. The plan you ship is rarely the plan you started with, and that is the point.",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Send the plan to your engineer, your PM, or a peer designer before you build. Five minutes of feedback on a plan saves a day of feedback on a half-finished implementation. The plan you ship is rarely the plan you started with, and that is the point.",
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "loop",
+                title: "The plan is the design document now",
+                text: "In AI-assisted work, the plan does the job a Figma cover page or a project brief used to do. It's the artifact that tells the team what's coming, what was considered, and what to push back on. Treat it like one.",
+              },
+            ],
           },
         ],
       },
       {
-        id: "learning-and-documenting-design",
+        id: "documenting-design-and-handing-it-off",
         number: 9,
-        title: "Learning & documenting design with AI",
+        title: "Documenting design and handing it off",
         summary:
-          "Three layered questions for any unfamiliar surface, plus generating component docs, accessibility audits, and design-system explainers on demand.",
-        readTime: "2 min",
+          "Handoff isn't a single act anymore. Figma frames going in, screenshots and video coming out, copy along the way, QE test plans, engineering handoff, and the source-of-truth file the next designer inherits.",
+        readTime: "6 min",
         sections: [
           {
-            heading: "Three layered questions for any surface",
-            body: "When you land on an unfamiliar component, file, or feature, ask three questions in order. Each one builds on the last and produces an answer you can actually use, instead of a wall of summary.",
-            bullets: [
-              "What is this, in one paragraph, for someone who has never seen it?",
-              "How is it used elsewhere in the product, with concrete examples?",
-              "What would I have to change to add a new variant or fix a known issue?",
+            heading: "Handoff isn't a single act anymore",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The old version of handoff was a single moment: redlines, a deck, a meeting, a Jira ticket. Vibe coding spreads it across the project. Inputs land at the start, artifacts collect in the middle, test plans and engineering handoffs arrive at the end, and a source-of-truth file outlasts all of it. Each handoff is a smaller, lower-ceremony exchange than the old monolithic one — and the cumulative effect is sharper.",
+              },
+              {
+                kind: "flow",
+                label: "Artifacts across the lifecycle",
+                steps: [
+                  { title: "Figma frames", meta: "Going in" },
+                  { title: "Screenshots and video", meta: "From the running build" },
+                  { title: "Real copy", meta: "As you go" },
+                  { title: "QE test plan", meta: "Before review" },
+                  { title: "Engineering handoff", meta: "Toward production" },
+                  { title: "Source-of-truth file", meta: "For the next designer" },
+                ],
+              },
             ],
           },
           {
-            heading: "Generate the docs you wish existed",
-            body: "Most design systems are under-documented in the places that matter most: edge cases, accessibility behavior, and the reasoning behind decisions. Use the assistant to draft the missing pieces from the actual code and design files, then edit. A draft you correct in ten minutes is faster than a blank page you fill in an hour.",
-          },
-          {
-            heading: "Audits on demand",
-            body: "Treat audits as a question, not a project. Ask for an accessibility pass on a single component before you ask for one on the whole app. Ask for a Spectrum-conformance check on the screen you just changed. Small, frequent audits beat the once-a-year heroic sweep, and they are cheap enough to run as part of normal work.",
-          },
-        ],
-      },
-      {
-        id: "context-that-travels-with-you",
-        number: 10,
-        title: "Context that travels with you",
-        summary:
-          "Taxonomy files, design token references, what survives across sessions, and when to start fresh.",
-        readTime: "2 min",
-        sections: [
-          {
-            heading: "Some context belongs in the project, not the prompt",
-            body: "A short set of files in your repo can do more for output quality than any clever prompt. Audience descriptions, voice guidance, design token references, and naming conventions belong in version-controlled files the assistant can read. They survive across sessions, across teammates, and across model upgrades.",
-            bullets: [
-              "A taxonomy file: who uses this, what they call things, what they care about.",
-              "A token reference: the colors, type, spacing, and motion variables you actually ship.",
-              "A patterns file: the handful of layouts and interactions your product reuses.",
+            heading: "Figma frames going in",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Even when you're driving the build, Figma still earns its keep at the front end. A frame the model can read — through the Figma MCP or as an attached image — narrows what gets generated and gives the rest of the team something to react to. Treat the input frame as a contract: it's the most precise version of the intent you'll have on day one, and the version everyone agreed on before code existed.",
+              },
+              {
+                kind: "checklist",
+                items: [
+                  {
+                    positive: true,
+                    title: "Name layers and components",
+                    text: "The MCP can read names. Generic names give you generic output.",
+                  },
+                  {
+                    positive: true,
+                    title: "Use design tokens, not styles",
+                    text: "A frame that references tokens generates code that references tokens. A frame full of one-off colors generates one-off colors.",
+                  },
+                  {
+                    positive: false,
+                    title: "A pixel-perfect mock of every state",
+                    text: "You don't need it. One frame for the happy path, plus a list of edge cases in the description, beats a forty-frame file you'll never update.",
+                  },
+                ],
+              },
             ],
           },
           {
-            heading: "Context rot and the 70 percent rule",
-            body: "Long sessions get worse, not better. Earlier turns crowd out later ones, the assistant starts repeating itself, and small mistakes compound. A working rule of thumb: when you feel like you're roughly 70 percent through the useful life of a conversation, stop and start fresh with a clean plan and only the context that still matters. A new chat is almost always cheaper than rescuing a tired one.",
+            heading: "Screenshots and video coming out",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Once the prototype runs, the artifacts that travel are no longer Figma frames. They're screenshots of real states, short screen recordings of flows, and the occasional clip of the interaction the team keeps asking about. Capture them as you go, name them clearly, and keep them in a place the team can find. They are the design review materials for AI-assisted work.",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    icon: "layers",
+                    eyebrow: "Static",
+                    title: "Screenshots of real states",
+                    text: "Empty, loading, error, and dense. The four states AI-generated UIs almost always break on, and the four most worth pinning to a thread.",
+                  },
+                  {
+                    icon: "loop",
+                    eyebrow: "Motion",
+                    title: "Short screen recordings",
+                    text: "Twenty seconds, captioned in the filename. Long enough to show the flow. Short enough that someone will actually watch it.",
+                  },
+                  {
+                    icon: "spark",
+                    eyebrow: "The hero clip",
+                    title: "The interaction in question",
+                    text: "The one moment the team keeps asking about. Clip it once, share it everywhere, and stop re-recording it.",
+                  },
+                ],
+              },
+            ],
           },
           {
-            heading: "Start fresh, but don't start over",
-            body: "Starting fresh does not mean throwing the work away. It means writing a short handoff to yourself: the goal, the decisions made so far, the open questions, and the relevant files. Paste that into a new session and you keep the progress without dragging the rot. Done well, this is one of the most underrated skills in AI-assisted work.",
+            heading: "Copy and content along the way",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Real copy, not lorem ipsum, belongs in the prototype as soon as you have it. Draft microcopy with the model and edit by hand. Pull in real product names, real labels, real error states. Content surfaces design problems that placeholder text politely covers up, and the cost of getting it right early is much smaller than fixing it in QE.",
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "chat",
+                title: "The model drafts, you decide",
+                text: "Treat AI-drafted microcopy the way a content designer treats a first pass: useful starting material, not the answer. The voice is yours. The model only knows the average of its training set.",
+              },
+            ],
+          },
+          {
+            heading: "QE test plans",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "AI-assisted features are easy to ship and easy to break. Hand QE a test plan that names the unhappy paths the model is likely to fumble. The model can draft the plan with you. Your job is to insist on the cases your prototype hides.",
+              },
+              {
+                kind: "checklist",
+                items: [
+                  {
+                    positive: true,
+                    title: "The empty state",
+                    text: "What does the screen look like before there's any data? AI-generated UI is built around the populated case.",
+                  },
+                  {
+                    positive: true,
+                    title: "The long input",
+                    text: "A 200-character title, a 500-row list, a name with non-Latin characters. Layouts that work for short, neat data fall apart on real data.",
+                  },
+                  {
+                    positive: true,
+                    title: "The slow network",
+                    text: "Loading states, optimistic updates, retry behavior. Easy to fake on localhost, hard to fake in production.",
+                  },
+                  {
+                    positive: true,
+                    title: "The keyboard and screen reader path",
+                    text: "Tab through every interactive element. Listen to the screen reader read the page. The two cheapest accessibility checks, and the two most often skipped.",
+                  },
+                  {
+                    positive: true,
+                    title: "The path that fails",
+                    text: "What happens when validation fails, the API errors, or the server returns nothing? AI loves the happy path; QE shouldn't.",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            heading: "Engineering handoff",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "When the work crosses from your prototype to production, engineering needs more than the URL. The handoff is short when the build is short, but it should never be zero. Five short paragraphs in the PR description outperform a thirty-minute walkthrough almost every time.",
+              },
+              {
+                kind: "steps",
+                items: [
+                  {
+                    title: "The plan you started with",
+                    text: "Paste the seven-section plan from chapter 8. Engineering needs to see what was decided before the code was written.",
+                  },
+                  {
+                    title: "What you actually built",
+                    text: "A short delta from the plan. What changed, what got cut, what got added. Honesty here saves an argument later.",
+                  },
+                  {
+                    title: "Components to keep or rewrite",
+                    text: "Mark which prototype components are production-ready and which are scaffolding. A list, not a tour.",
+                  },
+                  {
+                    title: "Open questions",
+                    text: "Anything you didn't resolve. Naming an open question is not failure; pretending one doesn't exist is.",
+                  },
+                  {
+                    title: "How to run it",
+                    text: "The dev server command, the env vars, the seed data. The fewer assumptions in the handoff, the fewer Slack pings later.",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            heading: "The source-of-truth file the next designer inherits",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Every project should leave behind one file that explains what it is and how to keep working on it. Not a deck. A short, version-controlled document that names the goal, the audience, the decisions, the components, and the things that would have helped you on day one. Write it for the next designer — which might be future you — and the project's second life is much cheaper than the first.",
+              },
+              {
+                kind: "code",
+                label: "PROJECT.md template",
+                language: "markdown",
+                text: "# What this is\nOne paragraph: the product, the audience, the goal.\n\n# How to run it\nClone, install, the dev command, the env vars.\n\n# Components and patterns\nThe components worth knowing about, with file paths.\n\n# Decisions worth remembering\nWhat we tried, what we picked, and why.\n\n# Open questions\nWhat we didn't resolve and where it would matter.\n\n# Where the artifacts live\nFigma file, screenshots folder, recordings, plan, PRs.",
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "target",
+                title: "The artifact that outlasts you",
+                text: "Decks get lost. Slack threads age out. Figma files drift. A markdown file in the repo travels with the code, opens in any editor, and renders on every PR review. Make this the thing the team can rely on.",
+              },
+            ],
           },
         ],
       },
@@ -1070,7 +2528,7 @@ export const playbook: Part[] = [
     chapters: [
       {
         id: "from-figma-to-working-ui",
-        number: 11,
+        number: 10,
         title: "From Figma to working UI",
         summary:
           "The design-to-code loop in practice: when to design first, when to skip Figma, and how to choose between screenshot, frame, and spec as input.",
@@ -1102,7 +2560,7 @@ export const playbook: Part[] = [
       },
       {
         id: "visual-design-fidelity",
-        number: 12,
+        number: 11,
         title: "Visual design fidelity",
         summary:
           "Holding the line on spacing, type, color, and hierarchy, with Spectrum as the canonical reference and a checklist for AI's visual tells.",
@@ -1131,7 +2589,7 @@ export const playbook: Part[] = [
       },
       {
         id: "motion-interaction-real-content",
-        number: 13,
+        number: 12,
         title: "Motion, interaction, and real content",
         summary:
           "Prototyping animation and state transitions, libraries worth knowing, how to describe motion in prompts, and replacing lorem ipsum with realistic data.",
@@ -1164,7 +2622,7 @@ export const playbook: Part[] = [
       },
       {
         id: "accessibility-as-you-build",
-        number: 14,
+        number: 13,
         title: "Accessibility as you build",
         summary:
           "Keyboard nav, focus, semantic markup, contrast, and screen readers, treated as a prompt-time concern instead of a post-launch audit.",
@@ -1200,7 +2658,7 @@ export const playbook: Part[] = [
     chapters: [
       {
         id: "quality-and-ownership",
-        number: 15,
+        number: 14,
         title: "Quality and ownership: avoiding AI slop",
         summary:
           "What slop looks like in design output, using Git as version history, and reviewing AI-generated code with the BLOCKER, MAJOR, MINOR, NIT habit.",
@@ -1232,13 +2690,13 @@ export const playbook: Part[] = [
           },
           {
             heading: "Own code you didn't type",
-            body: "If your name is on the PR, the code is yours. Read every change before you accept it. Run it. Test the unhappy paths. Ask the assistant to explain anything you don't understand, then verify the explanation. The shortcut to shipping AI-assisted work that you can stand behind is refusing to ship anything you can't explain.",
+            body: "If your name is on the PR, the code is yours — even when the PR is going to engineering for review and merge. Read every change before you push it. Run it. Test the unhappy paths. Ask the assistant to explain anything you don't understand, then verify the explanation. The shortcut to AI-assisted work you can stand behind is refusing to send anything into review that you can't explain.",
           },
         ],
       },
       {
         id: "working-as-a-team",
-        number: 16,
+        number: 15,
         title: "Working as a team",
         summary:
           "The AI pod rhythm, the design-build-review loop from the IFT playbook, cross-functional coordination, and automating the repetitive parts of your own process.",

@@ -338,7 +338,7 @@ export function Home() {
 
           <div className="about-author" aria-labelledby="about-author-heading">
             <h3 id="about-author-heading" className="about-author-name">
-              Veronica <em>Peitong Chen</em>
+              <em>Veronica</em>
             </h3>
             <p className="about-author-body">
               Her practice has been tangled up with AI for a long time &mdash;

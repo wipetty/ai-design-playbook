@@ -1,5 +1,45 @@
 import type { SectionBlock } from "../data/playbook";
 import Icon from "./Icon";
+import LightboxThumbnail from "./LightboxThumbnail";
+
+const LINK_RE = /\[([^\]]+)\]\(([^)]+)\)/g;
+
+function RichText({ text }: { text: string }) {
+  const parts: Array<string | { label: string; href: string }> = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  LINK_RE.lastIndex = 0;
+  while ((match = LINK_RE.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    parts.push({ label: match[1], href: match[2] });
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  if (parts.length === 0) return <>{text}</>;
+  return (
+    <>
+      {parts.map((part, i) => {
+        if (typeof part === "string") return <span key={i}>{part}</span>;
+        const isExternal = /^https?:\/\//.test(part.href);
+        return (
+          <a
+            key={i}
+            className="cb-link"
+            href={part.href}
+            target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noopener noreferrer" : undefined}
+          >
+            {part.label}
+          </a>
+        );
+      })}
+    </>
+  );
+}
 
 export function SectionBlocks({ blocks }: { blocks: SectionBlock[] }) {
   return (
@@ -14,7 +54,11 @@ export function SectionBlocks({ blocks }: { blocks: SectionBlock[] }) {
 function Block({ block }: { block: SectionBlock }) {
   switch (block.kind) {
     case "paragraph":
-      return <p className="cb-paragraph">{block.text}</p>;
+      return (
+        <p className="cb-paragraph">
+          <RichText text={block.text} />
+        </p>
+      );
 
     case "callout":
       return (
@@ -29,7 +73,24 @@ function Block({ block }: { block: SectionBlock }) {
           )}
           <div className="cb-callout-body">
             {block.title && <p className="cb-callout-title">{block.title}</p>}
-            <p className="cb-callout-text">{block.text}</p>
+            <p className="cb-callout-text">
+              <RichText text={block.text} />
+            </p>
+            {block.image && (
+              <figure className="cb-callout-figure">
+                <div className="cb-callout-figure-frame">
+                  <LightboxThumbnail
+                    src={block.image.src}
+                    alt={block.image.alt}
+                  />
+                </div>
+                {block.image.caption && (
+                  <figcaption className="cb-callout-figure-caption">
+                    <RichText text={block.image.caption} />
+                  </figcaption>
+                )}
+              </figure>
+            )}
           </div>
         </aside>
       );
@@ -71,11 +132,9 @@ function Block({ block }: { block: SectionBlock }) {
             >
               {item.image && (
                 <div className="cb-card-image">
-                  <img
+                  <LightboxThumbnail
                     src={item.image.src}
                     alt={item.image.alt}
-                    loading="lazy"
-                    decoding="async"
                   />
                 </div>
               )}
@@ -89,7 +148,14 @@ function Block({ block }: { block: SectionBlock }) {
                   <span className="cb-card-eyebrow">{item.eyebrow}</span>
                 )}
                 <h3 className="cb-card-title">{item.title}</h3>
-                <p className="cb-card-text">{item.text}</p>
+                <p className="cb-card-text">
+                  <RichText text={item.text} />
+                </p>
+                {item.meta && (
+                  <p className="cb-card-meta">
+                    <RichText text={item.meta} />
+                  </p>
+                )}
               </div>
             </article>
           ))}
@@ -125,7 +191,9 @@ function Block({ block }: { block: SectionBlock }) {
           <span aria-hidden="true" className="cb-wink-mark">
             <Icon name="spark" size={14} />
           </span>
-          <span className="cb-wink-text">{block.text}</span>
+          <span className="cb-wink-text">
+            <RichText text={block.text} />
+          </span>
         </p>
       );
 
@@ -179,7 +247,9 @@ function Block({ block }: { block: SectionBlock }) {
                 <span className="cb-check-title">
                   {item.positive ? "Does" : "Doesn't"}: {item.title}
                 </span>
-                <span className="cb-check-text">{item.text}</span>
+                <span className="cb-check-text">
+                  <RichText text={item.text} />
+                </span>
               </div>
             </li>
           ))}
@@ -190,13 +260,36 @@ function Block({ block }: { block: SectionBlock }) {
       return (
         <ol className="cb-steps">
           {block.items.map((item, i) => (
-            <li key={i} className="cb-step">
+            <li
+              key={i}
+              className={`cb-step${item.image ? " cb-step-has-image" : ""}${item.image?.variant === "logo" ? " cb-step-has-logo" : ""}`}
+            >
               <span className="cb-step-num">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <div className="cb-step-body">
                 <h3 className="cb-step-title">{item.title}</h3>
-                <p className="cb-step-text">{item.text}</p>
+                <p className="cb-step-text">
+                  <RichText text={item.text} />
+                </p>
+                {item.image &&
+                  (item.image.variant === "logo" ? (
+                    <div className="cb-step-image cb-step-image-logo">
+                      <img
+                        src={item.image.src}
+                        alt={item.image.alt}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                  ) : (
+                    <div className="cb-step-image">
+                      <LightboxThumbnail
+                        src={item.image.src}
+                        alt={item.image.alt}
+                      />
+                    </div>
+                  ))}
               </div>
             </li>
           ))}
@@ -233,7 +326,9 @@ function Block({ block }: { block: SectionBlock }) {
               {block.rows.map((row, i) => (
                 <tr key={i}>
                   {row.map((cell, j) => (
-                    <td key={j}>{cell}</td>
+                    <td key={j}>
+                      <RichText text={cell} />
+                    </td>
                   ))}
                 </tr>
               ))}
@@ -271,7 +366,285 @@ function Block({ block }: { block: SectionBlock }) {
 
     case "mirror":
       return <MirrorDiagram block={block} />;
+
+    case "figureGrid": {
+      const columns = block.columns ?? 2;
+      return (
+        <figure className={`cb-figure-grid cb-figure-grid-${columns}`}>
+          <div className="cb-figure-grid-track">
+            {block.items.map((item, i) => (
+              <figure key={i} className="cb-figure-tile">
+                <div className="cb-figure-frame">
+                  <LightboxThumbnail
+                    src={item.image.src}
+                    alt={item.image.alt}
+                  />
+                </div>
+                <figcaption className="cb-figure-caption">
+                  {item.eyebrow && (
+                    <span className="cb-figure-eyebrow">{item.eyebrow}</span>
+                  )}
+                  <span className="cb-figure-caption-text">
+                    <RichText text={item.caption} />
+                  </span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          {block.caption && (
+            <figcaption className="cb-figure-grid-caption">
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
+    }
+
+    case "code":
+      return (
+        <figure className="cb-code">
+          {(block.label || block.language) && (
+            <figcaption className="cb-code-header">
+              {block.label && (
+                <span className="cb-code-label">{block.label}</span>
+              )}
+              {block.language && (
+                <span className="cb-code-lang">{block.language}</span>
+              )}
+            </figcaption>
+          )}
+          <pre className="cb-code-body">
+            <code>{block.text}</code>
+          </pre>
+        </figure>
+      );
+
+    case "figure":
+      return (
+        <figure className="cb-figure">
+          <div className="cb-figure-frame">
+            <LightboxThumbnail
+              src={block.image.src}
+              alt={block.image.alt}
+            />
+          </div>
+          {(block.eyebrow || block.caption) && (
+            <figcaption className="cb-figure-caption cb-figure-caption-center">
+              {block.eyebrow && (
+                <span className="cb-figure-eyebrow">{block.eyebrow}</span>
+              )}
+              {block.caption && (
+                <span className="cb-figure-caption-text">
+                  <RichText text={block.caption} />
+                </span>
+              )}
+            </figcaption>
+          )}
+        </figure>
+      );
+
+    case "anatomy":
+      return <AnatomyDiagram block={block} />;
+
+    case "balance":
+      return <BalanceDiagram block={block} />;
+
+    case "bento":
+      return <BentoGrid block={block} />;
   }
+}
+
+function AnatomyDiagram({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "anatomy" }>;
+}) {
+  const orderedNotes = [...block.notes].sort((a, b) => a.mark - b.mark);
+  return (
+    <figure className="cb-anatomy">
+      {block.label && (
+        <figcaption className="cb-anatomy-label">{block.label}</figcaption>
+      )}
+      <div className="cb-anatomy-grid">
+        <pre className="cb-anatomy-source" aria-label={block.label}>
+          {block.lines.map((line, i) => (
+            <div key={i} className="cb-anatomy-line">
+              <span className="cb-anatomy-line-num" aria-hidden="true">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <code className="cb-anatomy-line-text">
+                {line.text || "\u00A0"}
+              </code>
+              {line.mark != null && (
+                <span
+                  className="cb-anatomy-mark"
+                  aria-label={`See note ${line.mark}`}
+                >
+                  {line.mark}
+                </span>
+              )}
+            </div>
+          ))}
+        </pre>
+        <ol className="cb-anatomy-notes">
+          {orderedNotes.map((note) => (
+            <li key={note.mark} className="cb-anatomy-note">
+              <span className="cb-anatomy-note-mark" aria-hidden="true">
+                {note.mark}
+              </span>
+              <div className="cb-anatomy-note-body">
+                <p className="cb-anatomy-note-label">{note.label}</p>
+                <p className="cb-anatomy-note-text">
+                  <RichText text={note.text} />
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+      {block.caption && (
+        <p className="cb-anatomy-caption">
+          <RichText text={block.caption} />
+        </p>
+      )}
+    </figure>
+  );
+}
+
+function BalanceDiagram({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "balance" }>;
+}) {
+  const tilt = block.tilt ?? "even";
+  const angle = tilt === "left" ? -8 : tilt === "right" ? 8 : 0;
+  return (
+    <figure className={`cb-balance cb-balance-tilt-${tilt}`}>
+      <svg
+        className="cb-balance-svg"
+        viewBox="0 0 400 220"
+        role="img"
+        aria-label={`Tradeoff between ${block.left.label} and ${block.right.label}`}
+      >
+        <line
+          x1="200"
+          y1="60"
+          x2="200"
+          y2="180"
+          className="cb-balance-stem"
+        />
+        <polygon
+          points="200,60 170,180 230,180"
+          className="cb-balance-base"
+        />
+        <line
+          x1="180"
+          y1="200"
+          x2="220"
+          y2="200"
+          className="cb-balance-floor"
+        />
+        <g
+          className="cb-balance-beam-group"
+          style={{
+            transform: `rotate(${angle}deg)`,
+            transformOrigin: "200px 60px",
+            transition: "transform 800ms cubic-bezier(.2,.7,.2,1)",
+          }}
+        >
+          <line
+            x1="60"
+            y1="60"
+            x2="340"
+            y2="60"
+            className="cb-balance-beam"
+          />
+          <line
+            x1="80"
+            y1="60"
+            x2="80"
+            y2="100"
+            className="cb-balance-rope"
+          />
+          <line
+            x1="320"
+            y1="60"
+            x2="320"
+            y2="100"
+            className="cb-balance-rope"
+          />
+          <circle
+            cx="80"
+            cy="118"
+            r="22"
+            className="cb-balance-pan-shape"
+          />
+          <circle
+            cx="320"
+            cy="118"
+            r="22"
+            className="cb-balance-pan-shape"
+          />
+        </g>
+      </svg>
+      <div className="cb-balance-pans">
+        <div className="cb-balance-pan cb-balance-pan-left">
+          <p className="cb-balance-pan-label">{block.left.label}</p>
+          <p className="cb-balance-pan-text">
+            <RichText text={block.left.text} />
+          </p>
+        </div>
+        <div className="cb-balance-pan cb-balance-pan-right">
+          <p className="cb-balance-pan-label">{block.right.label}</p>
+          <p className="cb-balance-pan-text">
+            <RichText text={block.right.text} />
+          </p>
+        </div>
+      </div>
+      {block.caption && (
+        <figcaption className="cb-balance-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function BentoGrid({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "bento" }>;
+}) {
+  return (
+    <figure className="cb-bento">
+      <div className="cb-bento-grid">
+        {block.items.map((item, i) => (
+          <article
+            key={i}
+            className={`cb-bento-tile cb-bento-tile-${item.size ?? "small"}${item.accent ? " cb-bento-tile-accent" : ""}`}
+          >
+            {item.icon && (
+              <span className="cb-bento-icon" aria-hidden="true">
+                <Icon name={item.icon} size={18} />
+              </span>
+            )}
+            {item.eyebrow && (
+              <span className="cb-bento-eyebrow">{item.eyebrow}</span>
+            )}
+            <h3 className="cb-bento-title">{item.title}</h3>
+            <p className="cb-bento-text">
+              <RichText text={item.text} />
+            </p>
+          </article>
+        ))}
+      </div>
+      {block.caption && (
+        <figcaption className="cb-bento-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
 }
 
 function StageStack({
