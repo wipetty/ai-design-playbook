@@ -102,10 +102,10 @@
   --accent-soft: rgba(91, 142, 255, 0.18);
   --accent-glow: rgba(91, 142, 255, 0.22);
 
-  /* Italic emphasis is just brighter warm white — same role as the light theme's
-     muted-strong on em. NOT a color accent. */
+  /* Italic emphasis mirrors the light theme: a clearly dimmer foreground tone
+     so the italic words read as a distinct color against the body text. */
   --em-style: italic;
-  --em-color: var(--muted-strong);
+  --em-color: rgba(255, 255, 255, 0.55);
   --em-color-on-alt: rgba(255, 255, 255, 0.55);
   --em-weight: 400;
 
@@ -1492,6 +1492,44 @@ em {
   color: var(--muted-on-alt);
   margin: 32px 0 0;
   max-width: 640px;
+}
+
+.about-author {
+  margin-top: 72px;
+  max-width: 640px;
+}
+
+.about-author-name {
+  font-family: var(--display);
+  font-weight: var(--display-weight);
+  font-size: clamp(32px, 4vw, 48px);
+  letter-spacing: var(--display-tracking);
+  line-height: 1.05;
+  color: var(--fg-on-alt);
+  margin: 0;
+}
+
+.about-author-name em {
+  color: var(--em-color-on-alt);
+  font-weight: var(--em-weight);
+  font-style: normal;
+}
+
+.about-author-body {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--muted-on-alt);
+  margin: 24px 0 0;
+}
+
+@media (max-width: 720px) {
+  .about-author {
+    margin-top: 48px;
+  }
+
+  .about-author-body {
+    font-size: 16px;
+  }
 }
 
 /* ============================================================

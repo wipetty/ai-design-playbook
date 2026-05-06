@@ -315,14 +315,30 @@ export function Home() {
         <div className="about-inner">
           <span className="section-eyebrow">About</span>
           <h2 id="about-heading" className="about-title">
-            Who this is <em>for</em>.
+            Why this <em>exists</em>.
           </h2>
           <p className="about-body">
-            Designers who want to use AI as a craft tool, not a magic trick.
-            Product designers, content designers, and design leaders who'd
-            rather spend a quiet afternoon learning the new instrument than
-            another week arguing about it.
+            This is a small set of notes from a working designer trying to make
+            sense of AI without losing the craft. It's written in the open, in
+            case any of it is useful to designers who'd rather spend a quiet
+            afternoon learning the new instrument than another week arguing
+            about it.
           </p>
+
+          <div className="about-author" aria-labelledby="about-author-heading">
+            <h3 id="about-author-heading" className="about-author-name">
+              Veronica <em>Peitong Chen</em>
+            </h3>
+            <p className="about-author-body">
+              Her practice has been tangled up with AI for a long time &mdash;
+              back when getting a model to do anything useful meant training
+              it yourself, wiring up your own agents, and coaxing pictures out
+              of small, stubborn networks. That work, alongside years spent in
+              code, parametric design, and design technology, is what made the
+              question of how AI and design fit together feel personal. This
+              playbook is a quiet attempt to think it through in public.
+            </p>
+          </div>
         </div>
       </section>
     </>

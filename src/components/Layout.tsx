@@ -28,7 +28,7 @@ export function Layout({ children }: { children: ReactNode }) {
             </nav>
             <span className="site-byline">
               <span className="site-byline-label">By</span>
-              <span className="site-byline-name">Veronica Peitong Chen</span>
+              <span className="site-byline-name">@peitongc</span>
             </span>
             <ThemeToggle />
           </div>
@@ -39,7 +39,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <div className="site-footer-inner">
           <span>© 2026 · AI Design Playbook</span>
           <span className="site-footer-credit">
-            Written and designed by{" "}
+            Made by{" "}
             <span className="site-footer-credit-name">
               Veronica Peitong Chen
             </span>
