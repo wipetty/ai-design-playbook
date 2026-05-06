@@ -1,27 +1,21 @@
-import { IMSProvider } from "./contexts/IMSProvider";
-import { Provider } from "@react-spectrum/s2";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import ChapterPage from "./pages/ChapterPage";
+import { ThemeProvider } from "./contexts/ThemeProvider";
 
 function App() {
   return (
-    <Provider>
-      <IMSProvider>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh",
-            width: "100vw",
-          }}
-        >
-          <h2>Welcome to the Clean Slate template</h2>
-          <div>
-            Start by asking the agent to <code>Set up the project</code>.
-          </div>
-        </div>
-      </IMSProvider>
-    </Provider>
+    <ThemeProvider>
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/:partId/:chapterId" element={<ChapterPage />} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

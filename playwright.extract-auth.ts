@@ -163,7 +163,7 @@ async function verifyAuthentication(): Promise<boolean> {
 
     // Check if we have an auth token
     const hasAuth = await page.evaluate(() => {
-      return typeof (window as any).adobeIMSAuthToken === 'string';
+      return typeof (window as unknown as { adobeIMSAuthToken?: unknown }).adobeIMSAuthToken === 'string';
     });
 
     await browser.close();
@@ -186,7 +186,7 @@ async function extract() {
   console.log('Attempting to extract authentication from your existing browser...\n');
 
   // Try Chrome first (most common)
-  let cookies = await extractChromeAdobeCookies();
+  const cookies = await extractChromeAdobeCookies();
 
   // TODO: Add Safari and Firefox extraction if Chrome fails
   // Safari: ~/Library/Cookies/Cookies.binarycookies

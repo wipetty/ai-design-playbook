@@ -26,8 +26,20 @@ After setup completes:
 
 ## Project Configuration
 
-**Framework:** React (default - will be updated after setup)
-**Status:** ⚠️ Setup required - run the interview to configure
+**Project Type:** Project (AI Design Playbook website)
+**Framework:** React
+**Routing:** React Router (`react-router-dom`)
+**State Management:** React state only
+**Adobe Services:** None configured (IMS files retained for future use)
+**Status:** ✅ Configured and ready
+
+**Project structure:**
+- `src/data/playbook.ts` — content for 5 parts and 16 chapters
+- `src/pages/Home.tsx` — homepage with table of contents
+- `src/pages/ChapterPage.tsx` — individual chapter view with prev/next navigation
+- `src/components/Layout.tsx` — shared header and footer
+- `src/index.css` — site styles (dark theme, sentence case, accent orange)
+- `src/App.tsx` — routes via `BrowserRouter`
 
 ---
 

@@ -22,6 +22,7 @@
     "@react-spectrum/s2": "latest",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-router-dom": "^7.15.0",
     "uuid": "^13.0.0",
     "vite-console-forward-plugin": "^2.0.1"
   },

@@ -44,7 +44,7 @@ async function smartAuth() {
     // If we get here, extraction succeeded
     console.log('\n✨ Authentication extraction successful!\n');
     process.exit(0);
-  } catch (error) {
+  } catch {
     console.log('\n⚠️  Extraction failed - falling back to manual login\n');
   }
 
@@ -56,7 +56,7 @@ async function smartAuth() {
     execSync('tsx playwright.auth.setup.ts', {
       stdio: 'inherit',
     });
-  } catch (error) {
+  } catch {
     console.error('\n❌ Manual authentication failed\n');
     process.exit(1);
   }
