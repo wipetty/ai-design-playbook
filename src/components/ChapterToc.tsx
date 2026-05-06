@@ -130,6 +130,7 @@ export function ChapterToc() {
                                   isCurrent ? " toc-chapter-current" : ""
                                 }`}
                                 aria-current={isCurrent ? "page" : undefined}
+                                viewTransition
                               >
                                 <span className="toc-chapter-number">
                                   {String(chapter.number).padStart(2, "0")}

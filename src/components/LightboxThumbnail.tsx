@@ -1,16 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 
 interface LightboxThumbnailProps {
   src: string;
   alt: string;
   className?: string;
+  style?: CSSProperties;
 }
 
 export default function LightboxThumbnail({
   src,
   alt,
   className,
+  style,
 }: LightboxThumbnailProps) {
   const [open, setOpen] = useState(false);
 
@@ -37,6 +39,7 @@ export default function LightboxThumbnail({
         src={src}
         alt={alt}
         className={`lightbox-img${className ? ` ${className}` : ""}`}
+        style={style}
         loading="lazy"
         decoding="async"
         role="button"

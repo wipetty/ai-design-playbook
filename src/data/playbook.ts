@@ -52,7 +52,20 @@ export type SectionBlock =
         title: string;
         text: string;
         meta?: string;
-        image?: { src: string; alt: string };
+        image?: {
+          src: string;
+          alt: string;
+          position?:
+            | "left"
+            | "center"
+            | "right"
+            | "top"
+            | "bottom"
+            | "left top"
+            | "left bottom"
+            | "right top"
+            | "right bottom";
+        };
       }[];
     }
   | {
@@ -140,6 +153,38 @@ export type SectionBlock =
       image: { src: string; alt: string };
       eyebrow?: string;
       caption?: string;
+    }
+  | {
+      kind: "video";
+      src: string;
+      poster?: string;
+      alt: string;
+      eyebrow?: string;
+      caption?: string;
+    }
+  | {
+      kind: "ratio";
+      caption?: string;
+      rows: {
+        label?: string;
+        left: { title: string; text?: string };
+        operator: ">" | "<" | "=";
+        right: { title: string; text?: string };
+        tone?: "muted" | "active";
+      }[];
+    }
+  | {
+      kind: "variantDemo";
+      eyebrow?: string;
+      title?: string;
+      task?: string;
+      caption?: string;
+      variants: {
+        key: string;
+        label: string;
+        preview: "compact" | "cards" | "dense";
+        note?: string;
+      }[];
     }
   | {
       kind: "code";
@@ -2098,99 +2143,48 @@ description: Run the accessibility floor before pushing for review. Use any time
         title: "Planning and exploring options",
         summary:
           "Touring unfamiliar codebases and design systems, sparring on decisions, reading product data, generating alternatives, and turning all of it into a plan you can execute. The work that determines whether the build succeeds.",
-        readTime: "7 min",
+        readTime: "10 min",
         sections: [
           {
             heading: "The work that determines whether the build succeeds",
             blocks: [
               {
                 kind: "paragraph",
-                text: "By the time the assistant is writing files, most of the important decisions have already been made. What you're building, why, for whom, and against what constraints. The chapter below is the work that earns the build — touring the surface you'll change, sparring on what to change it to, reading the data and the alternatives, then writing it all down as a plan you can hand to the model on turn one.",
+                text: "By the time the assistant is writing files, most of the important decisions have already been made. What you're building, why, for whom, and against what constraints. The chapter below is the work that earns the build — framing the problem, reading the data, widening the option space with people and the model, preserving the alternatives in a switcher you can demo, and writing it all down as a plan you can hand to the model on turn one.",
+              },
+            ],
+          },
+          {
+            heading: "Describe the problem, not the solution",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The most expensive habit in vibe coding is describing the solution you already had in mind. \"Build a dropdown for filtering dates.\" The model builds the dropdown. The dropdown works. Three weeks later the team realizes a dropdown was the wrong primitive — most users wanted a quick toggle between last 7 and last 30 days. The dropdown was just the first solution that occurred to the designer.",
               },
               {
-                kind: "flow",
-                label: "How the time before the build actually breaks down",
-                steps: [
-                  { title: "Tour", meta: "Read the surface" },
-                  { title: "Spar", meta: "Pressure-test the call" },
-                  { title: "Read", meta: "Data and feedback" },
-                  { title: "Generate", meta: "Alternatives" },
-                  { title: "Plan", meta: "Write it down" },
-                ],
+                kind: "compareFlow",
+                before: {
+                  label: "Solution-first",
+                  steps: [
+                    "Build a dropdown for date filtering",
+                    "Receive a working dropdown",
+                    "Ship it",
+                    "Realize a dropdown was the wrong primitive",
+                  ],
+                },
+                after: {
+                  label: "Problem-first",
+                  steps: [
+                    "Users filter a table by date. Most want last 7 or 30 days; some need custom ranges.",
+                    "Ask for three approaches with tradeoffs",
+                    "Compare them, combine the strongest parts",
+                    "Ask the model to argue against the result",
+                  ],
+                },
               },
               {
                 kind: "wink",
-                text: "Skip these and the build is faster on day one and slower every day after.",
-              },
-            ],
-          },
-          {
-            heading: "Tour guide for unfamiliar surfaces",
-            blocks: [
-              {
-                kind: "paragraph",
-                text: "Most design work starts on a surface you didn't build. An unfamiliar repo, a design system you've inherited, a feature owned by another team. The model is the fastest tour guide ever invented for this. Ask the same three questions in order and you have a working map in minutes instead of an afternoon.",
-              },
-              {
-                kind: "steps",
-                items: [
-                  {
-                    title: "What is this, in one paragraph?",
-                    text: "Aimed at a teammate who has never seen the file or feature. Forces the model to compress, which surfaces what it actually understands and what it has been guessing.",
-                  },
-                  {
-                    title: "How is it used elsewhere?",
-                    text: "Concrete examples, with file paths. This is where invented-API answers fall apart — if the model can't point at a real call site, you've found the part of its summary you should not trust.",
-                  },
-                  {
-                    title: "What would I change to add a variant or fix a bug?",
-                    text: "Forces the tour to land on the place you actually need. The answer is the shortlist of files you'll spend the rest of the project in.",
-                  },
-                ],
-              },
-              {
-                kind: "callout",
-                tone: "neutral",
-                icon: "compass",
-                title: "Verify the parts that matter",
-                text: "The tour is a starting map, not a finished one. Click through to the files the model references before you commit to its mental model. The wrong map costs more than no map.",
-              },
-            ],
-          },
-          {
-            heading: "Sparring partner for decisions",
-            blocks: [
-              {
-                kind: "paragraph",
-                text: "Design choices are usually clearer when somebody pushes back on them. The model is a tireless, opinionated sparring partner that doesn't tire of the third version of a question. The trick is asking it to take a position, not asking it what to do.",
-              },
-              {
-                kind: "cards",
-                columns: 3,
-                items: [
-                  {
-                    icon: "x",
-                    eyebrow: "Opposition",
-                    title: "Make the case against",
-                    text: "\"Argue against this approach. What's the weakest assumption? What breaks first under load?\" Useful when you're falling in love with your own idea.",
-                  },
-                  {
-                    icon: "ruler",
-                    eyebrow: "Conservative",
-                    title: "The smallest version",
-                    text: "\"What's the version that does half of this and ships in a week?\" Surfaces the cheapest experiment hiding inside the ambitious one.",
-                  },
-                  {
-                    icon: "spark",
-                    eyebrow: "Bold",
-                    title: "The version with no constraints",
-                    text: "\"If we threw out the existing system, what's the version we'd actually want?\" Useful for naming what you're trading away to fit reality.",
-                  },
-                ],
-              },
-              {
-                kind: "pullquote",
-                text: "The point isn't to outsource the choice. It's to surface the trade-offs you'd otherwise miss.",
+                text: "If you can describe the solution before you've described the problem, the prompt is already too narrow.",
               },
             ],
           },
@@ -2199,7 +2193,7 @@ description: Run the accessibility floor before pushing for review. Use any time
             blocks: [
               {
                 kind: "paragraph",
-                text: "When the question is what the work is doing — not what it should look like — the model can read product data, user feedback, and qualitative notes faster than you can scroll through them. Treat the output as a hypothesis you can chase, not a finding you can quote.",
+                text: "Before you can describe the problem well, you need to know what the product is actually doing. The model can read product data, user feedback, and qualitative notes faster than you can scroll through them. Treat the output as a hypothesis you can chase, not a finding you can quote.",
               },
               {
                 kind: "checklist",
@@ -2211,8 +2205,8 @@ description: Run the accessibility floor before pushing for review. Use any time
                   },
                   {
                     positive: true,
-                    title: "Usage breakdowns",
-                    text: "Drop in the CSV or table. Ask for the surprises — the rows that don't fit the pattern you expected.",
+                    title: "Live analytics dashboards",
+                    text: "Point the model at the dashboard or query — Tableau, Amplitude, an internal funnel report — and ask which steps are leaking, which cohorts behave unlike the rest, and which numbers contradict the story you've been telling.",
                   },
                   {
                     positive: true,
@@ -2226,6 +2220,65 @@ description: Run the accessibility floor before pushing for review. Use any time
                   },
                 ],
               },
+              {
+                kind: "figure",
+                image: {
+                  src: "/images/analytics-funnel-benchmark.png",
+                  alt: "Funnel benchmark table comparing toolbar clickers, generate rate, response rate, and task success rate across tools like remove, upscale, expand, fill, annotate, precision flow, remove background, and instruct.",
+                },
+                eyebrow: "Funnel benchmark, all logged-in users",
+                caption:
+                  "Connect Claude to the Firefly analytics warehouse and it can pull a funnel like this on demand — toolbar clickers, generate rates, response rates, task success — and read it as a designer would. Where is intent breaking down? Which tools have a discovery problem versus a quality problem? Which surfaces are quietly carrying the product? The model turns the dashboard into a running conversation about which features deserve the next round of design work.",
+              },
+            ],
+          },
+          {
+            heading: "Figma is still where exploration starts",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Once you know the problem worth solving, the next move is widening the option space. Vibe coding compresses the gap between an idea and a working prototype, but it doesn't replace the moment when you and another designer are pushing frames around a Figma file at the speed of thought. Figma is still the fastest tool for that — the place where six layouts can sit on the same artboard in twenty minutes, where a design jam produces three credible directions in an hour, where the conversation that happens around the file is part of the work.",
+              },
+              {
+                kind: "paragraph",
+                text: "The model is great at generating alternatives. It is not great at the kind of generative conversation a design jam produces — half-finished pointing, on-the-fly recombination, the moment a peer says \"what if we just removed the second step entirely.\" Use Figma for that. Bring the model in after you've left the room with a smaller set of options worth testing in code.",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    icon: "figma",
+                    eyebrow: "Solo exploration",
+                    title: "Sketch fast, sketch wide",
+                    text: "Half-formed frames, deliberate variations on the same artboard, the moves you'd never write down in a doc. The point isn't polish — it's giving your own thinking enough surface area to react to.",
+                    image: {
+                      src: "/images/figma-sketch-wide-empty-state.png",
+                      alt: "Figma artboard showing nine variations of an Edit image empty state laid out side by side for fast comparison.",
+                    },
+                  },
+                  {
+                    icon: "loop",
+                    eyebrow: "Design jam",
+                    title: "Pull other designers in",
+                    text: "Forty-five minutes, two or three peers, the file projected. The conversation produces directions you wouldn't reach alone — and rules out directions that look promising to one and obvious to another.",
+                    image: {
+                      src: "/images/figma-design-jam-explorations.png",
+                      alt: "FigJam-style board labeled Explorations with a grid of Edit image empty state variations surrounded by sticky notes, reactions, and comments from peers.",
+                    },
+                  },
+                  {
+                    icon: "arrow",
+                    eyebrow: "Then bring the model",
+                    title: "Hand it your shortlist",
+                    text: "Walk into the vibe-coding session with two or three options you've already pressure-tested. The model accelerates the work after that point; before it, you're better off with people and a Figma file.",
+                    image: {
+                      src: "/images/vibe-coding-shortlist.gif",
+                      alt: "Animated vibe-coding session cycling through a shortlist of three Edit image empty state options inside a browser-based prototype.",
+                    },
+                  },
+                ],
+              },
             ],
           },
           {
@@ -2236,11 +2289,91 @@ description: Run the accessibility floor before pushing for review. Use any time
                 text: "Vague briefs benefit from breadth. Ask the model for ten directions for an empty state, six ways a transition could feel, four visual languages a feature could borrow from. Most of what comes back is unusable, and that is fine — the value is in the one or two threads that nudge your thinking sideways.",
               },
               {
+                kind: "video",
+                src: "/images/variation-dropdown.mp4",
+                alt: "Prototype with a dropdown at the top of the canvas that switches between three different empty state variations side by side.",
+                eyebrow: "Tip — keep every option live",
+                caption:
+                  "Ask the model to wire a small dropdown at the top of the prototype that switches between every variation it generated. Nothing gets thrown away, the team can compare them side by side in the same session, and the next round of feedback is about which direction to push — not which screenshot to revisit.",
+              },
+            ],
+          },
+          {
+            heading: "The variation pattern",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The vibe-coding move most designers don't know about, and the one that changes the most about what's possible during the build itself. Instead of building one version, evaluating, and either keeping or rebuilding — which silently throws away every earlier attempt — you build the variations into the prototype itself. A small selector at the top toggles between every version you've explored. Nothing gets thrown away. Stakeholders see five options in one session instead of three options spread across three meetings.",
+              },
+              {
+                kind: "bento",
+                items: [
+                  {
+                    size: "hero",
+                    accent: true,
+                    icon: "loop",
+                    eyebrow: "The pattern",
+                    title: "One prototype, every version",
+                    text: "Build the variations into the prototype itself. A small switcher at the top toggles between every direction you've tried, in the same running build. Stakeholders see five options in one session instead of three options spread across three meetings.",
+                  },
+                  {
+                    size: "wide",
+                    icon: "code",
+                    eyebrow: "How to wire it",
+                    title: "Dropdown, segmented, or query param",
+                    text: "Ten lines of code. Read a `variant` value from a control or the URL, render the matching component. The model can scaffold the switcher in one turn.",
+                  },
+                  {
+                    icon: "spark",
+                    eyebrow: "What it costs",
+                    title: "An hour, once",
+                    text: "Pays for itself the first time someone asks \"can we see the other one again.\"",
+                  },
+                  {
+                    icon: "check",
+                    eyebrow: "What you save",
+                    title: "The meetings",
+                    text: "Side-by-side comparison in the same session beats three rounds of \"and here's the other version.\"",
+                  },
+                ],
+              },
+              {
+                kind: "variantDemo",
+                eyebrow: "Try it — same prototype, three directions",
+                task: "Browse the team's recent work",
+                caption:
+                  "The switcher at the top swaps between every direction you tried. Stakeholders compare them in the same session, in the same prototype — instead of clicking through three Figma files or three meetings.",
+                variants: [
+                  {
+                    key: "a",
+                    label: "Variation A — Compact",
+                    preview: "compact",
+                    note: "Density-first. Shows the most rows on screen; trades discoverability for scan speed. Good when users come back daily and already know what they're looking for.",
+                  },
+                  {
+                    key: "b",
+                    label: "Variation B — Cards",
+                    preview: "cards",
+                    note: "Visual-first. Surfaces thumbnails and metadata up front; trades density for browseability. Good for first-time users and weekly check-ins.",
+                  },
+                  {
+                    key: "c",
+                    label: "Variation C — Dense table",
+                    preview: "dense",
+                    note: "Power-user-flavored. Adds sortable columns and inline metadata; trades whitespace for control. Reveals what the other two hide.",
+                  },
+                ],
+              },
+              {
                 kind: "callout",
                 tone: "accent",
-                icon: "wand",
-                title: "Ask for variety, not quality",
-                text: "When you want the model to spread, tell it to spread. \"Give me ten that disagree with each other\" works better than \"give me your best three.\" Pick the threads worth pulling once you can see the field.",
+                icon: "spark",
+                title: "Name the variations",
+                text: "\"A, B, C\" is fine for early sketches. \"Compact, Spacious, Dense\" or \"Modal, Inline, Drawer\" is better for review. Names become the vocabulary the team uses to give feedback, and good names produce sharper feedback than anonymous ones.",
+              },
+              {
+                kind: "wink",
+                text: "When you pick a winner, don't delete the others. Move them to a /variations folder. Six months later they're some of the most valuable artifacts in the file.",
               },
             ],
           },
@@ -2249,65 +2382,88 @@ description: Run the accessibility floor before pushing for review. Use any time
             blocks: [
               {
                 kind: "paragraph",
-                text: "On any task bigger than a single message, resist asking the assistant to start writing code on turn one. The work that gets shipped almost always starts with a plan instead. Plan Mode in modern editors is built for exactly this: a read-only conversation that produces an agreed approach before anyone touches the file system.",
+                text: "On any prototype bigger than a single screen, resist asking the model to start building on turn one. The flows that hold up almost always start with a written plan — the design intent, the surfaces involved, the variations you want to compare. Plan Mode in modern editors is built for exactly this: a read-only conversation that produces an agreed approach before anyone touches a frame.",
               },
               {
                 kind: "compareFlow",
                 before: {
                   label: "Build first",
                   steps: [
-                    "Ask for code on turn one",
-                    "Patch what comes back",
-                    "Patch the patches",
-                    "Realize the structure was wrong",
-                    "Start over",
+                    "Ask the model to build on turn one",
+                    "Push back on what shows up",
+                    "Push back on the pushback",
+                    "Realize the flow was wrong",
+                    "Start the prototype over",
                   ],
                 },
                 after: {
                   label: "Plan first",
                   steps: [
-                    "Tour and explore in Plan Mode",
+                    "Tour the surface in Plan Mode",
                     "Write the seven-section plan",
-                    "Get one round of feedback",
+                    "Get one round of design feedback",
                     "Hand the plan to the model",
-                    "Build once",
+                    "Build the prototype once",
                   ],
                 },
               },
-            ],
-          },
-          {
-            heading: "The seven-section plan",
-            blocks: [
               {
                 kind: "paragraph",
-                text: "A repeatable plan shape that holds up across small features and bigger refactors. Skip a section if it is genuinely not relevant, but skip on purpose, not by accident.",
+                text: "Plan Mode pays off in three compounding ways, each of which alone would justify the habit.",
               },
               {
-                kind: "code",
-                label: "Plan template",
-                language: "markdown",
-                text: "## Goal\nWhat success looks like in one sentence.\n\n## Context\nFiles, components, tokens, and constraints that matter.\n\n## Approach\nThe path you intend to take, in plain language.\n\n## Trade-offs\nWhat you considered and rejected, and why.\n\n## Risks\nWhat could go wrong and how you'll catch it.\n\n## Steps\nThe ordered changes the assistant will make.\n\n## Verification\nHow you'll know the work is done.",
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    icon: "spark",
+                    eyebrow: "Cheap to change",
+                    title: "Decisions before pixels",
+                    text: "Reading a thirty-line plan and editing two lines takes ninety seconds. Discovering those same two decisions were wrong after the model has built five screens takes an hour of cleanup.",
+                  },
+                  {
+                    icon: "check",
+                    eyebrow: "Caught early",
+                    title: "PMs and engineers can react",
+                    text: "A short plan is something a partner can read on Slack in two minutes and respond to. Half-built screens demand a meeting. Plan review surfaces missing edge cases, brand constraints, and feasibility concerns while the fix is still copy-and-paste.",
+                  },
+                  {
+                    icon: "target",
+                    eyebrow: "Less rework",
+                    title: "Iteration stays in the cheap phase",
+                    text: "Words are free to rewrite; built screens aren't. Planning first means the loops you spend rebuilding the same flow turn into loops sharpening the words that describe it.",
+                  },
+                ],
               },
               {
                 kind: "wink",
-                text: "If the plan fits in a tweet, it isn't a plan. If it fits in a deck, it's the wrong shape. A page of plain text is the right size.",
-              },
-            ],
-          },
-          {
-            heading: "Socialize the plan, then build",
-            blocks: [
-              {
-                kind: "paragraph",
-                text: "Send the plan to your engineer, your PM, or a peer designer before you build. Five minutes of feedback on a plan saves a day of feedback on a half-finished implementation. The plan you ship is rarely the plan you started with, and that is the point.",
+                text: "Don't plan everything. A copy tweak or a color swap doesn't need a plan. The threshold: if the model gets the approach wrong, will I lose more than fifteen minutes redoing it?",
               },
               {
-                kind: "callout",
-                tone: "accent",
-                icon: "loop",
-                title: "The plan is the design document now",
-                text: "In AI-assisted work, the plan does the job a Figma cover page or a project brief used to do. It's the artifact that tells the team what's coming, what was considered, and what to push back on. Treat it like one.",
+                kind: "figureGrid",
+                columns: 2,
+                caption:
+                  "A real plan from this site. Before any animation code was written, Plan Mode produced a menu of options grouped by surface (route, element, brand) with a one-line cost note next to each. Only after the team picked the three worth trying did the model expand the chosen options into the implementation on the right.",
+                items: [
+                  {
+                    eyebrow: "Step 1 — Plan in plain text",
+                    caption:
+                      "Six animation directions across three surfaces, each tagged with cost and intent. Choosing happens here, in plain language, before any keyframe is written.",
+                    image: {
+                      src: "/images/plan-mode-animation-options.png",
+                      alt: "Plan Mode document listing six animation options grouped under Route-level transitions, Element-level moments, and Brand or editorial moments, with cost annotations like low cost or medium cost beside each.",
+                    },
+                  },
+                  {
+                    eyebrow: "Step 2 — Build the chosen options",
+                    caption:
+                      "The same plan expanded into concrete files, edits, and CSS keyframes — but only for the directions that survived the conversation in step one.",
+                    image: {
+                      src: "/images/plan-mode-animation-implementation.png",
+                      alt: "Implementation section of the same plan describing the View Transitions API crossfade, listing the files to edit and showing the new CSS with view-transition-old, view-transition-new, and keyframe definitions.",
+                    },
+                  },
+                ],
               },
             ],
           },
@@ -2318,7 +2474,7 @@ description: Run the accessibility floor before pushing for review. Use any time
         number: 9,
         title: "Documenting design and handing it off",
         summary:
-          "Handoff isn't a single act anymore. Figma frames going in, screenshots and video coming out, copy along the way, QE test plans, engineering handoff, and the source-of-truth file the next designer inherits.",
+          "Handoff isn't a single act anymore. It's a network of small handoffs — to the model, to content, to QE, to engineering, and to the next designer — each with its own audience and its own artifact.",
         readTime: "6 min",
         sections: [
           {
@@ -2326,192 +2482,331 @@ description: Run the accessibility floor before pushing for review. Use any time
             blocks: [
               {
                 kind: "paragraph",
-                text: "The old version of handoff was a single moment: redlines, a deck, a meeting, a Jira ticket. Vibe coding spreads it across the project. Inputs land at the start, artifacts collect in the middle, test plans and engineering handoffs arrive at the end, and a source-of-truth file outlasts all of it. Each handoff is a smaller, lower-ceremony exchange than the old monolithic one — and the cumulative effect is sharper.",
+                text: "Handoff used to be a specific event in the product cycle. The designer finished the Figma file, added redlines and specs, sent the file to engineering with a Slack message. Engineering built it. The designer reviewed the build. The handoff was complete.",
+              },
+              {
+                kind: "paragraph",
+                text: "That model assumed two things that are no longer true. It assumed engineering was the only downstream consumer of design work. And it assumed the designer's job ended where the code began.",
+              },
+              {
+                kind: "paragraph",
+                text: "Vibe coding breaks both assumptions. The designer is now writing some of the code. The downstream consumers now include the AI itself, the QE team running test plans against the build, the content team writing the copy that lives inside the components, the next designer who inherits the surface, and yes, still engineering — but engineering as a partner in production work, not as the recipient of a thrown-over-the-wall artifact.",
+              },
+              {
+                kind: "paragraph",
+                text: "Handoff isn't a single act anymore. It's a set of relationships, and each one needs its own artifact. This chapter walks through what each looks like.",
               },
               {
                 kind: "flow",
-                label: "Artifacts across the lifecycle",
+                label: "The five handoffs in vibe coding",
                 steps: [
-                  { title: "Figma frames", meta: "Going in" },
-                  { title: "Screenshots and video", meta: "From the running build" },
-                  { title: "Real copy", meta: "As you go" },
-                  { title: "QE test plan", meta: "Before review" },
-                  { title: "Engineering handoff", meta: "Toward production" },
-                  { title: "Source-of-truth file", meta: "For the next designer" },
+                  { title: "To the AI", meta: "Going in" },
+                  { title: "To content", meta: "During the build" },
+                  { title: "To engineering", meta: "Coming out" },
+                  { title: "To QE", meta: "Coming out" },
+                  { title: "To the next designer", meta: "After" },
                 ],
               },
             ],
           },
           {
-            heading: "Figma frames going in",
+            heading: "Process artifacts over end experiences",
             blocks: [
               {
                 kind: "paragraph",
-                text: "Even when you're driving the build, Figma still earns its keep at the front end. A frame the model can read — through the Figma MCP or as an attached image — narrows what gets generated and gives the rest of the team something to react to. Treat the input frame as a contract: it's the most precise version of the intent you'll have on day one, and the version everyone agreed on before code existed.",
+                text: "Look at where the hours actually go in a typical release cycle. The designer spends weeks translating intent into hundreds of Figma frames — flows, states, edge cases, redlines, specs, a prototype that simulates the experience without being one. Each frame is a translation step. Each step loses fidelity. By the time engineering interprets the file and the build comes back for review, the designer is comparing it against a document that already drifted from the design that already drifted from the original intent.",
               },
               {
-                kind: "checklist",
-                items: [
+                kind: "figure",
+                image: {
+                  src: "/images/figma-documentation-frames.png",
+                  alt: "A zoomed-out view of a Figma file densely packed with grouped sections — 1A scope, 1A spec, Context, Generative upscale, Generative remove, Generative fill, Remove background, 3P Model modal, Auto AI picker, Generative Expand — each containing dozens of tiny frames laid out in rows.",
+                },
+                eyebrow: "One feature, hundreds of frames",
+                caption:
+                  "A typical Figma file documenting a single feature release. Every box is a frame. Every grouped section is a state, an edge case, a sub-flow, or a spec view of the same screen. None of it is the experience — all of it is a translation of an experience that doesn't exist yet.",
+              },
+              {
+                kind: "paragraph",
+                text: "We do this because the traditional design process taught us to. The artifacts were the only available stand-in for an experience that didn't exist yet — and for years, they earned their reputation. But the side effect, and it's a brutal one, is that we learned to value the artifacts above the experience they were trying to describe.",
+              },
+              {
+                kind: "pullquote",
+                text: "Process artifacts > end experiences. That's what the old playbook taught. What's actually good for users is the inverse.",
+              },
+              {
+                kind: "ratio",
+                caption:
+                  "The flip is the whole game. The artifacts existed to bridge a gap that no longer exists — the team can hold the experience itself, day one. When the artifact outweighs the experience, the team gets fluent at producing documentation and forgets what the documentation was for.",
+                rows: [
                   {
-                    positive: true,
-                    title: "Name layers and components",
-                    text: "The MCP can read names. Generic names give you generic output.",
+                    label: "What the old playbook taught",
+                    tone: "muted",
+                    left: {
+                      title: "Process artifacts",
+                      text: "Hundreds of frames, redlines, specs that drift from implementation, sequential handoffs.",
+                    },
+                    operator: ">",
+                    right: {
+                      title: "End experience",
+                      text: "The thing the user actually touches — interaction, motion, copy in context.",
+                    },
                   },
                   {
-                    positive: true,
-                    title: "Use design tokens, not styles",
-                    text: "A frame that references tokens generates code that references tokens. A frame full of one-off colors generates one-off colors.",
-                  },
-                  {
-                    positive: false,
-                    title: "A pixel-perfect mock of every state",
-                    text: "You don't need it. One frame for the happy path, plus a list of edge cases in the description, beats a forty-frame file you'll never update.",
+                    label: "What's actually good for users",
+                    tone: "active",
+                    left: {
+                      title: "Process artifacts",
+                      text: "Smaller, fewer, produced as a byproduct of the build itself rather than as a translation of it.",
+                    },
+                    operator: "<",
+                    right: {
+                      title: "End experience",
+                      text: "The build is available from day one. Aligning around the experience replaces aligning around the spec.",
+                    },
                   },
                 ],
+              },
+              {
+                kind: "paragraph",
+                text: "Vibe coding inverts the equation. The build is available from day one. There's no need to simulate the experience in a mock when you can hold the experience itself. The two-week spec collapses into a twenty-minute reference frame — not because the design got worse, but because the spec was always a stand-in for the experience, and the experience is now there to react to directly.",
+              },
+              {
+                kind: "wink",
+                text: "If you're spending more hours documenting than you spent designing, you're optimizing for the wrong thing. The artifacts exist to serve the experience. When they start to compete with it, the process is failing.",
               },
             ],
           },
           {
-            heading: "Screenshots and video coming out",
+            heading: "What this chapter is actually about",
             blocks: [
               {
                 kind: "paragraph",
-                text: "Once the prototype runs, the artifacts that travel are no longer Figma frames. They're screenshots of real states, short screen recordings of flows, and the occasional clip of the interaction the team keeps asking about. Capture them as you go, name them clearly, and keep them in a place the team can find. They are the design review materials for AI-assisted work.",
+                text: "Most documentation writing fails because it tries to be comprehensive. The author imagines every possible reader and tries to serve all of them with one document. The result is a document that serves none of them well, takes weeks to produce, and is out of date the day it's published.",
+              },
+              {
+                kind: "pullquote",
+                text: "Documentation is a series of small artifacts, each addressed to a specific reader, produced at the moment that reader needs it.",
+              },
+              {
+                kind: "paragraph",
+                text: "You don't write one master document. You write a screenshot for QE, a Figma frame for the next designer, a copy doc for the content team, and a plan for engineering — each one shaped by who's reading it and what they need to do with it.",
+              },
+              {
+                kind: "paragraph",
+                text: "This sounds like more work. In practice, it's less, because each artifact is small and most of them are produced as a byproduct of the work itself rather than as a separate documentation pass at the end.",
+              },
+            ],
+          },
+          {
+            heading: "Going in: the handoff to the AI",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The first handoff happens before any code gets written, and it's the easiest one to overlook — there's no person on the other end. Most of what matters was already covered earlier in the playbook: the rules and design-system context the editor reads on every prompt, the Figma frame you point at, the plan you wrote in plain text. The handoff to the AI is the moment all of that prep work pays off. If the build comes back close enough that you spend the first round refining instead of redirecting, the handoff was complete. If you spend the first round redirecting, something on the list above was missing.",
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "spark",
+                title: "Two versions of the same frame",
+                text: "One discipline worth naming specifically to this handoff: keep an intent frame — structurally correct, visually rough, the version you point the model at — and a target frame — fully polished, the version you compare the build against once it exists. Often they're the same file at different fidelities, or even the same frame on two different days; the point isn't two artifacts, it's keeping the two roles separate so the model isn't asked to match polish you're still figuring out.",
+              },
+            ],
+          },
+          {
+            heading: "During the build: the handoff to content",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Halfway through a build, you realize the placeholder content is doing more work than you expected. The empty state copy needs language that matches the product's voice. The button label has to fit a specific tone. The sample images in a creative tool are deciding what the feature looks like to every reviewer who opens the prototype. The lorem ipsum and the stock photo that worked in Figma are suddenly the things every stakeholder reacts to in review.",
+              },
+              {
+                kind: "paragraph",
+                text: "\"Content\" here is shorthand for two distinct disciplines that ship side by side. They share a goal — get real material into the build before the build hardens around the placeholder — but they're different partners, different conversations, and different timing. Collapsing them into one \"content review\" at the end is the mistake.",
+              },
+              {
+                kind: "paragraph",
+                text: "The instinct is to wait until the build is done and then send the screens over for a copy pass and an asset swap. The cost shows up at the end, when there's no time left to absorb it. Tooltip wording, secondary CTAs, the second sentence of an empty state, the alt text on the hero image, the placeholder asset that's still in the build because nobody got the swap done — these don't make the launch checklist, so they ship as-is. Each one becomes a small piece of design debt that lives in the product, hard to find, hard to track, and quietly contradicting the voice and the visual the team thought they shipped.",
+              },
+              {
+                kind: "paragraph",
+                text: "The better pattern is to bring both in during the build, when the structure is still soft — but as two separate conversations with the right material for each.",
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "chat",
+                title: "Content strategy — bringing Marisa in early",
+              text: "The signal to loop Marisa in isn't \"the build is done\" — it's the moment the Figma frame is ready for review, well before the build settles. She comments on the source-of-truth frame on her own time, leaving content recommendations. The build is still being shaped while those threads land, so the decisions get folded in as the prototype evolves rather than retrofitted at the end. None of it would have surfaced in a static copy doc weeks later.",
+                image: {
+                  src: "/images/marisa-content-comment.png",
+                  alt: "Edit image empty state in Figma showing three sample image cards (Restyle an image, Precision flow beta, and a clothing render). A comment from Marisa Williams is open on the canvas suggesting five candidate microcopy options for the Precision flow card, ranging from \"Edit images using sliders for granular control\" to \"Edit your images with sliders.\"",
+                  caption: "Marisa's comment thread on the source-of-truth Figma frame — five candidate microcopy options for the same card, side by side, so the conversation lands on the design reference rather than scattered across the prototype.",
+                },
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "figma",
+                title: "Content materials — looping the asset team in early",
+                text: "Sample images and illustrations decide what the feature looks like to every reviewer who opens the prototype, so the asset team needs lead time. One thread, specific ask: the slot, the audience, the placeholders you used, three real options to swap in. Sent the week the build starts, not the week before launch.",
+              },
+              {
+                kind: "paragraph",
+                text: "The artifact, for both partners, is two things in the same message: the interactive build, where they can see how copy wraps and how an image sits in the slot, and the matching Figma frame, where they can comment directly on the surface. The build shows behavior; the frame holds the conversation. The constraints that apply to each — character limits and voice notes for strategy, image ratios and brand notes for materials — go in the message itself, not in a separate brief.",
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "loop",
+                title: "Preserve the decision conversation",
+                text: "Resolve the Figma comment thread with the decision in plain language — \"changed the CTA from Get started to Try a brush because Get started was already overloaded on the surface,\" \"swapped the photographic hero for an illustration to widen the audience read.\" The thread stays attached to the frame it's about, so the why lives on the surface itself. Future you, future Marisa, the asset team, and the next designer who picks this up all benefit from the reasoning, not just the final string.",
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "chat",
+                title: "Content is a peer discipline, not a service function",
+                text: "Both halves of content are peer disciplines. The handoff that works is the one that shows the work-in-progress and asks for collaboration, not the one that arrives with the copy already written or the imagery already chosen and asks for approval.",
+              },
+            ],
+          },
+          {
+            heading: "Coming out: the handoff back to engineering",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Engineering still owns the production implementation — reviewing the approach, hardening the edge cases, deciding what to keep, refactor, or rewrite. The handoff isn't shipping code; it's making that review fast and informed. Three things do most of the work.",
               },
               {
                 kind: "cards",
                 columns: 3,
                 items: [
                   {
-                    icon: "layers",
-                    eyebrow: "Static",
-                    title: "Screenshots of real states",
-                    text: "Empty, loading, error, and dense. The four states AI-generated UIs almost always break on, and the four most worth pinning to a thread.",
+                    icon: "compass",
+                    eyebrow: "Align on what's built",
+                    title: "Walk through the running build",
+                    text: "Click through the flow, name what's load-bearing and what's placeholder, and call out what you deliberately punted on. Engineering needs the same picture you have in your head before they review the code that produced it.",
                   },
                   {
-                    icon: "loop",
-                    eyebrow: "Motion",
-                    title: "Short screen recordings",
-                    text: "Twenty seconds, captioned in the filename. Long enough to show the flow. Short enough that someone will actually watch it.",
+                    icon: "code",
+                    eyebrow: "The PR",
+                    title: "A description that explains why",
+                    text: "What the code does and why this approach over alternatives — not just here is some code I wrote. Link the branch, a recording, and the stack of related PRs split by concern. A good description cuts review time in half.",
+                    image: {
+                      src: "/images/pr-handoff-slack-message.png",
+                      alt: "Slack message handing off a feature build to engineering. The message links the branch and a recording, then lists multiple PRs (Adding the empty state, Adding the cropping/aspect ratio, Color updates and dark mode fixes) and two PR mini items (Add plus icon to button, Fix cancel button color), each with review-status emoji.",
+                      position: "left top",
+                    },
                   },
                   {
                     icon: "spark",
-                    eyebrow: "The hero clip",
-                    title: "The interaction in question",
-                    text: "The one moment the team keeps asking about. Clip it once, share it everywhere, and stop re-recording it.",
+                    eyebrow: "Design documentation",
+                    title: "Capture what code can't show",
+                    text: "A short screen recording — motion timing, hover states, the empty-to-loaded transition. Drop it in the PR, pin it on the frame. The recording is the spec for the things specs always miss.",
+                    image: {
+                      src: "/images/design-documentation-recording.png",
+                      alt: "Poster frame from a 56-second screen recording of the running prototype, showing four image cards arranged in a row on a dark canvas with the surrounding browser chrome visible.",
+                    },
                   },
                 ],
-              },
-            ],
-          },
-          {
-            heading: "Copy and content along the way",
-            blocks: [
-              {
-                kind: "paragraph",
-                text: "Real copy, not lorem ipsum, belongs in the prototype as soon as you have it. Draft microcopy with the model and edit by hand. Pull in real product names, real labels, real error states. Content surfaces design problems that placeholder text politely covers up, and the cost of getting it right early is much smaller than fixing it in QE.",
               },
               {
                 kind: "callout",
-                tone: "neutral",
-                icon: "chat",
-                title: "The model drafts, you decide",
-                text: "Treat AI-drafted microcopy the way a content designer treats a first pass: useful starting material, not the answer. The voice is yours. The model only knows the average of its training set.",
+                tone: "accent",
+                icon: "loop",
+                title: "The special case: an AI pod",
+                text: "Inside a tight design-and-engineering pod — pairing on the build, reviewing each other's commits as they land — this handoff stops looking like one. The artifacts above still exist, but as a record of work the team already shares, not a transmission across a gap. Nothing should come as a surprise.",
               },
             ],
           },
           {
-            heading: "QE test plans",
+            heading: "Coming out: the handoff to QE",
             blocks: [
               {
                 kind: "paragraph",
-                text: "AI-assisted features are easy to ship and easy to break. Hand QE a test plan that names the unhappy paths the model is likely to fumble. The model can draft the plan with you. Your job is to insist on the cases your prototype hides.",
+                text: "Once engineering has the implementation, QE picks up the test plan. This handoff has changed the most in vibe-coding contexts, because the build itself is a moving target — there's no fixed feature spec to write test cases against, because the feature was figured out during the build.",
               },
               {
-                kind: "checklist",
+                kind: "paragraph",
+                text: "The artifact that works best here is a combination of two things: a flow video and an annotated screenshot set.",
+              },
+              {
+                kind: "cards",
+                columns: 2,
                 items: [
                   {
-                    positive: true,
-                    title: "The empty state",
-                    text: "What does the screen look like before there's any data? AI-generated UI is built around the populated case.",
+                    icon: "loop",
+                    eyebrow: "Motion",
+                    title: "Flow video — two to five minutes",
+                    text: "Walk through the feature, narrating what's happening. Hit every state, demonstrate every interaction, deliberately produce every error you can. As you record, narrate the intent alongside the action — \"I'm clicking submit with an empty form because we need to verify the validation appears, and focus should move to the first invalid field.\" That narration turns a demo into a test plan input.",
+                    image: {
+                      src: "/images/design-documentation-recording.png",
+                      alt: "Poster frame from a 56-second screen recording of the running prototype, used as the QE flow video — four image cards arranged on a dark canvas inside the browser chrome, with playback controls visible in the corner.",
+                    },
                   },
                   {
-                    positive: true,
-                    title: "The long input",
-                    text: "A 200-character title, a 500-row list, a name with non-Latin characters. Layouts that work for short, neat data fall apart on real data.",
-                  },
-                  {
-                    positive: true,
-                    title: "The slow network",
-                    text: "Loading states, optimistic updates, retry behavior. Easy to fake on localhost, hard to fake in production.",
-                  },
-                  {
-                    positive: true,
-                    title: "The keyboard and screen reader path",
-                    text: "Tab through every interactive element. Listen to the screen reader read the page. The two cheapest accessibility checks, and the two most often skipped.",
-                  },
-                  {
-                    positive: true,
-                    title: "The path that fails",
-                    text: "What happens when validation fails, the API errors, or the server returns nothing? AI loves the happy path; QE shouldn't.",
+                    icon: "layers",
+                    eyebrow: "Static",
+                    title: "Annotated screenshots and the source-of-truth frames",
+                    text: "Two layers, side by side. Screenshots of the build for every state — empty, loading, error, success, disabled, hover, focused — annotated step-by-step with what triggered each shot and what to verify in it. And a link to the source-of-truth Figma frames so that if a state changes after the screenshots are grabbed, QE has somewhere to check the current intent. The video shows the flow; the screenshots show the inventory; the frames stay current.",
+                    image: {
+                      src: "/images/qe-screenshot-inventory.png",
+                      alt: "A Figma board organizing the QE handoff: rows labeled Empty state, Create new canvas, Use sample cards, Edit row, Mobile web, Original design frames, and Light and dark mode, each containing a sequence of annotated build screenshots. The Original design frames row carries comment markers from Marisa.",
+                      position: "left",
+                    },
                   },
                 ],
-              },
-            ],
-          },
-          {
-            heading: "Engineering handoff",
-            blocks: [
-              {
-                kind: "paragraph",
-                text: "When the work crosses from your prototype to production, engineering needs more than the URL. The handoff is short when the build is short, but it should never be zero. Five short paragraphs in the PR description outperform a thirty-minute walkthrough almost every time.",
-              },
-              {
-                kind: "steps",
-                items: [
-                  {
-                    title: "The plan you started with",
-                    text: "Paste the seven-section plan from chapter 8. Engineering needs to see what was decided before the code was written.",
-                  },
-                  {
-                    title: "What you actually built",
-                    text: "A short delta from the plan. What changed, what got cut, what got added. Honesty here saves an argument later.",
-                  },
-                  {
-                    title: "Components to keep or rewrite",
-                    text: "Mark which prototype components are production-ready and which are scaffolding. A list, not a tour.",
-                  },
-                  {
-                    title: "Open questions",
-                    text: "Anything you didn't resolve. Naming an open question is not failure; pretending one doesn't exist is.",
-                  },
-                  {
-                    title: "How to run it",
-                    text: "The dev server command, the env vars, the seed data. The fewer assumptions in the handoff, the fewer Slack pings later.",
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            heading: "The source-of-truth file the next designer inherits",
-            blocks: [
-              {
-                kind: "paragraph",
-                text: "Every project should leave behind one file that explains what it is and how to keep working on it. Not a deck. A short, version-controlled document that names the goal, the audience, the decisions, the components, and the things that would have helped you on day one. Write it for the next designer — which might be future you — and the project's second life is much cheaper than the first.",
-              },
-              {
-                kind: "code",
-                label: "PROJECT.md template",
-                language: "markdown",
-                text: "# What this is\nOne paragraph: the product, the audience, the goal.\n\n# How to run it\nClone, install, the dev command, the env vars.\n\n# Components and patterns\nThe components worth knowing about, with file paths.\n\n# Decisions worth remembering\nWhat we tried, what we picked, and why.\n\n# Open questions\nWhat we didn't resolve and where it would matter.\n\n# Where the artifacts live\nFigma file, screenshots folder, recordings, plan, PRs.",
               },
               {
                 kind: "callout",
                 tone: "accent",
                 icon: "target",
-                title: "The artifact that outlasts you",
-                text: "Decks get lost. Slack threads age out. Figma files drift. A markdown file in the repo travels with the code, opens in any editor, and renders on every PR review. Make this the thing the team can rely on.",
+                title: "Design becomes the first line of defense",
+                text: "When the designer ships a working build, QE isn't the first set of eyes that's seen the experience end-to-end — you are. Every empty state was triggered, every loading transition was watched, every error path was deliberately produced before the recording was cut. That changes the QE conversation from \"is this what was designed?\" to \"under what conditions does this break?\" QE moves earlier into the lifecycle and deeper into the edges, because the obvious checks are already covered. Treat the recording and the screenshot set as proof you've already passed the experience review, not as instructions for a fresh one.",
+              },
+            ],
+          },
+          {
+            heading: "After: the handoff to the next designer",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The most underweighted handoff in vibe coding, and the one that compounds the most over time, is the one to the designer who comes back to this work next. That designer might be you in three months, having forgotten everything. It might be a teammate who's never seen the surface before. It might be a new hire onboarding into the codebase.",
+              },
+              {
+                kind: "paragraph",
+                text: "The artifact that serves all three is the Figma file itself — kept current, organized into key frames the next person can scan. After the build ships, update the file to match what's actually in production: the colors that got tweaked, the spacing that got adjusted, the variants that got added during implementation.",
+              },
+              {
+                kind: "figure",
+                image: {
+                  src: "/images/next-designer-keyframes.png",
+                  alt: "Figma board for the next designer: two rows of key frames. The first row is labeled Original design frames — a Blank Canvas cover frame followed by Edit image empty state, Edit image empty state with the prompt focused, and a People with no access state. The second row is labeled Light/dark mode and shows the same surface in both treatments alongside a closer view of the prompt area.",
+                },
+                caption: "Kept in Figma so the parts stay reusable: the next designer can pull a component, lift a color token, or trace why a state was treated the way it was — without reverse-engineering anything from production code.",
+              },
+            ],
+          },
+          {
+            heading: "What ties all of this together",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Five handoffs, five artifacts. Not every project needs all five. A throwaway prototype might only need the first one. A small production fix might skip the QE flow video. A solo exploration might not have a content team to hand off to at all. The skill is matching the documentation to the audience that actually exists.",
+              },
+              {
+                kind: "pullquote",
+                text: "The build is not the deliverable. The build plus the artifacts that surround it is the deliverable.",
+              },
+              {
+                kind: "paragraph",
+                text: "A vibe-coded feature shipped without screenshots, without an updated Figma file, without a decision log, without a copy review — that feature is not actually finished. It's running. That's a different thing.",
+              },
+              {
+                kind: "paragraph",
+                text: "Most of these artifacts are produced as a byproduct of doing the work well, not as a separate documentation pass. The model can help with most of them — generating screenshots, drafting decision logs, organizing variations — but the judgment about which artifacts matter for this project is yours.",
               },
             ],
           },
@@ -2524,15 +2819,15 @@ description: Run the accessibility floor before pushing for review. Use any time
     number: 4,
     title: "The Craft",
     description:
-      "Applied design work. Taking a Figma frame to working UI, holding the visual line, getting motion and content right, and treating accessibility as a prompt-time concern.",
+      "The design eye applied to what the model built. Once the build is running, this is the work that decides whether it's any good — visual fidelity, motion and content, accessibility, and the loop back to Figma.",
     chapters: [
       {
         id: "from-figma-to-working-ui",
-        number: 10,
-        title: "From Figma to working UI",
+        number: 11,
+        title: "From Figma to working UI and back",
         summary:
-          "The design-to-code loop in practice: when to design first, when to skip Figma, and how to choose between screenshot, frame, and spec as input.",
-        readTime: "2 min",
+          "The design-to-code loop in practice: when to design first, when to skip Figma, when to go back to Figma after the build, and how each round-trip serves a different purpose.",
+        readTime: "6 min",
         sections: [
           {
             heading: "The design-to-code loop",
@@ -2556,15 +2851,24 @@ description: Run the accessibility floor before pushing for review. Use any time
               "Written spec: best when the design does not exist yet, or when constraints matter more than visuals.",
             ],
           },
+          {
+            heading: "Going back to Figma after the build",
+            body: "The loop is not finished when the prototype runs. The working build almost always teaches you something the static design missed — a state you forgot, a transition that needed a softer curve, a layout that only feels right at one breakpoint. Those discoveries belong back in Figma if the work is going to be picked up by the team.",
+            bullets: [
+              "For hand-off: capture the final states and edge cases the build surfaced, so engineering inherits the decisions instead of re-deriving them.",
+              "For the design system: feed novel patterns back into the library, with the version of the component the build actually used.",
+              "For the record: keep a frame that matches what shipped, so the next round of exploration starts from reality rather than an older intent.",
+            ],
+          },
         ],
       },
       {
         id: "visual-design-fidelity",
-        number: 11,
+        number: 12,
         title: "Visual design fidelity",
         summary:
-          "Holding the line on spacing, type, color, and hierarchy, with Spectrum as the canonical reference and a checklist for AI's visual tells.",
-        readTime: "2 min",
+          "Spacing, typography, color, hierarchy. Using Spectrum or your design system as the canonical reference, and recognizing the visual tells that mark AI output as AI output.",
+        readTime: "6 min",
         sections: [
           {
             heading: "Tokens, not magic numbers",
@@ -2588,12 +2892,12 @@ description: Run the accessibility floor before pushing for review. Use any time
         ],
       },
       {
-        id: "motion-interaction-real-content",
-        number: 12,
-        title: "Motion, interaction, and real content",
+        id: "motion-and-real-content",
+        number: 13,
+        title: "Motion and real content",
         summary:
-          "Prototyping animation and state transitions, libraries worth knowing, how to describe motion in prompts, and replacing lorem ipsum with realistic data.",
-        readTime: "2 min",
+          "Replacing placeholder transitions and lorem ipsum with motion that matches your product's vocabulary and content that reflects what users will actually see. Why this changes how stakeholders react.",
+        readTime: "5 min",
         sections: [
           {
             heading: "Describe motion the way a director would",
@@ -2618,15 +2922,19 @@ description: Run the accessibility floor before pushing for review. Use any time
             heading: "Real content beats lorem ipsum",
             body: "A prototype with realistic data exposes problems a prototype with placeholder text hides. Long names break layouts. Empty states feel different from full ones. Numbers with commas look different from numbers without. Ask the assistant to populate the prototype with data that looks like the real thing, and you will catch design issues that lorem ipsum politely covers up.",
           },
+          {
+            heading: "Why this changes how stakeholders react",
+            body: "A prototype with the right motion and the right content stops feeling like a sketch and starts feeling like the product. The conversation moves off layout and onto the decisions that actually matter — what the feature does, who it serves, and whether it earns its place. Placeholder transitions and lorem ipsum invite placeholder feedback. Real motion and real content invite real critique.",
+          },
         ],
       },
       {
-        id: "accessibility-as-you-build",
-        number: 13,
-        title: "Accessibility as you build",
+        id: "accessibility-as-a-prompt-time-concern",
+        number: 14,
+        title: "Accessibility as a prompt-time concern",
         summary:
-          "Keyboard nav, focus, semantic markup, contrast, and screen readers, treated as a prompt-time concern instead of a post-launch audit.",
-        readTime: "2 min",
+          "Keyboard nav, focus, semantic markup, contrast, screen readers. Treating accessibility as a constraint the model honors during the build, not a cleanup pass after.",
+        readTime: "5 min",
         sections: [
           {
             heading: "Accessibility belongs in the prompt",
@@ -2658,7 +2966,7 @@ description: Run the accessibility floor before pushing for review. Use any time
     chapters: [
       {
         id: "quality-and-ownership",
-        number: 14,
+        number: 15,
         title: "Quality and ownership: avoiding AI slop",
         summary:
           "What slop looks like in design output, using Git as version history, and reviewing AI-generated code with the BLOCKER, MAJOR, MINOR, NIT habit.",
@@ -2696,7 +3004,7 @@ description: Run the accessibility floor before pushing for review. Use any time
       },
       {
         id: "working-as-a-team",
-        number: 15,
+        number: 16,
         title: "Working as a team",
         summary:
           "The AI pod rhythm, the design-build-review loop from the IFT playbook, cross-functional coordination, and automating the repetitive parts of your own process.",

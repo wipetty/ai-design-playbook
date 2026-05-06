@@ -25,7 +25,7 @@ export function ChapterPage() {
         <div className="chapter-inner">
           <h1 className="chapter-page-title">Chapter not found.</h1>
           <p>That chapter doesn't exist.</p>
-          <Link to="/" className="back-link">
+          <Link to="/" className="back-link" viewTransition>
             ← Back to contents
           </Link>
         </div>
@@ -48,7 +48,9 @@ export function ChapterPage() {
       >
         <div className="chapter-inner">
           <nav aria-label="Breadcrumb" className="breadcrumb">
-            <Link to="/">Contents</Link>
+            <Link to="/" viewTransition>
+              Contents
+            </Link>
             <span aria-hidden="true">/</span>
             <span>
               Part {part.number} · {part.title}
@@ -91,6 +93,7 @@ export function ChapterPage() {
               <Link
                 to={`/${prev.partId}/${prev.chapterId}`}
                 className="pager-link pager-prev"
+                viewTransition
               >
                 <span className="pager-direction">← Previous</span>
                 <span className="pager-title">
@@ -107,6 +110,7 @@ export function ChapterPage() {
               <Link
                 to={`/${next.partId}/${next.chapterId}`}
                 className="pager-link pager-next"
+                viewTransition
               >
                 <span className="pager-direction">Next →</span>
                 <span className="pager-title">
@@ -114,7 +118,7 @@ export function ChapterPage() {
                 </span>
               </Link>
             ) : (
-              <Link to="/" className="pager-link pager-next">
+              <Link to="/" className="pager-link pager-next" viewTransition>
                 <span className="pager-direction">Back →</span>
                 <span className="pager-title">Contents</span>
               </Link>

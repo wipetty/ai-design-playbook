@@ -1,8 +1,51 @@
+import { useEffect, useRef, useState } from "react";
 import type { SectionBlock } from "../data/playbook";
 import Icon from "./Icon";
 import LightboxThumbnail from "./LightboxThumbnail";
 
 const LINK_RE = /\[([^\]]+)\]\(([^)]+)\)/g;
+
+/*
+ * Fires once the element first crosses ~15% into the viewport.
+ * Returns a ref + className suffix so diagram components can opt in
+ * to a "reveal" animation without each re-implementing the observer.
+ */
+function useInView<T extends HTMLElement>(
+  rootMargin = "0px 0px -10% 0px",
+): [React.RefObject<T | null>, boolean] {
+  const ref = useRef<T>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    if (inView) return;
+    const node = ref.current;
+    if (!node) return;
+    if (
+      typeof IntersectionObserver === "undefined" ||
+      typeof window === "undefined"
+    ) {
+      setInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin, threshold: 0.15 },
+    );
+    io.observe(node);
+    return () => io.disconnect();
+  }, [inView, rootMargin]);
+
+  return [ref, inView];
+}
+
+function revealClass(inView: boolean) {
+  return inView ? " is-in-view" : "";
+}
 
 function RichText({ text }: { text: string }) {
   const parts: Array<string | { label: string; href: string }> = [];
@@ -135,6 +178,11 @@ function Block({ block }: { block: SectionBlock }) {
                   <LightboxThumbnail
                     src={item.image.src}
                     alt={item.image.alt}
+                    style={
+                      item.image.position
+                        ? { objectPosition: item.image.position }
+                        : undefined
+                    }
                   />
                 </div>
               )}
@@ -164,26 +212,7 @@ function Block({ block }: { block: SectionBlock }) {
     }
 
     case "flow":
-      return (
-        <div className="cb-flow" aria-label={block.label}>
-          {block.label && <span className="cb-flow-label">{block.label}</span>}
-          <ol className="cb-flow-track">
-            {block.steps.map((step, i) => (
-              <li key={i} className="cb-flow-step">
-                {step.meta && (
-                  <span className="cb-flow-meta">{step.meta}</span>
-                )}
-                <span className="cb-flow-title">{step.title}</span>
-                {i < block.steps.length - 1 && (
-                  <span className="cb-flow-arrow" aria-hidden="true">
-                    <Icon name="arrow" size={14} />
-                  </span>
-                )}
-              </li>
-            ))}
-          </ol>
-        </div>
-      );
+      return <Flow block={block} />;
 
     case "wink":
       return (
@@ -443,6 +472,84 @@ function Block({ block }: { block: SectionBlock }) {
         </figure>
       );
 
+    case "ratio":
+      return (
+        <figure className="cb-ratio">
+          {block.rows.map((row, i) => (
+            <div
+              key={i}
+              className={`cb-ratio-row cb-ratio-row-${row.tone ?? "active"}`}
+            >
+              {row.label && (
+                <span className="cb-ratio-label">{row.label}</span>
+              )}
+              <div className="cb-ratio-equation">
+                <div className="cb-ratio-term">
+                  <span className="cb-ratio-term-title">{row.left.title}</span>
+                  {row.left.text && (
+                    <span className="cb-ratio-term-text">{row.left.text}</span>
+                  )}
+                </div>
+                <span className="cb-ratio-operator" aria-hidden="true">
+                  {row.operator}
+                </span>
+                <div className="cb-ratio-term">
+                  <span className="cb-ratio-term-title">
+                    {row.right.title}
+                  </span>
+                  {row.right.text && (
+                    <span className="cb-ratio-term-text">
+                      {row.right.text}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+          {block.caption && (
+            <figcaption className="cb-figure-caption cb-figure-caption-center">
+              <span className="cb-figure-caption-text">
+                <RichText text={block.caption} />
+              </span>
+            </figcaption>
+          )}
+        </figure>
+      );
+
+    case "variantDemo":
+      return <VariantDemo block={block} />;
+
+    case "video":
+      return (
+        <figure className="cb-figure cb-video">
+          <div className="cb-figure-frame cb-video-frame">
+            <video
+              className="cb-video-player"
+              src={block.src}
+              poster={block.poster}
+              aria-label={block.alt}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="metadata"
+            />
+          </div>
+          {(block.eyebrow || block.caption) && (
+            <figcaption className="cb-figure-caption cb-figure-caption-center">
+              {block.eyebrow && (
+                <span className="cb-figure-eyebrow">{block.eyebrow}</span>
+              )}
+              {block.caption && (
+                <span className="cb-figure-caption-text">
+                  <RichText text={block.caption} />
+                </span>
+              )}
+            </figcaption>
+          )}
+        </figure>
+      );
+
     case "anatomy":
       return <AnatomyDiagram block={block} />;
 
@@ -454,14 +561,45 @@ function Block({ block }: { block: SectionBlock }) {
   }
 }
 
+function Flow({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "flow" }>;
+}) {
+  const [ref, inView] = useInView<HTMLDivElement>();
+  return (
+    <div
+      ref={ref}
+      className={`cb-flow${revealClass(inView)}`}
+      aria-label={block.label}
+    >
+      {block.label && <span className="cb-flow-label">{block.label}</span>}
+      <ol className="cb-flow-track">
+        {block.steps.map((step, i) => (
+          <li key={i} className="cb-flow-step">
+            {step.meta && <span className="cb-flow-meta">{step.meta}</span>}
+            <span className="cb-flow-title">{step.title}</span>
+            {i < block.steps.length - 1 && (
+              <span className="cb-flow-arrow" aria-hidden="true">
+                <Icon name="arrow" size={14} />
+              </span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 function AnatomyDiagram({
   block,
 }: {
   block: Extract<SectionBlock, { kind: "anatomy" }>;
 }) {
   const orderedNotes = [...block.notes].sort((a, b) => a.mark - b.mark);
+  const [ref, inView] = useInView<HTMLElement>();
   return (
-    <figure className="cb-anatomy">
+    <figure ref={ref} className={`cb-anatomy${revealClass(inView)}`}>
       {block.label && (
         <figcaption className="cb-anatomy-label">{block.label}</figcaption>
       )}
@@ -511,6 +649,191 @@ function AnatomyDiagram({
   );
 }
 
+function VariantDemo({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "variantDemo" }>;
+}) {
+  const [active, setActive] = useState(block.variants[0]?.key ?? "");
+  const current =
+    block.variants.find((v) => v.key === active) ?? block.variants[0];
+  if (!current) return null;
+  return (
+    <figure className="cb-variant-demo">
+      <div className="cb-variant-demo-frame">
+        <div className="cb-variant-demo-chrome" aria-hidden="true">
+          <div className="cb-variant-demo-dots">
+            <span />
+            <span />
+            <span />
+          </div>
+          <div className="cb-variant-demo-url">
+            prototype.local/?variant={current.key}
+          </div>
+        </div>
+        <div className="cb-variant-demo-toolbar">
+          <span className="cb-variant-demo-toolbar-label">Variant</span>
+          <div className="cb-variant-demo-tabs" role="tablist">
+            {block.variants.map((v) => {
+              const isActive = v.key === current.key;
+              return (
+                <button
+                  key={v.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  className={`cb-variant-demo-tab${isActive ? " is-active" : ""}`}
+                  onClick={() => setActive(v.key)}
+                >
+                  {v.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div className="cb-variant-demo-canvas">
+          {block.task && (
+            <p className="cb-variant-demo-task">{block.task}</p>
+          )}
+          <div
+            className="cb-variant-demo-stage"
+            role="tabpanel"
+            aria-label={`${current.label} preview`}
+          >
+            <VariantPreview kind={current.preview} />
+          </div>
+          {current.note && (
+            <p className="cb-variant-demo-note">
+              <RichText text={current.note} />
+            </p>
+          )}
+        </div>
+      </div>
+      {(block.eyebrow || block.caption) && (
+        <figcaption className="cb-figure-caption cb-figure-caption-center">
+          {block.eyebrow && (
+            <span className="cb-figure-eyebrow">{block.eyebrow}</span>
+          )}
+          {block.caption && (
+            <span className="cb-figure-caption-text">
+              <RichText text={block.caption} />
+            </span>
+          )}
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+const SAMPLE_ITEMS: {
+  title: string;
+  meta: string;
+  status: "draft" | "review" | "shipped";
+}[] = [
+  { title: "Empty state — Edit", meta: "Anya · 2h ago", status: "review" },
+  { title: "Variant switcher", meta: "Jordan · yesterday", status: "draft" },
+  { title: "Funnel benchmark", meta: "Maya · Mon", status: "shipped" },
+  { title: "Date picker spec", meta: "Lee · Mon", status: "review" },
+  { title: "Plan template v3", meta: "Anya · last week", status: "shipped" },
+  { title: "Toolbar cleanup", meta: "Jordan · last week", status: "draft" },
+];
+
+function VariantPreview({
+  kind,
+}: {
+  kind: "compact" | "cards" | "dense";
+}) {
+  switch (kind) {
+    case "compact":
+      return (
+        <div className="cb-variant-preview cb-variant-preview-compact">
+          <div className="cb-variant-preview-head">
+            <span className="cb-variant-preview-title">Recent work</span>
+            <span className="cb-variant-preview-count">
+              {SAMPLE_ITEMS.length} items
+            </span>
+          </div>
+          <ul className="cb-variant-preview-list">
+            {SAMPLE_ITEMS.map((item) => (
+              <li key={item.title}>
+                <span className="cb-variant-preview-row-title">
+                  {item.title}
+                </span>
+                <span className="cb-variant-preview-row-meta">
+                  {item.meta}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    case "cards":
+      return (
+        <div className="cb-variant-preview cb-variant-preview-cards">
+          <div className="cb-variant-preview-head">
+            <span className="cb-variant-preview-title">Recent work</span>
+            <span className="cb-variant-preview-count">
+              {SAMPLE_ITEMS.length} items
+            </span>
+          </div>
+          <div className="cb-variant-preview-card-grid">
+            {SAMPLE_ITEMS.slice(0, 4).map((item, i) => (
+              <article
+                key={item.title}
+                className={`cb-variant-preview-card cb-variant-preview-card-${i % 4}`}
+              >
+                <div className="cb-variant-preview-card-thumb" aria-hidden="true" />
+                <div className="cb-variant-preview-card-body">
+                  <span className="cb-variant-preview-card-title">
+                    {item.title}
+                  </span>
+                  <span className="cb-variant-preview-card-meta">
+                    {item.meta}
+                  </span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      );
+    case "dense":
+      return (
+        <div className="cb-variant-preview cb-variant-preview-dense">
+          <div className="cb-variant-preview-head">
+            <span className="cb-variant-preview-title">Recent work</span>
+            <span className="cb-variant-preview-count">
+              {SAMPLE_ITEMS.length} items
+            </span>
+          </div>
+          <table className="cb-variant-preview-table">
+            <thead>
+              <tr>
+                <th>Title ↓</th>
+                <th>Owner</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {SAMPLE_ITEMS.map((item) => (
+                <tr key={item.title}>
+                  <td>{item.title}</td>
+                  <td>{item.meta}</td>
+                  <td>
+                    <span
+                      className={`cb-variant-preview-status cb-variant-preview-status-${item.status}`}
+                    >
+                      {item.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+  }
+}
+
 function BalanceDiagram({
   block,
 }: {
@@ -518,8 +841,12 @@ function BalanceDiagram({
 }) {
   const tilt = block.tilt ?? "even";
   const angle = tilt === "left" ? -8 : tilt === "right" ? 8 : 0;
+  const [ref, inView] = useInView<HTMLElement>();
   return (
-    <figure className={`cb-balance cb-balance-tilt-${tilt}`}>
+    <figure
+      ref={ref}
+      className={`cb-balance cb-balance-tilt-${tilt}${revealClass(inView)}`}
+    >
       <svg
         className="cb-balance-svg"
         viewBox="0 0 400 220"
@@ -547,9 +874,10 @@ function BalanceDiagram({
         <g
           className="cb-balance-beam-group"
           style={{
-            transform: `rotate(${angle}deg)`,
+            transform: `rotate(${inView ? angle : 0}deg)`,
             transformOrigin: "200px 60px",
-            transition: "transform 800ms cubic-bezier(.2,.7,.2,1)",
+            transition:
+              "transform 1000ms cubic-bezier(.2,.7,.2,1) 320ms",
           }}
         >
           <line
@@ -615,8 +943,9 @@ function BentoGrid({
 }: {
   block: Extract<SectionBlock, { kind: "bento" }>;
 }) {
+  const [ref, inView] = useInView<HTMLElement>();
   return (
-    <figure className="cb-bento">
+    <figure ref={ref} className={`cb-bento${revealClass(inView)}`}>
       <div className="cb-bento-grid">
         {block.items.map((item, i) => (
           <article
@@ -695,8 +1024,9 @@ function RoomDiagram({
 }: {
   block: Extract<SectionBlock, { kind: "roomDiagram" }>;
 }) {
+  const [ref, inView] = useInView<HTMLElement>();
   return (
-    <figure className="cb-room">
+    <figure ref={ref} className={`cb-room${revealClass(inView)}`}>
       <div className="cb-room-stage">
         <div className="cb-room-center" aria-hidden="true">
           <span className="cb-room-pulse cb-room-pulse-1" />
@@ -732,12 +1062,14 @@ function MirrorDiagram({
   const forwardLabel = block.forwardLabel ?? "thought";
   const returnLabel = block.returnLabel ?? "reflection";
 
+  const [ref, inView] = useInView<HTMLElement>();
+
   /*
    * One shared coordinate system. viewBox 800×260, aspect-ratio applied
    * to the wrapping figure so SVG scales uniformly without distortion.
    */
   return (
-    <figure className="cb-mirror">
+    <figure ref={ref} className={`cb-mirror${revealClass(inView)}`}>
       <svg
         className="cb-mirror-svg"
         viewBox="0 0 800 260"

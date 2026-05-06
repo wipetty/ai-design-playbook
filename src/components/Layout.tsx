@@ -17,7 +17,7 @@ export function Layout({ children }: { children: ReactNode }) {
     if (location.pathname === "/") {
       scrollToId(id);
     } else {
-      navigate("/", { state: { scrollTo: id } });
+      navigate("/", { state: { scrollTo: id }, viewTransition: true });
     }
   };
 
@@ -25,7 +25,12 @@ export function Layout({ children }: { children: ReactNode }) {
     <div className="layout">
       <header className="site-header">
         <div className="site-header-inner">
-          <Link to="/" className="site-brand" aria-label="AI Design Playbook home">
+          <Link
+            to="/"
+            className="site-brand"
+            aria-label="AI Design Playbook home"
+            viewTransition
+          >
             <span className="site-brand-mark" aria-hidden="true" />
             <span className="site-brand-text">AI Design Playbook</span>
           </Link>

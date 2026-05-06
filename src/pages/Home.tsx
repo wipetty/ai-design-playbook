@@ -95,7 +95,13 @@ export function Home() {
           </a>
 
           <h1 className="hero-title hero-title-xl">
-            The AI design <em>playbook</em> for designers who <em>ship</em>.
+            <span className="hero-line hero-line-1">The AI design</span>
+            <span className="hero-line hero-line-2">
+              <em>playbook</em> for
+            </span>
+            <span className="hero-line hero-line-3">
+              designers who <em className="hero-deliver">deliver</em>.
+            </span>
           </h1>
 
           <div className="hero-bottom">
@@ -106,6 +112,7 @@ export function Home() {
             <Link
               to={`/${featuredPart.id}/${featured.id}`}
               className="hero-cta"
+              viewTransition
             >
               <span className="hero-cta-label">Start reading</span>
               <span className="hero-cta-arrow" aria-hidden="true">
@@ -200,6 +207,7 @@ export function Home() {
           <Link
             to={`/${featuredPart.id}/${featured.id}`}
             className="featured-card"
+            viewTransition
           >
             <span className="featured-number">01</span>
             <div className="featured-card-body">
@@ -238,6 +246,7 @@ export function Home() {
                       <Link
                         to={`/${part.id}/${chapter.id}`}
                         className="chapter-link"
+                        viewTransition
                       >
                         <span className="chapter-number">
                           {String(chapter.number).padStart(2, "0")}
@@ -302,6 +311,7 @@ export function Home() {
             <Link
               to={`/${featuredPart.id}/${featured.id}`}
               className="cta-button cta-button-primary"
+              viewTransition
             >
               Start with Chapter 01
             </Link>
@@ -338,7 +348,7 @@ export function Home() {
 
           <div className="about-author" aria-labelledby="about-author-heading">
             <h3 id="about-author-heading" className="about-author-name">
-              <em>Veronica</em>
+              <em>Veronica</em> Peitong Chen
             </h3>
             <p className="about-author-body">
               Her practice has been tangled up with AI for a long time &mdash;
