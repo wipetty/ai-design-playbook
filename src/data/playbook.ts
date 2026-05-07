@@ -975,7 +975,7 @@ export const playbook: Part[] = [
                               outcome: {
                                 eyebrow: "Path 3 of 4",
                                 title: "You're ready for the team chapter. That's the missing piece.",
-                                body: "Skim parts 1–4 for the framing, then read part 5 carefully. The hardest part of this work isn't writing prompts — it's working with engineering, content, brand, legal, and the rest of the org. [Chapter 13](/shipping-and-team/working-inside-an-ai-pod) is the pod model. [Chapter 15](/shipping-and-team/the-invisible-work) is the cross-functional support pod. Read them as the actual practice.",
+                                body: "Skim parts 1–4 for the framing, then read part 5 carefully. The hardest part of this work isn't writing prompts — it's working with engineering, content, brand, legal, and the rest of the org. [Chapter 13](/shipping-and-team/working-inside-an-ai-pod) is the pod model. [Chapter 15](/shipping-and-team/the-invisible-work) is the foundational service layer the pod is built on. Read them as the actual practice.",
                               },
                             },
                           },
@@ -1414,7 +1414,7 @@ export const playbook: Part[] = [
                   },
                   {
                     eyebrow: "Part 5 · Team",
-                    front: "Chapter [13](/shipping-and-team/working-inside-an-ai-pod)–[15](/shipping-and-team/the-invisible-work) — Pod, support pod, what doesn't shift.",
+                    front: "Chapter [13](/shipping-and-team/working-inside-an-ai-pod)–[15](/shipping-and-team/the-invisible-work) — Pod, service layer, what doesn't shift.",
                     backLabel: "When it pays off",
                     back: "Mode 03 only. These chapters describe shipping production work with a team. If you're solo in mode 01 or 02, skim them so you know what you're heading toward — and read them carefully the day someone says \"can we ship this.\"",
                   },
@@ -5628,7 +5628,7 @@ Example:
               },
               {
                 kind: "paragraph",
-                text: "Just outside the core pod is a **cross-functional support pod** — one named contact from each centralized function the product depends on (content, QE, brand, legal, accessibility). The [next chapter](/shipping-and-team/the-invisible-work) picks it up in detail.",
+                text: "Underneath the core pod is the **foundational service layer** every Adobe product is built on — content, QE, brand, legal, accessibility, and the rest. The pod's job is to plug into that layer through one named contact per service, kept in the conversation from kickoff. The [next chapter](/shipping-and-team/the-invisible-work) picks it up in detail.",
               },
               {
                 kind: "wink",
@@ -5928,8 +5928,8 @@ Example:
                     key: "prep",
                     eyebrow: "Phase 06",
                     label: "Prep for shipping",
-                    title: "The centralized service layer earns its keep",
-                    body: "Brand, marketing, legal, BMS, BKS — the cross-functional support pod runs its review work in parallel. The build pod's velocity here depends entirely on having those contacts already in the conversation.",
+                    title: "The foundational service layer earns its keep",
+                    body: "Brand, marketing, legal, BMS, BKS — the named contacts in the service layer run their review work in parallel. The build pod's velocity here depends entirely on having those contacts already in the conversation.",
                     region: { x: 71.5, y: 2, width: 9.5, height: 96 },
                   },
                   {
@@ -5963,7 +5963,7 @@ Example:
               },
               {
                 kind: "paragraph",
-                text: "A small cross-functional pod, with a wider support pod adjacent. Shared ownership replaces handoffs. Real-time collaboration replaces translation. The designer ships code alongside the engineer and the PM, on the same loop, against the same repo.",
+                text: "A small cross-functional pod, plugged into the foundational service layer beneath it through one named contact per service. Shared ownership replaces handoffs. Real-time collaboration replaces translation. The designer ships code alongside the engineer and the PM, on the same loop, against the same repo.",
               },
               {
                 kind: "paragraph",
@@ -5994,7 +5994,7 @@ Example:
             blocks: [
               {
                 kind: "paragraph",
-                text: "The previous chapter described the structure: pod, support pod, design ↔ build loop, the wider rhythm. This chapter is the one pod that ran that structure end to end, in a tractable timeframe, on a real product surface. Two weeks. Five people. Two features that shipped to users. The reason to read it slowly is that almost every principle in [Chapter 13](/shipping-and-team/working-inside-an-ai-pod) has a corresponding moment in this pod's two weeks — and the moments are easier to remember than the principles.",
+                text: "The previous chapter described the structure: pod, service layer, design ↔ build loop, the wider rhythm. This chapter is the one pod that ran that structure end to end, in a tractable timeframe, on a real product surface. Two weeks. Five people. Two features that shipped to users. The reason to read it slowly is that almost every principle in [Chapter 13](/shipping-and-team/working-inside-an-ai-pod) has a corresponding moment in this pod's two weeks — and the moments are easier to remember than the principles.",
               },
             ],
           },
@@ -6082,7 +6082,7 @@ Example:
                   {
                     positive: true,
                     title: "Cross-functional partners were already in the conversation",
-                    text: "Brand, content, legal, accessibility — none of these arrived at the end. They were threaded through the two weeks via the support pod model.",
+                    text: "Brand, content, legal, accessibility — none of these arrived at the end. They were threaded through the two weeks via named contacts in the foundational service layer.",
                   },
                 ],
               },
@@ -6378,7 +6378,7 @@ Example:
             blocks: [
               {
                 kind: "paragraph",
-                text: "The pod shipped because the work the rest of the org did around it was already in motion — content, brand, legal, accessibility, monetization, the analytics layer. None of that shows up in the two-week story above, because none of it had to be negotiated mid-flight. The next chapter is about that second team: the cross-functional partnerships that determine whether a pod's work actually reaches users.",
+                text: "The pod shipped because the foundational service layer beneath it was already in motion — content, brand, legal, accessibility, monetization, the analytics layer. None of that shows up in the two-week story above, because none of it had to be negotiated mid-flight. The next chapter is about that layer: the centralized services every Adobe product is built on, and the named-contact pattern that lets a pod actually reach them.",
               },
             ],
           },
@@ -6389,7 +6389,7 @@ Example:
         number: 15,
         title: "The invisible work",
         summary:
-          "The cross-functional partnerships that don't show up in the build but determine whether it ships: technology research, content, QE, marketing, brand, legal, monetization, and accessibility. The cross-functional support pod — one named person from each function, in conversation with the pod — as the structural answer to centralized-services drag.",
+          "The foundational service layer every Adobe product is built on: technology research, content, QE, marketing, brand, legal, monetization, and accessibility. Eight centralized services that don't show up in the build but determine whether it ships — and the named-contact pattern that lets a pod actually reach them, instead of going through queues.",
         readTime: "12 min",
         sections: [
           {
@@ -6397,28 +6397,32 @@ Example:
             blocks: [
               {
                 kind: "paragraph",
-                text: "[Chapter 13](/shipping-and-team/working-inside-an-ai-pod) was about the pod — the five people who actually build the thing — and [Chapter 14](/shipping-and-team/image-frontier-pod) walked through the Image Frontier pod as the lived example. This chapter is about the second team that has to exist, half-visibly, around the pod. The work the second team does doesn't show up on the pod's burndown. It shows up in whether the feature ships at all.",
+                text: "[Chapter 13](/shipping-and-team/working-inside-an-ai-pod) was about the pod — the five people who actually build the thing — and [Chapter 14](/shipping-and-team/image-frontier-pod) walked through the Image Frontier pod as the lived example. This chapter is about what's underneath both of them. Every product team at Adobe is built on top of a foundational service layer — eight centralized functions that own the parts of shipping a feature that don't fit inside any one pod. The work this layer does doesn't show up on the pod's burndown. It shows up in whether the feature ships at all.",
               },
               {
                 kind: "paragraph",
-                text: "Most pods that fail in the last mile fail here. The build is done. The Figma is matched. The PRs are merged. And then the feature sits for six weeks because nobody talked to brand about the announcement copy, because legal hadn't seen the prompt template, because marketing didn't know it was happening, because the metering integration was assumed and not confirmed. The pod did its work. The work *around* the pod didn't get done.",
+                text: "Most pods that fail in the last mile fail here. The build is done. The Figma is matched. The PRs are merged. And then the feature sits for six weeks because nobody talked to brand about the announcement copy, because legal hadn't seen the prompt template, because marketing didn't know it was happening, because the metering integration was assumed and not confirmed. The pod did its work. The work *underneath* the pod didn't get done.",
               },
               {
                 kind: "pullquote",
-                text: "The pod ships the build. The work around the pod ships the feature.",
+                text: "The pod ships the build. The service layer beneath it ships the feature.",
               },
               {
                 kind: "paragraph",
-                text: "There are two structural things to learn about this work. The first is what it actually is — the eight functions every Adobe product touches on the way to production, and what each of them does that doesn't fit inside the pod. The second is how to engage with it without getting buried by it: the cross-functional support pod, which is the structural answer to the drag that centralized services produce when you talk to them through a queue.",
+                text: "There are two structural things to learn about this layer. The first is what it actually is — the eight services every Adobe product is built on, and what each of them does that doesn't fit inside the pod. The second is how to engage with it without getting buried by it: the named-contact pattern, which is the structural answer to the drag that centralized services produce when you talk to them through a queue.",
               },
             ],
           },
           {
-            heading: "The eight invisible partners",
+            heading: "The eight services in the layer",
             blocks: [
               {
                 kind: "paragraph",
-                text: "Eight functions sit between a working build and a shipped feature. One of them — technology research — sits *upstream* of the build, providing the model capability the feature is made of. The other seven sit *alongside and downstream*, shaping or receiving what the pod produces. Each has a one-line story you can tell from inside the pod — the visible part — and a much larger story about what they actually do, which doesn't make it onto any pod artifact. Click any of them to see the part you don't see.",
+                text: "The layer doesn't stop at eight. Depending on the product, you might also lean on data science, security, localization, customer support, sales enablement, developer relations, or other centralized teams — and on a large enough product, all of them. The eight below are the ones every Adobe product touches, the load-bearing minimum for an AI feature shipping to users. Treat them as the floor, not the ceiling, and add the services your product actually depends on.",
+              },
+              {
+                kind: "paragraph",
+                text: "Of these eight, one — technology research — sits *underneath* the build itself, providing the model capability the feature is made of. The other seven sit alongside and downstream, shaping or receiving what the pod produces. Each has a one-line story you can tell from inside the pod — the visible part — and a much larger story about what the service actually does, which doesn't make it onto any pod artifact. Click any of them to see the part you don't see.",
               },
               {
                 kind: "invisibleStack",
@@ -6498,11 +6502,11 @@ Example:
                   },
                 ],
                 caption:
-                  "Eight functions, eight invisible jobs. None of them are sign-off gates. All of them block ship if you find them at the end — or, in research's case, if you find them after it.",
+                  "Eight services, eight invisible jobs. None of them are sign-off gates. All of them block ship if you find them at the end — or, in research's case, if you find them after it.",
               },
               {
                 kind: "paragraph",
-                text: "Read those long enough and the pattern becomes obvious. The visible part of each function fits inside the pod's mental model — *brand reviews the visuals*, *legal approves the launch*. The invisible part is several weeks of upstream work the pod was supposed to engage with and didn't. Each function has the same structural problem from the pod's side: it looks like a step you can do at the end, and it isn't.",
+                text: "Read those long enough and the pattern becomes obvious. The visible part of each service fits inside the pod's mental model — *brand reviews the visuals*, *legal approves the launch*. The invisible part is several weeks of upstream work the pod was supposed to engage with and didn't. Each service has the same structural problem from the pod's side: it looks like a step you can do at the end, and it isn't.",
               },
             ],
           },
@@ -6511,15 +6515,15 @@ Example:
             blocks: [
               {
                 kind: "paragraph",
-                text: "There's no single playbook for *working with content strategy* or *working with legal*, and this chapter isn't going to pretend to write one. Each of these relationships has its own people, its own institutional history at Adobe, its own rhythms. What a chapter can teach is not the relationships themselves — those you build by doing the work — but the *shape* of them. Recognize the shape and the relationship becomes navigable. Mistake the shape, and you'll make a category error that costs you trust you'll spend the rest of the year earning back.",
+                text: "There's no single playbook for *working with content strategy* or *working with legal*, and this chapter isn't going to pretend to write one. Each service has its own people, its own institutional history at Adobe, its own rhythms. What a chapter can teach is not the relationships themselves — those you build by doing the work — but the *shape* of them. Recognize the shape and the service becomes navigable. Mistake the shape, and you'll make a category error that costs you trust you'll spend the rest of the year earning back.",
               },
               {
                 kind: "paragraph",
-                text: "The first useful distinction is between partners who are *co-owners* of the work and partners who are *consumers* of it. A co-owner shapes what gets built. A consumer receives what got built and does something downstream with it. QE sits in its own bucket — neither co-owner nor consumer, but a parallel track that runs alongside the build the whole way through.",
+                text: "The first useful distinction is between services that are *co-owners* of the work and services that are *consumers* of it. A co-owner shapes what gets built. A consumer receives what got built and does something downstream with it. QE sits in its own bucket — neither co-owner nor consumer, but a parallel track that runs alongside the build the whole way through.",
               },
               {
                 kind: "partnerTriage",
-                hint: "Drop each function into the category that matches the shape of the partnership. Reveal when you're done — disagreement is allowed.",
+                hint: "Drop each service into the category that matches the shape of the relationship. Reveal when you're done — disagreement is allowed.",
                 bins: [
                   {
                     label: "Co-owner",
@@ -6611,11 +6615,11 @@ Example:
               },
               {
                 kind: "paragraph",
-                text: "The same partner can be a co-owner one quarter and a consumer the next. That's why the practical move is to name each partner explicitly when the pod kicks off a feature and decide which category they're in for *this* piece of work. Knowing which is which is a triage skill, and the cost of getting it wrong is one-directional — you almost never regret bringing a partner in early, and you frequently regret bringing them in late.",
+                text: "The same service can be a co-owner one quarter and a consumer the next. That's why the practical move is to name each service explicitly when the pod kicks off a feature and decide which category it's in for *this* piece of work. Knowing which is which is a triage skill, and the cost of getting it wrong is one-directional — you almost never regret reaching into a service early, and you frequently regret reaching in late.",
               },
               {
                 kind: "wink",
-                text: "The category errors that cost the most: treating an upstream input as a downstream check, or treating a co-owner as a service desk.",
+                text: "The category errors that cost the most: treating an upstream input as a downstream check, or treating a co-owner as a ticket queue.",
               },
             ],
           },
@@ -6639,9 +6643,9 @@ Example:
                   ],
                 },
                 relay: {
-                  label: "The support pod relay",
+                  label: "Named contacts in the layer",
                   subtitle:
-                    "One named person from each function. Already in the conversation. Direct line, both ways.",
+                    "One named person per service, already in the conversation. Direct line, both ways.",
                   notes: [
                     "One hop, not five. The contact already has context.",
                     "Async by default. Slack, not Jira.",
@@ -6662,19 +6666,19 @@ Example:
             ],
           },
           {
-            heading: "The cross-functional support pod",
+            heading: "Named contacts in the layer",
             blocks: [
               {
                 kind: "paragraph",
-                text: "The structural answer is the support pod. The shape is simple: one named person from each function, in conversation with the build pod from kickoff onward, with a direct line — Slack, calendar, name, face — back to the team. Not the whole content team. One content strategist. Not the whole legal team. One lawyer. Not the whole research org. One technology researcher who knows the model the feature is built on. Together they form a second pod, around the first — eight or so people who collectively have enough institutional context to keep the build pod's velocity alive through the rest of the org.",
+                text: "The structural answer isn't to build a second team. It's to give the build pod a direct line into the layer it's already sitting on top of. The shape is simple: one named person per service, in conversation with the build pod from kickoff onward, with a real line — Slack, calendar, name, face — back to the team. Not the whole content team. One content strategist. Not the whole legal team. One lawyer. Not the whole research org. One technology researcher who knows the model the feature is built on. Eight named contacts, one per service, who collectively give the pod working access to the foundation it depends on.",
               },
               {
                 kind: "paragraph",
-                text: "The support pod isn't a status meeting. It isn't a steering committee. It isn't a chain of approvals. It's a Slack channel, a shared doc, and a standing thirty-minute weekly sync. The structural innovation is that the contacts are *named and in the room*, not pulled from a queue when the pod is ready for them. Drag the chips below to feel the model — every partner is tethered to the core pod, and pulled out, they snap back.",
+                text: "This isn't a status meeting. It isn't a steering committee. It isn't a chain of approvals. It's a Slack channel, a shared doc, and a standing thirty-minute weekly sync. The structural innovation is that the contacts are *named and in the room*, not pulled from a queue when the pod is ready for them. Drag the chips below to feel the model — every contact is tethered to the build pod, and pulled out, they snap back into the conversation.",
               },
               {
                 kind: "podOrbit",
-                hint: "Drag any partner to feel the tether stretch. Click to read what they own and what they need from the pod.",
+                hint: "Drag any contact to feel the tether stretch. Click to read what their service owns and what it needs from the pod.",
                 center: {
                   label: "Core pod",
                 },
@@ -6769,20 +6773,20 @@ Example:
                   },
                 ],
                 caption:
-                  "The same eight functions, modeled as a tethered orbit. Each one is one named person, not a queue. Pull a chip out and feel the connection — release and it snaps back into the conversation.",
+                  "The same eight services, modeled as named contacts tethered to the pod. Each one is one person, not a queue. Pull a chip out and feel the connection — release and it snaps back into the conversation.",
               },
               {
                 kind: "wink",
-                text: "The pod is what makes the build go fast. The support pod is what keeps it going fast all the way to ship.",
+                text: "The pod is what makes the build go fast. The named contacts in the layer are what keep it going fast all the way to ship.",
               },
             ],
           },
           {
-            heading: "How a designer engages with the support pod",
+            heading: "How a designer engages the layer",
             blocks: [
               {
                 kind: "paragraph",
-                text: "From inside the build pod, the support pod is an audience and a resource — not a gauntlet. The designer's specific work with it has a different shape than the engineer's or the PM's, and it's worth being concrete about.",
+                text: "From inside the build pod, the service layer is an audience and a resource — not a gauntlet. The designer's specific work with it has a different shape than the engineer's or the PM's, and it's worth being concrete about.",
               },
               {
                 kind: "cards",
@@ -6792,65 +6796,65 @@ Example:
                     icon: "compass",
                     eyebrow: "Show, don't summarize",
                     title: "Bring the build, not the spec",
-                    text: "When you bring something to a support-pod contact, bring the running prototype if you can, the screenshot if you can't, and the Figma frame only as a last resort. Brand can react to a real surface in a way they can't react to a description. Legal can read a prompt template in five seconds — they can't read your summary of one. The pod's velocity advantage applies here too: the artifact is the conversation.",
+                    text: "When you bring something to a contact in the layer, bring the running prototype if you can, the screenshot if you can't, and the Figma frame only as a last resort. Brand can react to a real surface in a way they can't react to a description. Legal can read a prompt template in five seconds — they can't read your summary of one. The pod's velocity advantage applies here too: the artifact is the conversation.",
                   },
                   {
                     icon: "loop",
                     eyebrow: "Engage at directional, not at done",
                     title: "Twenty minutes early, not two days late",
-                    text: "Every support-pod contact will tell you the same thing: catching it directionally is twenty minutes. Catching it at the end is two days. The designer's job is to be the person who knows when each contact needs to be looped in — usually earlier than feels natural — and who actually does it instead of putting it on the team's todo list.",
+                    text: "Every contact in the layer will tell you the same thing: catching it directionally is twenty minutes. Catching it at the end is two days. The designer's job is to be the person who knows when each service needs to be looped in — usually earlier than feels natural — and who actually does it instead of putting it on the team's todo list.",
                   },
                   {
                     icon: "chat",
                     eyebrow: "One channel, one thread per topic",
                     title: "Async beats meeting, threads beat DMs",
-                    text: "The support pod's working surface is a Slack channel with the build pod and all eight contacts. Topics live in threads. Decisions get pinned. Standing weekly meeting is thirty minutes max, only when there's something to decide together. Side-channel DMs are how things get lost.",
+                    text: "The layer's working surface is a Slack channel with the build pod and all eight contacts. Topics live in threads. Decisions get pinned. Standing weekly meeting is thirty minutes max, only when there's something to decide together. Side-channel DMs are how things get lost.",
                   },
                   {
                     icon: "check",
                     eyebrow: "Treat their feedback as feedback, not as a gate",
                     title: "BLOCKER, MAJOR, MINOR, NIT — same scale",
-                    text: "When a support-pod contact raises an issue, ask them to tag the severity using the same scale the build pod uses internally. Not every brand note is a blocker. Not every legal flag is a launch-stopper. The severity model the pod uses for its own reviews works for cross-functional reviews too — it keeps the conversation honest in both directions.",
+                    text: "When a contact in the layer raises an issue, ask them to tag the severity using the same scale the build pod uses internally. Not every brand note is a blocker. Not every legal flag is a launch-stopper. The severity model the pod uses for its own reviews works for cross-functional reviews too — it keeps the conversation honest in both directions.",
                   },
                 ],
               },
             ],
           },
           {
-            heading: "Building the support pod for your own work",
+            heading: "Plugging into the layer for your own work",
             blocks: [
               {
                 kind: "paragraph",
-                text: "If your team doesn't already have a support pod, the work to build one is mostly mechanical. The harder part is being the person who insists on it.",
+                text: "If your team doesn't already have a contact in each service, the work to set that up is mostly mechanical. The harder part is being the person who insists on it.",
               },
               {
                 kind: "steps",
                 items: [
                   {
-                    title: "Inventory the eight functions for your product",
-                    text: "Some products will skip a few — a B2B tool with no monetization story, an internal preview with no marketing beat, a feature built on a stable existing model that doesn't need an active research contact. Most will have all eight. For each one, identify the team that owns it inside Adobe and the specific person who already has context on your product or domain.",
+                    title: "Inventory the eight services for your product",
+                    text: "Some products will skip a few — a B2B tool with no monetization story, an internal preview with no marketing beat, a feature built on a stable existing model that doesn't need an active research contact. Most will have all eight. For each service, identify the team that owns it inside Adobe and the specific person who already has context on your product or domain.",
                   },
                   {
                     title: "Ask, don't assign",
-                    text: "Reach out to each candidate contact directly. Explain the model — one named person, in conversation, low overhead, named in advance. Make it clear you're asking for their time as a peer, not nominating them through their manager. Most people say yes. The ones who don't will tell you who else to ask.",
+                    text: "Reach out to each candidate contact directly. Explain the model — one named person per service, in conversation, low overhead, named in advance. Make it clear you're asking for their time as a peer, not nominating them through their manager. Most people say yes. The ones who don't will tell you who else to ask.",
                   },
                   {
                     title: "Set up the channel",
-                    text: "One Slack channel with the build pod and all confirmed contacts. Pin a one-page doc with the project goal, the pod members, the support-pod members, and the ship target. Set a standing thirty-minute weekly sync, optional attendance, used only when there's a cross-functional decision to make.",
+                    text: "One Slack channel with the build pod and all confirmed contacts. Pin a one-page doc with the project goal, the pod members, the named contact for each service, and the ship target. Set a standing thirty-minute weekly sync, optional attendance, used only when there's a cross-functional decision to make.",
                   },
                   {
                     title: "Engage every contact in the first week",
-                    text: "Even if it's just a five-minute introduction. The structural value of the support pod is that contacts are *already in the conversation* when you need them — that requires being in the conversation before you need them. Skipping this and the support pod degrades to a contact list, which is no faster than a queue.",
+                    text: "Even if it's just a five-minute introduction. The structural value of the named-contact pattern is that the layer is *already in the conversation* when you need it — that requires being in the conversation before you need it. Skipping this and the pattern degrades to a contact list, which is no faster than a queue.",
                   },
                   {
                     title: "Kill it if it doesn't work",
-                    text: "Some support pods don't gel. People ghost the channel. The weekly sync becomes status theater. When this happens, name it and either restart or dissolve it. A support pod nobody uses is worse than no support pod, because it gives the build pod false confidence the cross-functional work is happening.",
+                    text: "Sometimes a contact relationship doesn't gel. People ghost the channel. The weekly sync becomes status theater. When this happens, name it and either swap the contact or restart the channel. A named contact nobody uses is worse than none, because it gives the build pod false confidence the cross-functional work is happening.",
                   },
                 ],
               },
               {
                 kind: "wink",
-                text: "*Find your partners before you need them* — the cheapest investment in shipping speed available, applied at the team scale this time instead of the individual one.",
+                text: "*Find your partners before you need them* — the cheapest investment in shipping speed available, applied this time to the layer the whole org already runs on.",
               },
             ],
           },
@@ -6859,7 +6863,7 @@ Example:
             blocks: [
               {
                 kind: "paragraph",
-                text: "Worth being concrete about the failure modes, because the cost of skipping the support pod doesn't show up where you'd expect it. It shows up as the build pod's speed disappearing into the gap between the build and the launch.",
+                text: "Worth being concrete about the failure modes, because the cost of treating the service layer as a queue doesn't show up where you'd expect it. It shows up as the build pod's speed disappearing into the gap between the build and the launch.",
               },
               {
                 kind: "checklist",
@@ -6893,7 +6897,7 @@ Example:
               },
               {
                 kind: "paragraph",
-                text: "None of these are recoverable from inside the build pod. They all require the cross-functional contacts to have been in the conversation early enough to surface the issue when it was cheap. Which means the support pod isn't optional infrastructure — it's load-bearing. The pod that thinks it's saving time by skipping it is consistently the pod that ships latest.",
+                text: "None of these are recoverable from inside the build pod. They all require the named contacts in the layer to have been in the conversation early enough to surface the issue when it was cheap. Which means the service layer isn't optional infrastructure — it's load-bearing. The pod that thinks it's saving time by treating it as a final-mile gate is consistently the pod that ships latest.",
               },
             ],
           },
@@ -6910,7 +6914,7 @@ Example:
               },
               {
                 kind: "paragraph",
-                text: "The tools have changed. The bottleneck has moved. The shape of the team is different. The cross-functional partnerships are more numerous and more concurrent. But the core thing — the part of design work that was always the hard part — is unchanged. Vibe coding doesn't replace it. The pod model doesn't replace it. The cross-functional support structure doesn't replace it. Everything in this playbook is in service of letting that core thing — taste, judgment, care — show up in the work more often, more quickly, and with less of it lost in translation.",
+                text: "The tools have changed. The bottleneck has moved. The shape of the team is different. The service layer the team plugs into is more numerous and more concurrent. But the core thing — the part of design work that was always the hard part — is unchanged. Vibe coding doesn't replace it. The pod model doesn't replace it. The named-contact pattern doesn't replace it. Everything in this playbook is in service of letting that core thing — taste, judgment, care — show up in the work more often, more quickly, and with less of it lost in translation.",
               },
               {
                 kind: "pullquote",
