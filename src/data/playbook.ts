@@ -2588,7 +2588,7 @@ description: Run the accessibility floor before pushing for review. Use any time
         number: 7,
         title: "Prompting best practices",
         summary:
-          "Specificity, pointers, constraints, showing the pattern. The per-message craft of getting useful output, with examples tuned to UI work rather than backend code.",
+          "Specificity, pointers, constraints, examples. The per-message craft of getting useful output, tuned to UI work.",
         readTime: "10 min",
         sections: [
           {
@@ -3042,7 +3042,7 @@ description: Run the accessibility floor before pushing for review. Use any time
         number: 8,
         title: "Planning and exploring options",
         summary:
-          "Touring unfamiliar codebases and design systems, sparring on decisions, reading product data, generating alternatives, and turning all of it into a plan you can execute. The work that determines whether the build succeeds.",
+          "Touring the codebase, reading the data, sparring on decisions, and turning it into a plan the model can actually execute.",
         readTime: "9 min",
         sections: [
           {
@@ -3499,7 +3499,7 @@ description: Run the accessibility floor before pushing for review. Use any time
         number: 9,
         title: "Documenting design and handing it off",
         summary:
-          "Handoff isn't a single act anymore. It's a network of small handoffs — to the model, to content, to QE, to engineering, and to the next designer — each with its own audience and its own artifact.",
+          "Handoff isn't a single act. It's a network of small ones — to the model, to QE, to engineering, and to the next designer.",
         readTime: "13 min",
         sections: [
           {
@@ -3896,7 +3896,7 @@ description: Run the accessibility floor before pushing for review. Use any time
         number: 10,
         title: "From Figma to working UI and back",
         summary:
-          "The design-to-code loop has four moments — starting, mid-build, review, and after shipping — each with a different right answer. Underneath the workflow is the harder craft of reading what Figma and code each tell you about the design.",
+          "The design-to-code loop has four moments — starting, mid-build, review, shipping — each with a different right answer.",
         readTime: "7 min",
         sections: [
           {
@@ -4263,7 +4263,7 @@ description: Run the accessibility floor before pushing for review. Use any time
         number: 11,
         title: "Visual design fidelity",
         summary:
-          "AI lands every build in the *almost right* zone by default. The gap shows up in five places — spacing, typography, color, hierarchy, and motion — and closing it means anchoring the model in a design system: Spectrum tokens, the alias tier, and one Provider that handles light and dark.",
+          "AI lands every build in the *almost right* zone. Closing the gap means anchoring the model in spacing, typography, color, hierarchy, and motion.",
         readTime: "10 min",
         sections: [
           {
@@ -4871,7 +4871,7 @@ description: Run the accessibility floor before pushing for review. Use any time
         number: 12,
         title: "Accessibility as a prompt-time concern",
         summary:
-          "Accessibility is the deferral that costs the most. Pull it into the prompt, the rules, the Figma frame, and the partnership cadence — so the floor is higher before any human reviews the build.",
+          "Accessibility is the deferral that costs the most. Pull it into the prompt, the rules, and the Figma frame instead.",
         readTime: "15 min",
         sections: [
           {
@@ -5521,7 +5521,7 @@ Example:
         number: 13,
         title: "Working inside an AI pod",
         summary:
-          "Most of the playbook so far teaches you to vibe code as a designer. This chapter is about what changes when you do it as part of a team organized around the practice — five people, two roles, shared ownership of the build. How a designer plugs in, what you contribute that no one else can, and how quality holds up when designers ship code. [Chapter 14](/shipping-and-team/image-frontier-pod) walks through the Image Frontier pod — 2 weeks, 5 people, 2 features — as the worked example.",
+          "What changes when vibe coding moves from a solo practice to a five-person pod — how a designer plugs in, and how quality holds up.",
         readTime: "11 min",
         sections: [
           {
@@ -5986,7 +5986,7 @@ Example:
         number: 14,
         title: "The Image Frontier pod",
         summary:
-          "A two-week, five-person pod that shipped two new image-editing features for Adobe Firefly. The cleanest worked example of pod work at Adobe so far, and the texture behind every principle in the previous chapter.",
+          "A two-week, five-person pod that shipped two image-editing features for Adobe Firefly — the worked example behind every pod principle.",
         readTime: "11 min",
         sections: [
           {
@@ -6389,7 +6389,7 @@ Example:
         number: 15,
         title: "The invisible work",
         summary:
-          "The foundational service layer every Adobe product is built on: technology research, content, QE, marketing, brand, legal, monetization, and accessibility. Eight centralized services that don't show up in the build but determine whether it ships — and the named-contact pattern that lets a pod actually reach them, instead of going through queues.",
+          "The foundational service layer every Adobe product is built on, and the named-contact pattern that lets a pod reach it without queues.",
         readTime: "12 min",
         sections: [
           {
