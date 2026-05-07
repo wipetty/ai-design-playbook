@@ -2117,17 +2117,17 @@ export const playbook: Part[] = [
                 kind: "steps",
                 items: [
                   {
-                    title: "Get IMS and repo access",
-                    text: "Request access to the product repos you'll actually work in, plus IMS and the dev tooling baseline. This usually means a self-serve request and an approval from your manager.",
-                  },
-                  {
                     title: "Install Protopack and the templates",
-                    text: "Install the Protopack plugin for Claude Code or Cursor. It pulls in the skills, agents, and templates the rest of the company is already using.",
+                    text: "Install the Protopack plugin for Claude Code or Cursor. It pulls in the skills, agents, and templates the rest of the company is already using. The [AD AI Prototyping Quick Start](https://wiki.corp.adobe.com/spaces/AdobeDesign/pages/3650101698/AD+AI+Prototyping+Quick+Start) on the Adobe Design wiki walks through the install end to end.",
                     image: {
                       src: "/images/logo-protopack.png",
                       alt: "Protopack app icon.",
                       variant: "logo",
                     },
+                  },
+                  {
+                    title: "Get GitHub and repo access (optional if you're just experimenting)",
+                    text: "Skip this step if you're poking at Protopack templates or running things locally — you don't need it. The day your work crosses into a real product repo, request access to the GitHub orgs and the specific product repos you'll work in, plus the dev tooling baseline. This usually means a self-serve request and an approval from your manager.",
                   },
                   {
                     title: "Wire the MCPs you'll actually use",
