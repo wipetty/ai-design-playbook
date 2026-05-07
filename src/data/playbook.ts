@@ -1825,7 +1825,7 @@ export const playbook: Part[] = [
                 tone: "neutral",
                 icon: "arrow",
                 title: "Prototyping path? There's a shorter route",
-                text: "If most of your work is prototyping rather than landing changes inside a production codebase, Protopack is a faster on-ramp than a full repo clone. It handles the local environment, gives you Spectrum-aligned templates, and makes hosting easy. [Chapter 5](/setup-and-tooling/ai-tooling-at-adobe) walks through it; [#adpt-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) is where the day-to-day questions get answered. Skim the next section and come back to it the day your work starts crossing into a real product repo.",
+                text: "If most of your work is prototyping rather than landing changes inside a production codebase, Protopack is a faster on-ramp than a full repo clone. It handles the local environment, gives you Spectrum-aligned templates, and makes hosting easy. [Chapter 5](/setup-and-tooling/ai-tooling-at-adobe) walks through it; [#adp-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) is where the day-to-day questions get answered. Skim the next section and come back to it the day your work starts crossing into a real product repo.",
               },
             ],
           },
@@ -2135,7 +2135,7 @@ export const playbook: Part[] = [
                   },
                   {
                     title: "Join the channels where help happens",
-                    text: "There's no central docs site that beats a Slack channel of people doing the same thing today. The starter set: [#ad-ai-collective](https://adobe.enterprise.slack.com/archives/C04MKDW961Z) for AI design across disciplines, [#ai-coding-assistant-users](https://adobe.enterprise.slack.com/archives/C06MW635SD8) for Cursor and Claude Code questions, [#adpt-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) for Protopack, and [#external-ai-coding-cursor](https://adobe.enterprise.slack.com/archives/C07UL8NPFNK) for Cursor-specific chat. Lurk first, then ask.",
+                    text: "There's no central docs site that beats a Slack channel of people doing the same thing today. The starter set: [#ad-ai-collective](https://adobe.enterprise.slack.com/archives/C04MKDW961Z) for AI design across disciplines, [#ai-coding-assistant-users](https://adobe.enterprise.slack.com/archives/C06MW635SD8) for Cursor and Claude Code questions, [#adp-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) for Protopack, and [#external-ai-coding-cursor](https://adobe.enterprise.slack.com/archives/C07UL8NPFNK) for Cursor-specific chat. Lurk first, then ask.",
                     image: {
                       src: "/images/logo-slack.svg",
                       alt: "Slack logo mark.",
@@ -2175,7 +2175,7 @@ export const playbook: Part[] = [
                     icon: "chat",
                     eyebrow: "Slack",
                     title: "The working channels",
-                    text: "[#ad-ai-collective](https://adobe.enterprise.slack.com/archives/C04MKDW961Z) for AI design across disciplines, [#ai-coding-assistant-users](https://adobe.enterprise.slack.com/archives/C06MW635SD8) for Cursor and Claude Code, [#adpt-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) for Protopack, and [#external-ai-coding-cursor](https://adobe.enterprise.slack.com/archives/C07UL8NPFNK) for Cursor's own team. Join all four before you need them.",
+                    text: "[#ad-ai-collective](https://adobe.enterprise.slack.com/archives/C04MKDW961Z) for AI design across disciplines, [#ai-coding-assistant-users](https://adobe.enterprise.slack.com/archives/C06MW635SD8) for Cursor and Claude Code, [#adp-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) for Protopack, and [#external-ai-coding-cursor](https://adobe.enterprise.slack.com/archives/C07UL8NPFNK) for Cursor's own team. Join all four before you need them.",
                   },
                   {
                     icon: "layers",
