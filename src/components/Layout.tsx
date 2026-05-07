@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import type { ReactNode } from "react";
 import ThemeToggle from "./ThemeToggle";
+import BackToTop from "./BackToTop";
 
 export function Layout({ children }: { children: ReactNode }) {
   const location = useLocation();
@@ -93,6 +94,7 @@ export function Layout({ children }: { children: ReactNode }) {
           </a>
         </div>
       </footer>
+      <BackToTop />
     </div>
   );
 }
