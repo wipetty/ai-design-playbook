@@ -244,6 +244,25 @@ export type SectionBlock =
       right: { label: string; subtitle?: string; reveals: string[] };
     }
   | {
+      kind: "blindSpot";
+      caption?: string;
+      visible: { label: string; subtitle?: string; items: string[] };
+      invisible: {
+        label: string;
+        subtitle?: string;
+        items: {
+          text: string;
+          audience:
+            | "keyboard"
+            | "screenReader"
+            | "lowVision"
+            | "colorBlind"
+            | "vestibular"
+            | "cognitive";
+        }[];
+      };
+    }
+  | {
       kind: "driftMeter";
       caption?: string;
       zones: {
@@ -4024,7 +4043,7 @@ description: Run the accessibility floor before pushing for review. Use any time
             blocks: [
               {
                 kind: "paragraph",
-                text: "Of the three deferrals from the previous chapter — motion, content, and accessibility — accessibility is the one with the highest cost when it gets pushed to the end. Motion fixed late is fixed badly. Content fixed late is fixed against constraints set without it. Accessibility fixed late is, in many cases, *not actually fixed* — it's spot-fixed where automated scanners notice gaps, and left untouched everywhere else.",
+                text: "Accessibility is the design dimension that costs the most when it gets pushed to the end. Spacing fixed late is awkward but fixable. Motion fixed late is fixed badly. Accessibility fixed late is, in many cases, *not actually fixed* — it's spot-fixed where automated scanners notice gaps, and left untouched everywhere else.",
               },
               {
                 kind: "pullquote",
@@ -4032,11 +4051,56 @@ description: Run the accessibility floor before pushing for review. Use any time
               },
               {
                 kind: "paragraph",
-                text: "This chapter is about pulling accessibility forward — into the prompt, into the rules, into the design system, into the build itself — so that the version the model produces is closer to right by default, and the manual work that remains is the work that was always going to require human judgment.",
+                text: "This chapter is about pulling accessibility forward, so that the version the model produces is closer to right by default, and the manual work that remains is the work that was always going to require human judgment.",
               },
               {
                 kind: "paragraph",
-                text: "It's also the chapter where Adobe-specific resources matter most. The canonical references — the WCAG criteria, Adobe's bluelines toolkit, the corporate accessibility partners, the Stark plugin rollout — are concrete enough that a generic chapter would be doing the reader a disservice. Where earlier chapters held the Adobe specifics back, this one names them, because the work is Adobe's.",
+                text: "A current snapshot from the [DACE accessibility dashboard](https://dace-capstone-03dff.entapp.adproto.com/#), Adobe's central tracker for open accessibility issues:",
+              },
+              {
+                kind: "stats",
+                items: [
+                  {
+                    value: "16,485",
+                    label: "Total issues tracked",
+                    meta: "Across products, surfaces, and severities.",
+                  },
+                  {
+                    value: "7,342",
+                    label: "Still open",
+                    meta: "Roughly 45% of everything ever logged.",
+                  },
+                  {
+                    value: "35%",
+                    label: "Fixed",
+                    meta: "3,340 more were closed without a fix.",
+                  },
+                  {
+                    value: "544 days",
+                    label: "Average age of an open issue",
+                    meta: "Time to fix, when fixed, averages 289 days.",
+                  },
+                ],
+              },
+              {
+                kind: "paragraph",
+                text: "The shape of the backlog matters as much as the size. The top four categories — accessible names, keyboard and focus, color and contrast, semantics — account for the bulk of the open issues, and *every one of them is a category a model can be prompted to handle on the first pass*. The chart below shows where the work is.",
+              },
+              {
+                kind: "table",
+                columns: ["Category", "Issues", "Where it shows up"],
+                rows: [
+                  ["Accessible names & descriptions", "~5,500", "Missing or unhelpful labels on inputs, buttons, icons, and images."],
+                  ["Keyboard & focus", "~3,000", "Elements unreachable by Tab, focus order that doesn't match visual order, missing focus rings."],
+                  ["Color & contrast", "~2,200", "Text or interactive elements below the WCAG threshold against their background."],
+                  ["Semantics", "~1,800", "Divs and spans where headings, lists, landmarks, or buttons belong."],
+                  ["Navigation & structure", "~1,000", "Missing landmarks, broken heading hierarchy, no skip links."],
+                  ["Reflow & zoom", "~900", "Layouts that break or hide content at 200% zoom or narrow viewports."],
+                ],
+              },
+              {
+                kind: "wink",
+                text: "Most of the categories above are exactly what *prompt-time accessibility* prevents. The numbers are the chapter's argument in chart form: the deferral compounds, and the compounded debt is paid by users.",
               },
             ],
           },
@@ -4052,32 +4116,29 @@ description: Run the accessibility floor before pushing for review. Use any time
                 text: "Accessibility, when it goes wrong, is mostly invisible to the person who built it. A focus state that doesn't render is missing for everyone except keyboard users. A heading hierarchy that's flat to screen readers reads correctly to sighted users. A contrast failure looks fine to someone whose vision is in the median.",
               },
               {
-                kind: "lensCompare",
-                center: "The same build",
-                left: {
-                  label: "What you see",
-                  subtitle: "Visible failure modes",
-                  reveals: [
+                kind: "blindSpot",
+                visible: {
+                  label: "Visible to you",
+                  subtitle: "What the eye catches",
+                  items: [
                     "Spacing that's off",
                     "Typography that's flat",
                     "Color that doesn't carry",
                     "Hierarchy that competes",
-                    "Motion that drags",
                   ],
                 },
-                right: {
-                  label: "What you don't",
-                  subtitle: "Invisible failure modes",
-                  reveals: [
-                    "Missing focus states",
-                    "Heading hierarchy flattened",
-                    "Contrast below threshold",
-                    "Inputs without labels",
-                    "Motion that triggers vestibular discomfort",
+                invisible: {
+                  label: "Invisible to you",
+                  subtitle: "What your user can't reach",
+                  items: [
+                    { text: "Missing focus states", audience: "keyboard" },
+                    { text: "Heading hierarchy flattened", audience: "screenReader" },
+                    { text: "Contrast below threshold", audience: "lowVision" },
+                    { text: "Inputs without labels", audience: "screenReader" },
+                    { text: "Motion that triggers nausea", audience: "vestibular" },
+                    { text: "State signalled by color alone", audience: "colorBlind" },
                   ],
                 },
-                caption:
-                  "Fidelity failures train the eye through observation. Accessibility failures don't — there's nothing to observe. Different skill, different practice.",
               },
               {
                 kind: "wink",
@@ -4090,7 +4151,7 @@ description: Run the accessibility floor before pushing for review. Use any time
             blocks: [
               {
                 kind: "paragraph",
-                text: "There's a useful framing from Matthew Stephens's work on accessibility skills, worth naming explicitly because it shapes how you should think about tooling. Automated scanners — Lighthouse, axe, WAVE — can programmatically test about a third of WCAG success criteria. They check the things with a clear yes/no answer. The rest depends on judgment.",
+                text: "There's a useful framing from Matthew Stephens's work on accessibility skills, worth naming explicitly because it shapes how you should think about tooling. Automated scanners — [Lighthouse](https://developer.chrome.com/docs/lighthouse/accessibility/), [axe](https://www.deque.com/axe/), [WAVE](https://wave.webaim.org/) — can programmatically test about a third of [WCAG success criteria](https://www.w3.org/WAI/WCAG22/quickref/). They check the things with a clear yes/no answer. The rest depends on judgment.",
               },
               {
                 kind: "stats",
@@ -4122,142 +4183,100 @@ description: Run the accessibility floor before pushing for review. Use any time
             blocks: [
               {
                 kind: "paragraph",
-                text: "The single highest-leverage place to handle accessibility is in the prompt and in the rules — before any code gets generated. Every issue caught at prompt time is one less issue you fix in review, one less issue that reaches QE, one less issue that ships.",
+                text: "The model knows how to write accessible code — focus management, ARIA, semantic HTML, contrast, all of it. It just won't reach for any of that unless you ask. Two moves fix that: write your floor into the rules file once, and name the accessibility you want in every prompt.",
               },
               {
-                kind: "cards",
-                columns: 2,
-                items: [
-                  {
-                    icon: "code",
-                    eyebrow: "Pattern 01",
-                    title: "Encode your floor as rules",
-                    text: "Minimum contrast ratios, required focus states, semantic HTML expectations, ARIA conventions. *All interactive elements must have visible focus states with a minimum 3:1 contrast against the background. Use semantic HTML before reaching for ARIA. Do not use div with onClick for actionable elements.*",
-                  },
-                  {
-                    icon: "spark",
-                    eyebrow: "Pattern 02",
-                    title: "Ask for the accessible version on the first pass",
-                    text: "*Build a modal that traps focus, restores focus on close, dismisses with Escape, and announces itself to screen readers.* The model is fully capable of producing this on the first attempt. It just won't if you don't ask.",
-                  },
-                  {
-                    icon: "x",
-                    eyebrow: "Pattern 03",
-                    title: "Name the failure modes you want to avoid",
-                    text: "*Do not use color as the only signal for state — pair color with iconography or text. Do not use placeholder text as a label. Do not put interactive elements inside elements that are themselves clickable.* Each line rules out a class of fix-in-review.",
-                  },
-                  {
-                    icon: "compass",
-                    eyebrow: "Pattern 04",
-                    title: "Reference the canonical patterns",
-                    text: "Where Adobe Design has documented patterns — landmarks, focus order, semantic structure — point to them. *Follow the heading hierarchy and landmark structure from the Adobe Design accessibility bluelines.* The anchor is stronger than any description.",
-                  },
-                ],
+                kind: "pullquote",
+                text: "The model isn't being lazy. It's being literal. Tell it what you want, get what you asked for.",
               },
               {
-                kind: "wink",
-                text: "Compounding effect: rules + named patterns + canonical references produce builds where accessibility is roughly correct on the first pass. The remaining work is judgment work — the 70% — instead of mechanical fixing of the 30%.",
+                kind: "code",
+                label: "CLAUDE.md — accessibility floor (drop-in)",
+                language: "markdown",
+                text: `## Accessibility floor (non-negotiable)
+
+- All interactive elements need visible focus states
+  (3:1 contrast min, 2px outline min).
+- Reach for semantic HTML before ARIA: button, a, input, label,
+  nav, main, header, footer, h1–h6.
+- Never use <div onClick>. Never use placeholder as a label.
+- Color is never the only signal for state — pair with icon or text.
+- Modals trap focus, restore focus on close, dismiss with Escape.
+- Forms have explicit labels; errors tied with aria-describedby.
+- Touch targets at least 44×44 CSS pixels.
+- Respect prefers-reduced-motion: skip non-essential animation.`,
+              },
+              {
+                kind: "compareFlow",
+                before: {
+                  label: "Vague prompt → average output",
+                  steps: [
+                    "*Build a settings dialog with a save button*",
+                    "Styled div, no focus trap",
+                    "No Escape handler, no return focus on close",
+                    "Save is a div with onClick",
+                    "You catch it in review. Or worse, you don't.",
+                  ],
+                },
+                after: {
+                  label: "Specific prompt → tight output",
+                  steps: [
+                    "*…trap focus, dismiss with Escape, restore focus on close. Use semantic <dialog> and <button>.*",
+                    "Real <dialog> element",
+                    "Focus trap and Escape wired up",
+                    "Save is a <button>, focus returns on close",
+                    "Nothing to catch in review.",
+                  ],
+                },
               },
             ],
           },
           {
-            heading: "Adobe's accessibility partners",
+            heading: "Start in Stark, before you build anything",
             blocks: [
               {
                 kind: "paragraph",
-                text: "Accessibility is *not solely an engineering concern, and it's not solely a designer's concern*. It's a cross-functional concern, with partners in design, PM, legal, and inclusive design — and the right time to involve them is before the code is locked, not after.",
+                text: "The cheapest accessibility move available to a vibe-coding designer happens before any code exists. Open the frame in Figma. Run [Stark](https://www.getstark.co/). Fix what it surfaces. Annotate what it asks you to annotate. Then — and only then — point the model at the frame.",
               },
               {
-                kind: "cards",
-                columns: 3,
-                items: [
+                kind: "pullquote",
+                text: "Two minutes in Stark up front saves more than two minutes of fix work later. And the build is better.",
+              },
+              {
+                kind: "paragraph",
+                text: "Stark, rolled out across Adobe Design in late 2024 by the [Product Equity team](https://wiki.corp.adobe.com/pages/viewpage.action?spaceKey=AdobeDesign&title=Product+Equity+Team#9baffee3-9e0d-42eb-867a-0a75e660d677-2779257533), moves some of the 30% checkable layer into Figma — contrast, color blindness simulation, alt text, focus order, landmarks. The rollout matters because it makes accessibility a *design-phase* concern rather than an implementation cleanup. If you don't yet have access, [request a Stark seat through the intake form](https://forms.office.com/pages/responsepage.aspx?id=Wht7-jR7h0OUrtLBeN7O4dmDQYKiErBHjt6uDfzwzZpUNDg5NkhMTkMwWFlZQzQ0M0s5RTdRVU5STyQlQCN0PWcu&route=shorturl).",
+              },
+              {
+                kind: "flow",
+                label: "The Stark-first workflow",
+                steps: [
                   {
-                    icon: "spark",
-                    eyebrow: "Express",
-                    title: "Design + PM",
-                    text: "Julie Ip on the design side, Kate Eom on the PM side. The #express-accessibility Slack channel is where accessibility-related questions land for the org.",
+                    title: "Frame the design",
+                    meta: "Lay out the screen or component you're about to build. Real labels, real states, real ranges — not lorem.",
                   },
                   {
-                    icon: "layers",
-                    eyebrow: "Inclusive Design",
-                    title: "Cross-org",
-                    text: "Timothy Bardlevans and Matt May. The team that thinks about accessibility as a design discipline before it becomes a compliance check.",
+                    title: "Run Stark",
+                    meta: "Contrast scan, color blindness simulation, alt text audit. Fix the failures in the file, not in the build.",
                   },
                   {
-                    icon: "target",
-                    eyebrow: "Accessibility PM",
-                    title: "Program",
-                    text: "Mary Ann Jawili and Elle Waters. Most product organizations across Adobe have equivalents — find yours before you need them.",
+                    title: "Annotate semantic intent",
+                    meta: "Number focus order, label landmarks (header, main, nav, footer), tag interactive elements, mark decorative imagery.",
+                  },
+                  {
+                    title: "Point the model at the frame",
+                    meta: "Through the Figma MCP. The annotations travel with the frame — the model reads them and honors them in the build.",
                   },
                 ],
               },
               {
-                kind: "paragraph",
-                text: "The cadence the wiki documents, and the cadence that works in practice, has three checkpoints. Spending time at each saves more time later than it costs.",
-              },
-              {
-                kind: "pathway",
-                items: [
-                  {
-                    number: "01",
-                    title: "Directional review, early",
-                    description:
-                      "When the design problem is still open and you're choosing between approaches. Accessibility partners can flag which directions are feasible to make accessible and which will fight the implementation. Fifteen minutes here saves hours later.",
-                  },
-                  {
-                    number: "02",
-                    title: "Bluelines review, mid-build",
-                    description:
-                      "Bluelines are detailed accessibility specs — focus order numbers, ARIA roles and labels, landmark regions, heading levels, keyboard behavior. The bluelines toolkit on the Adobe Design wiki is the canonical starting point. Sample bluelines from Kino Johl and Jessie Smith are the fastest way to learn the conventions.",
-                  },
-                  {
-                    number: "03",
-                    title: "Experience audit, after shipping",
-                    description:
-                      "Accessibility partners can audit existing experiences and surface the gaps the build introduced or inherited. The screenshots and flow videos from your QE handoff (Chapter 9) are the artifacts an audit can work from.",
-                  },
-                ],
-              },
-              {
-                kind: "callout",
-                tone: "neutral",
-                icon: "chat",
-                title: "Partners, not approvers",
-                text: "Accessibility partners are not a service function that signs off your designs. They're peers with expertise the designer doesn't have, and the cadence works best when the partnership is collaborative rather than approval-seeking. Same dynamic Chapter 9 described for the content team. Show the work in progress; ask for collaboration.",
-              },
-            ],
-          },
-          {
-            heading: "Stark in the Figma layer",
-            blocks: [
-              {
-                kind: "paragraph",
-                text: "In late 2024, Adobe Design rolled out Stark — a suite of integrated accessibility tools embedded inside Figma — to all designers across the organization. The rollout was led by the [Product Equity team](https://wiki.corp.adobe.com/pages/viewpage.action?spaceKey=AdobeDesign&title=Product+Equity+Team#9baffee3-9e0d-42eb-867a-0a75e660d677-2779257533) in partnership with Design Operations and the Accessibility team, and it's the first time Adobe Design has had a measurable accessibility standard applied at the design phase rather than only at implementation. The team's external-facing work lives at [adobe.design/ideas/product-equity](https://adobe.design/ideas/product-equity).",
-              },
-              {
-                kind: "paragraph",
-                text: "What Stark does, in practical terms, is move some of the 30% checkable layer into Figma — contrast checking, color blindness simulation, alt text auditing, focus order annotation — so designers can catch and fix the easy issues before any code exists. If you don't yet have access, [request a Stark seat through the intake form](https://forms.office.com/pages/responsepage.aspx?id=Wht7-jR7h0OUrtLBeN7O4dmDQYKiErBHjt6uDfzwzZpUNDg5NkhMTkMwWFlZQzQ0M0s5RTdRVU5STyQlQCN0PWcu&route=shorturl).",
-              },
-              {
-                kind: "balance",
-                left: {
-                  label: "Stark in Figma",
-                  text: "Establishes semantic intent. Annotations for focus order, ARIA labels, landmarks, contrast.",
+                kind: "figure",
+                eyebrow: "Stark in a Firefly frame",
+                image: {
+                  src: "/images/stark-annotations-firefly.png",
+                  alt: "A Firefly Generate screen in Figma with Stark annotations layered over it. The left panel lists landmarks — Header (FF Header), Section (FF Panel, aria-label Settings panel), Section (Container Bottom, aria-label Prompt tools), and Main (Content, aria-label Generation results) — alongside a general accessibility note: *Want all landmarks have an F6 key focus indicator*. Each landmark is numbered and outlined on the canvas.",
                 },
-                right: {
-                  label: "Model in code",
-                  text: "Honors that intent in the build. Reads Stark annotations through the Figma MCP. Knows what each element is *meant to be*, not just what it looks like.",
-                },
-                tilt: "even",
                 caption:
-                  "Skipping Stark and asking the model to derive semantics from visual structure produces guesses that are close-but-wrong often enough to matter.",
-              },
-              {
-                kind: "callout",
-                tone: "accent",
-                icon: "figma",
-                title: "Two minutes in Stark, before you point the model at the frame",
-                text: "Run Stark. Fix the contrast issues, add focus order annotations, label the landmarks. The model will use what's there. A frame with Stark annotations produces dramatically better accessibility output than an unannotated frame, because the model has explicit signal about what each element is meant to be, semantically.",
+                  "What a Stark-annotated frame actually looks like. Numbered landmarks, named regions, ARIA labels, and a top-level accessibility note — all sitting in Figma, all readable by the model through the Figma MCP. Skip this and the model derives semantics from visual structure, which produces guesses that are close-but-wrong often enough to matter.",
               },
             ],
           },
@@ -4282,9 +4301,101 @@ description: Run the accessibility floor before pushing for review. Use any time
                     icon: "layers",
                     eyebrow: "External reference",
                     title: "Matthew Stephens's 33 skills",
-                    text: "A published suite covering accessibility audit, compliance, audience-specific lenses (older users, kids, DEI), ethics, test planning, screen reader scripting, and design-to-engineering handoff. Framed as a *small accessibility agency* — specialists, audience advocates, and an orchestrator that routes work across them. Worth reading even if you don't adopt the specific skills. Repo at github.com/matthewlarn/claude-skills.",
+                    text: "A published suite covering accessibility audit, compliance, audience-specific lenses (older users, kids, DEI), ethics, test planning, screen reader scripting, and design-to-engineering handoff. Framed as a *small accessibility agency* — specialists, audience advocates, and an orchestrator that routes work across them. Worth reading even if you don't adopt the specific skills. Repo at [github.com/matthewlarn/claude-skills](https://github.com/matthewlarn/claude-skills).",
                   },
                 ],
+              },
+              {
+                kind: "paragraph",
+                text: "What does one of these skills actually look like? Two excerpts from Stephens's [audit suite](https://github.com/matthewlarn/claude-skills/tree/master/accessibility-skills-complete/audit) make the shape concrete. Each `.skill` file opens with a YAML descriptor — name, trigger language, related skills — and then a structured prompt that gives the model both expertise and a method to follow.",
+              },
+              {
+                kind: "code",
+                label: "full-accessibility-audit.skill — orchestrator",
+                language: "yaml",
+                text: `---
+name: full-accessibility-audit
+description: "Perform a complete, multi-dimensional accessibility audit
+  by orchestrating all audit-category skills into a single unified report.
+  Trigger on phrases like 'full accessibility audit', 'complete audit',
+  'audit everything', 'comprehensive accessibility review'..."
+category: audit
+related-skills:
+  - accessibility-audit       # design layer
+  - accessibility-code        # code layer
+  - contrast-checker
+  - keyboard-focus-auditor
+  - accessibility-copy
+  - alt-text-generator
+  - accessible-forms
+  - accessible-tables
+  - motion-auditor
+  - cognitive-accessibility
+  - mobile-touch-auditor
+  - wcag-compliance-auditor
+---
+
+# Full Accessibility Audit
+
+You are the audit director. Your job is to run a complete accessibility
+assessment by systematically applying every relevant audit dimension to
+the input provided, then synthesizing findings into a single prioritized
+report with a clear path to remediation, grounded in business impact.
+
+## Step 1: Triage the Input
+- Design (Figma, mockup) → design-heavy audit
+- Code (HTML, JSX, Vue) → code-heavy audit
+- Live URL → comprehensive audit, all modules
+- Copy / content only → content audit
+- Description (text only) → limited scope, note gaps upfront`,
+              },
+              {
+                kind: "paragraph",
+                text: "The orchestrator routes work to a dozen specialists. Here's one of them — the copy auditor — opening with its frontmatter and the first principle it argues for.",
+              },
+              {
+                kind: "code",
+                label: "accessibility-copy.skill — specialist",
+                language: "yaml",
+                text: `---
+name: accessibility-copy
+description: Write or audit accessible content — alt text, ARIA labels,
+  error messages, button labels, link text, form instructions, tooltips,
+  notifications, empty states, and plain language copy. Trigger on
+  phrases like "alt text", "accessible label", "screen reader",
+  "plain language", "error message"...
+category: audit
+related-skills: cognitive-accessibility, alt-text-generator, accessible-forms
+---
+
+# Accessibility Copy Skill
+
+You write and audit content that works for everyone — screen reader users,
+people with cognitive disabilities, non-native speakers, users with
+dyslexia, and anyone skimming under pressure.
+
+## Core Philosophy
+1. Meaning survives modality — content must work without color, without
+   images, without audio, without fine motor precision.
+2. Context is everything — the same image needs different alt text
+   depending on its purpose and surrounding content.
+3. Plain language is not dumbing down — it is respect for the reader's
+   time and cognitive load.
+4. Labels are user interfaces — every label, button, and error message
+   is a UX decision.
+5. Copy is inclusive by default — write for the widest possible audience
+   from the first draft.
+
+## Reading Level Audit
+Plain language means Grade 8–9 reading level per WCAG AAA 3.1.5.
+Measure with multiple formulas (Flesch-Kincaid, SMOG, Gunning Fog) —
+if scores diverge, rewrite for consistency.
+
+Example:
+  Original: "Users are prohibited from utilizing non-conforming
+            authentication mechanisms..."  (Grade 12+)
+  Rewrite:  "Use the correct password. You won't be able to sign in
+             if your password is wrong."  (Grade 5)`,
               },
               {
                 kind: "pullquote",
@@ -4343,10 +4454,6 @@ description: Run the accessibility floor before pushing for review. Use any time
                   },
                 ],
               },
-              {
-                kind: "wink",
-                text: "The model's role, executed through skills, is to make sure the easy work is actually getting done — not to claim the hard work is finished.",
-              },
             ],
           },
           {
@@ -4389,6 +4496,96 @@ description: Run the accessibility floor before pushing for review. Use any time
             ],
           },
           {
+            heading: "The partners around production-grade work",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "A vibe-coded prototype is yours. A vibe-coded *product* belongs to the team. The moment your work is on a path to production — code real users will load, in a flow legal might review, against standards corp accessibility maintains — you stop being the only person responsible for whether the experience holds up. Production-grade vibe coding is a *cross-functional* practice, and accessibility is the dimension where that's most obvious.",
+              },
+              {
+                kind: "pullquote",
+                text: "The build is yours to make. The quality of what ships is the team's to keep.",
+              },
+              {
+                kind: "paragraph",
+                text: "Five other functions need to be in the loop, each with a different angle on experience, code, and build quality. None of them are sign-off gates. All of them are cheaper to involve early than late.",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    icon: "compass",
+                    eyebrow: "PM",
+                    title: "Scope, sequencing, customer impact",
+                    text: "Owns the customer problem and the prioritization call. Decides which accessibility issues block ship and which ride a fast-follow. Make sure they see the *cost-of-deferral* numbers, not just the work-to-fix numbers.",
+                  },
+                  {
+                    icon: "code",
+                    eyebrow: "Engineering",
+                    title: "Architecture and merge readiness",
+                    text: "Reviews the code you generated for architecture, dependency risk, and how it fits the wider system. Owns the semantic foundations — focus management, ARIA at the framework level — that no prompt can fully cover from the outside.",
+                  },
+                  {
+                    icon: "check",
+                    eyebrow: "QE",
+                    title: "Build quality and assistive tech",
+                    text: "Runs the keyboard-only path, the screen reader pass, the real-device coverage your laptop can't fake. Catches the issues that would otherwise show up in next quarter's DACE backlog.",
+                  },
+                  {
+                    icon: "ruler",
+                    eyebrow: "Legal",
+                    title: "Regulatory exposure",
+                    text: "ADA, the EU Accessibility Act, Section 508 — different products carry different exposure. Legal tells you which surfaces need formal sign-off and which standards apply, before you've shipped past the point where it's cheap to fix.",
+                  },
+                  {
+                    icon: "spark",
+                    eyebrow: "Product Equity team",
+                    title: "Design-phase equity standards",
+                    text: "The team behind the Stark rollout and the org-wide accessibility floor. They set the bar designers are expected to clear before code, and they own the tooling that makes the bar checkable in Figma.",
+                  },
+                  {
+                    icon: "layers",
+                    eyebrow: "Corporate Accessibility",
+                    title: "Standards, audits, training",
+                    text: "The people who keep WCAG current, run formal audits, validate with assistive tech, and train teams on what *good* looks like. The escalation path when the answer isn't in the dashboard or the wiki.",
+                  },
+                ],
+              },
+              {
+                kind: "paragraph",
+                text: "The cadence that holds across all six is the same — bring people in before the decisions are locked, not after — and it has three checkpoints.",
+              },
+              {
+                kind: "pathway",
+                items: [
+                  {
+                    number: "01",
+                    title: "Directional review, early",
+                    description:
+                      "PM on scope and risk, accessibility partner on which directions are feasible to make accessible, legal on regulatory exposure if the surface is in scope. Fifteen minutes here keeps you from building something the team later has to walk back.",
+                  },
+                  {
+                    number: "02",
+                    title: "Bluelines, code review, test plan, mid-build",
+                    description:
+                      "Accessibility partner reviews bluelines (focus order, ARIA, landmarks, keyboard behavior). Engineering reviews architecture and code quality. QE drafts the test plan, including the assistive-tech path. The three reviews stack — none of them is the others' job.",
+                  },
+                  {
+                    number: "03",
+                    title: "Audit and bug bash, after shipping",
+                    description:
+                      "Accessibility audit from a partner. QE bug bash on real devices with real assistive tech. Legal sign-off if the surface needed it. The screenshots and flow videos from your QE handoff (Chapter 9) are inputs for all three.",
+                  },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "If you don't know who any of these people are for your product, that's the first task. *Find your partners before you need them* is the cheapest accessibility investment available.",
+              },
+            ],
+          },
+          {
             heading: "What this chapter has been arguing",
             blocks: [
               {
@@ -4400,25 +4597,26 @@ description: Run the accessibility floor before pushing for review. Use any time
                 text: "Treating it as a cleanup pass — running a scanner at the end, fixing what shows up — covers about 30% of what matters and misses the rest. The work this chapter is arguing for is the work of pulling accessibility into the prompt, into the rules, into the Figma frame, and into the partnership cadence with the people whose job it is to make products accessible.",
               },
               {
-                kind: "ratio",
-                caption:
-                  "Tooling raises the floor. Partnership and lived experience raise the ceiling. Both, together, are how accessibility gets done.",
-                rows: [
+                kind: "cards",
+                columns: 2,
+                items: [
                   {
-                    label: "The floor",
-                    left: { title: "Rules + Stark + skills", text: "Encoded constraints. Annotated frames. Judgment-trained reviewers. The baseline of every prototype is higher before a human sees it." },
-                    operator: "<",
-                    right: { title: "What used to ship", text: "Designer-only review. Scanner at the end. Spot-fixes where automation noticed gaps." },
-                    tone: "active",
+                    icon: "ruler",
+                    eyebrow: "The floor",
+                    title: "What tooling raises",
+                    text: "Rules in your CLAUDE.md. Stark annotations on the frame. Skills that encode judgment. Every prototype starts at a higher baseline than the previous era's designer-only review with a scanner at the end.",
                   },
                   {
-                    label: "The ceiling",
-                    left: { title: "Accessibility partners", text: "People who know your product and the criteria. The cadence — directional, bluelines, audit — that catches what the floor doesn't." },
-                    operator: "=",
-                    right: { title: "Disabled users", text: "Lived experience and feedback that shapes what you build. No amount of tooling replaces this." },
-                    tone: "active",
+                    icon: "spark",
+                    eyebrow: "The ceiling",
+                    title: "What partnership and lived experience raise",
+                    text: "Accessibility partners who know your product. Disabled users whose feedback shapes what you build. The cadence — directional, bluelines, audit — that catches what tooling can't. No amount of automation replaces either.",
                   },
                 ],
+              },
+              {
+                kind: "wink",
+                text: "Tooling raises the floor. Partnership and lived experience raise the ceiling. Both, together, are how accessibility gets done.",
               },
               {
                 kind: "paragraph",

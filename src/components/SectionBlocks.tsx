@@ -607,6 +607,9 @@ function Block({ block }: { block: SectionBlock }) {
     case "lensCompare":
       return <LensCompare block={block} />;
 
+    case "blindSpot":
+      return <BlindSpot block={block} />;
+
     case "driftMeter":
       return <DriftMeter block={block} />;
 
@@ -1624,6 +1627,128 @@ function LensCompare({
       </div>
       {block.caption && (
         <figcaption className="cb-lens-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+const AUDIENCE_META: Record<
+  "keyboard" | "screenReader" | "lowVision" | "colorBlind" | "vestibular" | "cognitive",
+  { label: string; glyph: string }
+> = {
+  keyboard: { label: "Keyboard", glyph: "⌨" },
+  screenReader: { label: "Screen reader", glyph: "◌" },
+  lowVision: { label: "Low vision", glyph: "◐" },
+  colorBlind: { label: "Color blind", glyph: "◑" },
+  vestibular: { label: "Vestibular", glyph: "≋" },
+  cognitive: { label: "Cognitive", glyph: "❋" },
+};
+
+function BlindSpot({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "blindSpot" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  return (
+    <figure ref={ref} className={`cb-blind${revealClass(inView)}`}>
+      <div className="cb-blind-stage" aria-hidden={false}>
+        <div className="cb-blind-scan" aria-hidden="true" />
+
+        <div className="cb-blind-col cb-blind-col-visible">
+          <div className="cb-blind-col-head">
+            <span className="cb-blind-col-eye" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16">
+                <path
+                  d="M2 12c2.5-4.5 6-7 10-7s7.5 2.5 10 7c-2.5 4.5-6 7-10 7s-7.5-2.5-10-7Z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                />
+                <circle cx="12" cy="12" r="3" fill="currentColor" />
+              </svg>
+            </span>
+            <div>
+              <span className="cb-blind-col-label">{block.visible.label}</span>
+              {block.visible.subtitle && (
+                <span className="cb-blind-col-subtitle">
+                  {block.visible.subtitle}
+                </span>
+              )}
+            </div>
+          </div>
+          <ul className="cb-blind-list cb-blind-list-visible">
+            {block.visible.items.map((item, i) => (
+              <li
+                key={i}
+                className="cb-blind-row cb-blind-row-visible"
+                style={{ ["--i" as string]: String(i) }}
+              >
+                <span className="cb-blind-bar" aria-hidden="true" />
+                <span className="cb-blind-row-text">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="cb-blind-col cb-blind-col-invisible">
+          <div className="cb-blind-col-head">
+            <span className="cb-blind-col-eye cb-blind-col-eye-closed" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16">
+                <path
+                  d="M2 14c2.5 3 6 5 10 5s7.5-2 10-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M5 16l-1 2M19 16l1 2M12 19v2"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
+            <div>
+              <span className="cb-blind-col-label">{block.invisible.label}</span>
+              {block.invisible.subtitle && (
+                <span className="cb-blind-col-subtitle">
+                  {block.invisible.subtitle}
+                </span>
+              )}
+            </div>
+          </div>
+          <ul className="cb-blind-list cb-blind-list-invisible">
+            {block.invisible.items.map((item, i) => {
+              const meta = AUDIENCE_META[item.audience];
+              return (
+                <li
+                  key={i}
+                  className="cb-blind-row cb-blind-row-invisible"
+                  style={{ ["--i" as string]: String(i) }}
+                >
+                  <span className="cb-blind-row-text">{item.text}</span>
+                  <span
+                    className={`cb-blind-aud cb-blind-aud-${item.audience}`}
+                    title={`Affects: ${meta.label} users`}
+                  >
+                    <span className="cb-blind-aud-glyph" aria-hidden="true">
+                      {meta.glyph}
+                    </span>
+                    {meta.label}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+      {block.caption && (
+        <figcaption className="cb-blind-caption">
           <RichText text={block.caption} />
         </figcaption>
       )}
