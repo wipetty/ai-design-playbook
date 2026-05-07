@@ -31,7 +31,21 @@ export function Layout({ children }: { children: ReactNode }) {
             aria-label="AI Design Playbook home"
             viewTransition
           >
-            <span className="site-brand-mark" aria-hidden="true" />
+            <span className="site-brand-mark" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="22"
+                height="22"
+                fill="none"
+                role="presentation"
+              >
+                <path
+                  className="site-brand-spark"
+                  d="M12 2C12 9 15 12 22 12C15 12 12 15 12 22C12 15 9 12 2 12C9 12 12 9 12 2Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
             <span className="site-brand-text">AI Design Playbook</span>
           </Link>
           <div className="site-header-right">
@@ -43,10 +57,15 @@ export function Layout({ children }: { children: ReactNode }) {
                 About
               </a>
             </nav>
-            <span className="site-byline">
+            <a
+              className="site-byline"
+              href="https://venmo.com/u/wipetty"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <span className="site-byline-label">By</span>
               <span className="site-byline-name">@peitongc</span>
-            </span>
+            </a>
             <ThemeToggle />
           </div>
         </div>
@@ -56,12 +75,22 @@ export function Layout({ children }: { children: ReactNode }) {
         <div className="site-footer-inner">
           <span>© 2026 · AI Design Playbook</span>
           <span className="site-footer-credit">
-            Made by{" "}
+            Made with AI by{" "}
             <span className="site-footer-credit-name">
               Veronica Peitong Chen
             </span>
           </span>
-          <span>A field guide for designers</span>
+          <a
+            href="https://venmo.com/u/wipetty"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="site-footer-coffee"
+          >
+            <span className="site-footer-coffee-icon" aria-hidden="true">
+              ☕
+            </span>
+            Buy me a coffee
+          </a>
         </div>
       </footer>
     </div>

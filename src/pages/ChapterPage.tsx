@@ -1,6 +1,6 @@
 import { Link, useParams, Navigate } from "react-router-dom";
 import { getChapter } from "../data/playbook";
-import SectionBlocks from "../components/SectionBlocks";
+import SectionBlocks, { RichText } from "../components/SectionBlocks";
 import ReadingProgress from "../components/ReadingProgress";
 import ChapterToc from "../components/ChapterToc";
 
@@ -63,7 +63,9 @@ export function ChapterPage() {
               {chapter.readTime}
             </span>
             <h1 className="chapter-page-title">{chapter.title}.</h1>
-            <p className="chapter-page-summary">{chapter.summary}</p>
+            <p className="chapter-page-summary">
+              <RichText text={chapter.summary} />
+            </p>
           </header>
 
           <div className="chapter-body">
@@ -75,7 +77,11 @@ export function ChapterPage() {
                 data-section-index={idx}
               >
                 <h2 className="chapter-section-heading">{section.heading}.</h2>
-                {section.body && <p>{section.body}</p>}
+                {section.body && (
+                  <p>
+                    <RichText text={section.body} />
+                  </p>
+                )}
                 {section.blocks && <SectionBlocks blocks={section.blocks} />}
                 {section.bullets && (
                   <ul>

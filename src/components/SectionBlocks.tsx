@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import type { SectionBlock } from "../data/playbook";
 import Icon from "./Icon";
 import LightboxThumbnail from "./LightboxThumbnail";
@@ -47,7 +48,13 @@ function revealClass(inView: boolean) {
   return inView ? " is-in-view" : "";
 }
 
-function RichText({ text }: { text: string }) {
+export function RichText({
+  text,
+  disableLinks = false,
+}: {
+  text: string;
+  disableLinks?: boolean;
+}) {
   const parts: Array<string | { label: string; href: string }> = [];
   let lastIndex = 0;
   let match: RegExpExecArray | null;
@@ -67,7 +74,21 @@ function RichText({ text }: { text: string }) {
     <>
       {parts.map((part, i) => {
         if (typeof part === "string") return <span key={i}>{part}</span>;
+        if (disableLinks) return <span key={i}>{part.label}</span>;
         const isExternal = /^https?:\/\//.test(part.href);
+        const isInternal = part.href.startsWith("/");
+        if (isInternal) {
+          return (
+            <Link
+              key={i}
+              className="cb-link"
+              to={part.href}
+              viewTransition
+            >
+              {part.label}
+            </Link>
+          );
+        }
         return (
           <a
             key={i}
@@ -165,8 +186,12 @@ function Block({ block }: { block: SectionBlock }) {
 
     case "cards": {
       const columns = block.columns ?? 2;
+      const variantClass = block.variant ? ` cb-cards-${block.variant}` : "";
       return (
-        <div className={`cb-cards cb-cards-${columns}`} role="list">
+        <div
+          className={`cb-cards cb-cards-${columns}${variantClass}`}
+          role="list"
+        >
           {block.items.map((item, i) => (
             <article
               key={i}
@@ -187,11 +212,15 @@ function Block({ block }: { block: SectionBlock }) {
                 </div>
               )}
               <div className="cb-card-content">
-                {item.icon && (
+                {item.logo ? (
+                  <span className="cb-card-icon cb-card-logo" aria-hidden="true">
+                    <img src={item.logo.src} alt={item.logo.alt} loading="lazy" />
+                  </span>
+                ) : item.icon ? (
                   <span className="cb-card-icon" aria-hidden="true">
                     <Icon name={item.icon} size={22} />
                   </span>
-                )}
+                ) : null}
                 {item.eyebrow && (
                   <span className="cb-card-eyebrow">{item.eyebrow}</span>
                 )}
@@ -642,6 +671,39 @@ function Block({ block }: { block: SectionBlock }) {
 
     case "motionTrace":
       return <MotionTrace block={block} />;
+
+    case "podOrbit":
+      return <PodOrbit block={block} />;
+
+    case "queueRelay":
+      return <QueueRelay block={block} />;
+
+    case "invisibleStack":
+      return <InvisibleStack block={block} />;
+
+    case "partnerTriage":
+      return <PartnerTriage block={block} />;
+
+    case "flipDeck":
+      return <FlipDeck block={block} />;
+
+    case "dragSpectrum":
+      return <DragSpectrum block={block} />;
+
+    case "tapTrace":
+      return <TapTrace block={block} />;
+
+    case "decisionTree":
+      return <DecisionTree block={block} />;
+
+    case "promptScope":
+      return <PromptScope block={block} />;
+
+    case "podRhythm":
+      return <PodRhythm block={block} />;
+
+    case "severitySort":
+      return <SeveritySort block={block} />;
   }
 }
 
@@ -651,16 +713,22 @@ function Flow({
   block: Extract<SectionBlock, { kind: "flow" }>;
 }) {
   const [ref, inView] = useInView<HTMLDivElement>();
+  const hasImages = block.steps.some((s) => !!s.image);
   return (
     <div
       ref={ref}
-      className={`cb-flow${revealClass(inView)}`}
+      className={`cb-flow${hasImages ? " cb-flow-illustrated" : ""}${revealClass(inView)}`}
       aria-label={block.label}
     >
       {block.label && <span className="cb-flow-label">{block.label}</span>}
       <ol className="cb-flow-track">
         {block.steps.map((step, i) => (
           <li key={i} className="cb-flow-step">
+            {step.image && (
+              <span className="cb-flow-image" aria-hidden="true">
+                <img src={step.image.src} alt={step.image.alt} loading="lazy" />
+              </span>
+            )}
             {step.meta && <span className="cb-flow-meta">{step.meta}</span>}
             <span className="cb-flow-title">{step.title}</span>
             {i < block.steps.length - 1 && (
@@ -1067,7 +1135,8 @@ function StageStack({
 }) {
   const stages = [...block.stages].reverse();
   const top = stages[0];
-  const attentionLabel = block.attentionLabel ?? "Where your attention is";
+  const attentionLabel = block.attentionLabel;
+  const showHighlight = !!attentionLabel;
 
   return (
     <figure className="cb-stack-diagram">
@@ -1077,7 +1146,7 @@ function StageStack({
           return (
             <li
               key={s.number}
-              className={`cb-stack-layer${isTop ? " cb-stack-layer-top" : ""}`}
+              className={`cb-stack-layer${isTop && showHighlight ? " cb-stack-layer-top" : ""}`}
             >
               <div className="cb-stack-layer-row">
                 <span className="cb-stack-layer-num">{s.number}</span>
@@ -1085,7 +1154,7 @@ function StageStack({
                   <p className="cb-stack-layer-name">{s.name}</p>
                   <p className="cb-stack-layer-verb">{s.verb}</p>
                 </div>
-                {isTop && top && (
+                {isTop && top && showHighlight && (
                   <span className="cb-stack-pin" aria-hidden="true">
                     <span className="cb-stack-pin-dot" />
                     <span className="cb-stack-pin-label">{attentionLabel}</span>
@@ -2741,6 +2810,1594 @@ function MotionTrace({
       </div>
       {block.caption && (
         <figcaption className="cb-motion-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+/*
+ * PodOrbit: 8 partner chips arranged in a ring around the core pod.
+ * Each chip is draggable (pointer-based, with a visible tether back to
+ * its anchor) and click-to-expand for detail. Tether is the visceral
+ * point: you can pull a partner away, but they snap back into the orbit.
+ */
+function PodOrbit({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "podOrbit" }>;
+}) {
+  const partners = block.partners.slice(0, 8);
+  const [ref, inView] = useInView<HTMLElement>();
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [drag, setDrag] = useState<{
+    id: string;
+    dx: number;
+    dy: number;
+  } | null>(null);
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const pointerStart = useRef<{ x: number; y: number } | null>(null);
+  const suppressClick = useRef(false);
+
+  const cx = 280;
+  const cy = 240;
+  const radius = 180;
+  const vbW = 560;
+  const vbH = 480;
+
+  const anchors = partners.map((_, i) => {
+    const angle = (i / partners.length) * Math.PI * 2 - Math.PI / 2;
+    const x = cx + radius * Math.cos(angle);
+    const y = cy + radius * Math.sin(angle);
+    return {
+      x,
+      y,
+      leftPct: `${(x / vbW) * 100}%`,
+      topPct: `${(y / vbH) * 100}%`,
+    };
+  });
+
+  function onPointerDown(
+    e: React.PointerEvent<HTMLDivElement>,
+    id: string,
+  ) {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    pointerStart.current = { x: e.clientX, y: e.clientY };
+    suppressClick.current = false;
+    setDrag({ id, dx: 0, dy: 0 });
+    try {
+      (e.currentTarget as Element).setPointerCapture(e.pointerId);
+    } catch {
+      // some environments don't support pointer capture; safe to ignore
+    }
+  }
+
+  function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (!drag || !pointerStart.current) return;
+    const dx = e.clientX - pointerStart.current.x;
+    const dy = e.clientY - pointerStart.current.y;
+    if (Math.hypot(dx, dy) > 4) suppressClick.current = true;
+    setDrag({ id: drag.id, dx, dy });
+  }
+
+  function onPointerUp(e: React.PointerEvent<HTMLDivElement>) {
+    if (!drag) return;
+    try {
+      if ((e.currentTarget as Element).hasPointerCapture(e.pointerId)) {
+        (e.currentTarget as Element).releasePointerCapture(e.pointerId);
+      }
+    } catch {
+      // ignore
+    }
+    setDrag(null);
+    pointerStart.current = null;
+  }
+
+  function onClickChip(id: string) {
+    if (suppressClick.current) {
+      suppressClick.current = false;
+      return;
+    }
+    setExpanded((cur) => (cur === id ? null : id));
+  }
+
+  const expandedPartner = partners.find((p) => p.id === expanded);
+
+  return (
+    <figure ref={ref} className={`cb-pod${revealClass(inView)}`}>
+      <div className="cb-pod-stage" ref={stageRef}>
+        <svg
+          className="cb-pod-svg"
+          viewBox="0 0 560 480"
+          aria-hidden="true"
+        >
+          <circle
+            cx={cx}
+            cy={cy}
+            r={radius}
+            className="cb-pod-ring"
+          />
+          {partners.map((p, i) => {
+            const a = anchors[i];
+            const isDragged = drag?.id === p.id;
+            const stageW = stageRef.current?.clientWidth || vbW;
+            const scale = vbW / stageW;
+            const tx = isDragged ? drag.dx * scale : 0;
+            const ty = isDragged ? drag.dy * scale : 0;
+            const stretch = isDragged ? Math.hypot(drag.dx, drag.dy) : 0;
+            const opacity = Math.min(1, 0.35 + stretch / 240);
+            return (
+              <line
+                key={p.id}
+                x1={cx}
+                y1={cy}
+                x2={a.x + tx}
+                y2={a.y + ty}
+                className={`cb-pod-tether${isDragged ? " is-dragged" : ""}`}
+                style={{ opacity }}
+              />
+            );
+          })}
+        </svg>
+
+        <div
+          className="cb-pod-core"
+          style={{
+            left: `${(cx / vbW) * 100}%`,
+            top: `${(cy / vbH) * 100}%`,
+          }}
+        >
+          <span className="cb-pod-core-pulse" aria-hidden="true" />
+          <span className="cb-pod-core-disc">
+            <span className="cb-pod-core-label">{block.center.label}</span>
+            {block.center.sublabel && (
+              <span className="cb-pod-core-sub">{block.center.sublabel}</span>
+            )}
+            <span className="cb-pod-core-dots" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+            </span>
+          </span>
+        </div>
+
+        {partners.map((p, i) => {
+          const a = anchors[i];
+          const isDragged = drag?.id === p.id;
+          const tx = isDragged ? drag.dx : 0;
+          const ty = isDragged ? drag.dy : 0;
+          const isExpanded = expanded === p.id;
+          return (
+            <div
+              key={p.id}
+              className={`cb-pod-chip${isDragged ? " is-dragged" : ""}${
+                isExpanded ? " is-expanded" : ""
+              }`}
+              style={{
+                left: a.leftPct,
+                top: a.topPct,
+                transform: `translate(-50%, -50%) translate(${tx}px, ${ty}px)`,
+                ["--i" as string]: String(i),
+              }}
+              onPointerDown={(e) => onPointerDown(e, p.id)}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onPointerCancel={onPointerUp}
+              onClick={() => onClickChip(p.id)}
+              role="button"
+              tabIndex={0}
+              aria-pressed={isExpanded}
+              aria-label={`${p.label} — drag to test the tether, click to read more`}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setExpanded((cur) => (cur === p.id ? null : p.id));
+                }
+              }}
+            >
+              <span className="cb-pod-chip-glyph" aria-hidden="true">
+                {p.glyph}
+              </span>
+              <span className="cb-pod-chip-label">{p.label}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="cb-pod-detail" aria-live="polite">
+        {expandedPartner ? (
+          <div className="cb-pod-detail-card">
+            <div className="cb-pod-detail-head">
+              <span className="cb-pod-detail-glyph" aria-hidden="true">
+                {expandedPartner.glyph}
+              </span>
+              <h3 className="cb-pod-detail-title">{expandedPartner.label}</h3>
+              <button
+                type="button"
+                className="cb-pod-detail-close"
+                onClick={() => setExpanded(null)}
+                aria-label="Close detail"
+              >
+                ×
+              </button>
+            </div>
+            <dl className="cb-pod-detail-grid">
+              <div>
+                <dt>Owns</dt>
+                <dd>{expandedPartner.owns}</dd>
+              </div>
+              <div>
+                <dt>Needs from the pod</dt>
+                <dd>{expandedPartner.needs}</dd>
+              </div>
+              <div>
+                <dt>Without them</dt>
+                <dd>{expandedPartner.without}</dd>
+              </div>
+            </dl>
+          </div>
+        ) : (
+          <p className="cb-pod-hint">
+            {block.hint ??
+              "Drag any partner to feel the tether stretch. Click to read what they own."}
+          </p>
+        )}
+      </div>
+
+      {block.caption && (
+        <figcaption className="cb-pod-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+/*
+ * QueueRelay: side-by-side animated comparison.
+ * Left lane: tickets queue at intake, drip slowly through five gates.
+ * Right lane: ticket goes pod → named contact → back, single hop.
+ * "Send a request" button drops a synchronized ticket into both lanes
+ * so the timing difference is felt, not just labeled.
+ */
+function QueueRelay({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "queueRelay" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  const [pulses, setPulses] = useState<number[]>([]);
+  const counter = useRef(0);
+
+  function fire() {
+    const id = ++counter.current;
+    setPulses((p) => [...p, id]);
+    window.setTimeout(() => {
+      setPulses((p) => p.filter((x) => x !== id));
+    }, 6200);
+  }
+
+  return (
+    <figure ref={ref} className={`cb-relay${revealClass(inView)}`}>
+      <div className="cb-relay-controls">
+        <button type="button" className="cb-relay-fire" onClick={fire}>
+          <span aria-hidden="true">▷</span> Send a request
+        </button>
+        <span className="cb-relay-counter">
+          {counter.current} sent
+        </span>
+      </div>
+
+      <div className="cb-relay-stage">
+        <div className="cb-relay-lane cb-relay-lane-queue">
+          <header className="cb-relay-head">
+            <span className="cb-relay-tag">Queue</span>
+            <h3 className="cb-relay-label">{block.queue.label}</h3>
+            {block.queue.subtitle && (
+              <p className="cb-relay-sub">{block.queue.subtitle}</p>
+            )}
+          </header>
+          <div className="cb-relay-track cb-relay-track-queue">
+            <span className="cb-relay-node cb-relay-node-pod">Pod</span>
+            <span className="cb-relay-pipe" aria-hidden="true" />
+            <span className="cb-relay-gates" aria-hidden="true">
+              <span className="cb-relay-gate" />
+              <span className="cb-relay-gate" />
+              <span className="cb-relay-gate" />
+              <span className="cb-relay-gate" />
+              <span className="cb-relay-gate" />
+            </span>
+            <span className="cb-relay-pipe" aria-hidden="true" />
+            <span className="cb-relay-node cb-relay-node-target">Function</span>
+            {pulses.map((id) => (
+              <span
+                key={id}
+                className="cb-relay-ticket cb-relay-ticket-queue"
+                style={{ ["--start" as string]: "0s" }}
+              />
+            ))}
+            <span className="cb-relay-ambient cb-relay-ambient-1" />
+            <span className="cb-relay-ambient cb-relay-ambient-2" />
+            <span className="cb-relay-ambient cb-relay-ambient-3" />
+          </div>
+          <ul className="cb-relay-notes">
+            {block.queue.notes.map((n, i) => (
+              <li key={i}>{n}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="cb-relay-lane cb-relay-lane-relay">
+          <header className="cb-relay-head">
+            <span className="cb-relay-tag cb-relay-tag-accent">Relay</span>
+            <h3 className="cb-relay-label">{block.relay.label}</h3>
+            {block.relay.subtitle && (
+              <p className="cb-relay-sub">{block.relay.subtitle}</p>
+            )}
+          </header>
+          <div className="cb-relay-track cb-relay-track-relay">
+            <span className="cb-relay-node cb-relay-node-pod">Pod</span>
+            <span className="cb-relay-direct" aria-hidden="true" />
+            <span className="cb-relay-node cb-relay-node-named">
+              Named contact
+            </span>
+            {pulses.map((id) => (
+              <span
+                key={id}
+                className="cb-relay-ticket cb-relay-ticket-relay"
+              />
+            ))}
+          </div>
+          <ul className="cb-relay-notes">
+            {block.relay.notes.map((n, i) => (
+              <li key={i}>{n}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {block.caption && (
+        <figcaption className="cb-relay-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+/*
+ * InvisibleStack: a list of cards. Each card collapsed to a one-line
+ * "what's visible on the burndown". Click expands to reveal the
+ * invisible work and the failure mode if the function isn't engaged.
+ * Several can be open simultaneously.
+ */
+function InvisibleStack({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "invisibleStack" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  const [open, setOpen] = useState<Set<number>>(() => new Set());
+
+  function toggle(i: number) {
+    setOpen((cur) => {
+      const next = new Set(cur);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
+  }
+
+  function expandAll() {
+    setOpen(new Set(block.items.map((_, i) => i)));
+  }
+  function collapseAll() {
+    setOpen(new Set());
+  }
+
+  const allOpen = open.size === block.items.length;
+
+  return (
+    <figure ref={ref} className={`cb-invis${revealClass(inView)}`}>
+      <div className="cb-invis-controls">
+        <p className="cb-invis-hint">
+          {block.hint ??
+            "Click any function to surface the invisible work behind it."}
+        </p>
+        <button
+          type="button"
+          className="cb-invis-toggle-all"
+          onClick={allOpen ? collapseAll : expandAll}
+        >
+          {allOpen ? "Collapse all" : "Reveal all"}
+        </button>
+      </div>
+      <ul className="cb-invis-list">
+        {block.items.map((item, i) => {
+          const isOpen = open.has(i);
+          return (
+            <li
+              key={i}
+              className={`cb-invis-item${isOpen ? " is-open" : ""}`}
+              style={{ ["--i" as string]: String(i) }}
+            >
+              <button
+                type="button"
+                className="cb-invis-row"
+                aria-expanded={isOpen}
+                onClick={() => toggle(i)}
+              >
+                <span className="cb-invis-eyebrow">{item.eyebrow}</span>
+                <span className="cb-invis-title">{item.title}</span>
+                <span className="cb-invis-visible">
+                  <span className="cb-invis-visible-tag">On the burndown</span>
+                  <span className="cb-invis-visible-text">{item.visible}</span>
+                </span>
+                <span
+                  className="cb-invis-caret"
+                  aria-hidden="true"
+                  data-open={isOpen}
+                >
+                  ▾
+                </span>
+              </button>
+              <div
+                className="cb-invis-reveal"
+                aria-hidden={!isOpen}
+              >
+                <div className="cb-invis-reveal-inner">
+                  <div className="cb-invis-reveal-block">
+                    <span className="cb-invis-reveal-tag cb-invis-reveal-tag-work">
+                      Invisible work
+                    </span>
+                    <p className="cb-invis-reveal-text">
+                      <RichText text={item.invisible} />
+                    </p>
+                  </div>
+                  <div className="cb-invis-reveal-block">
+                    <span className="cb-invis-reveal-tag cb-invis-reveal-tag-risk">
+                      Without it
+                    </span>
+                    <p className="cb-invis-reveal-text">
+                      <RichText text={item.blocks} />
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      {block.caption && (
+        <figcaption className="cb-invis-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+/*
+ * PartnerTriage: a click-to-sort interactive that asks the reader to
+ * place each partner into one of three categories — co-owner, consumer
+ * with gating power, or parallel track. Click a category pill on a
+ * chip to assign it; click the × in a bin to send it back to the tray.
+ * Once placed, "Reveal" highlights correct vs incorrect placements and
+ * exposes the reasoning. Reset clears the board.
+ */
+function PartnerTriage({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "partnerTriage" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  const [placements, setPlacements] = useState<Record<string, number | null>>(
+    () => {
+      const init: Record<string, number | null> = {};
+      block.partners.forEach((p) => {
+        init[p.id] = null;
+      });
+      return init;
+    },
+  );
+  const [revealed, setRevealed] = useState(false);
+
+  function assign(id: string, binIdx: number) {
+    setPlacements((cur) => ({ ...cur, [id]: binIdx }));
+    setRevealed(false);
+  }
+
+  function unassign(id: string) {
+    setPlacements((cur) => ({ ...cur, [id]: null }));
+    setRevealed(false);
+  }
+
+  function reset() {
+    setPlacements(
+      Object.fromEntries(block.partners.map((p) => [p.id, null])),
+    );
+    setRevealed(false);
+  }
+
+  const placedCount = Object.values(placements).filter(
+    (v) => v !== null,
+  ).length;
+  const total = block.partners.length;
+  const allPlaced = placedCount === total;
+
+  const correctCount = block.partners.filter(
+    (p) => placements[p.id] === p.correctBin,
+  ).length;
+
+  function chipsInBin(binIdx: number) {
+    return block.partners.filter((p) => placements[p.id] === binIdx);
+  }
+  const trayChips = block.partners.filter(
+    (p) => placements[p.id] === null,
+  );
+
+  return (
+    <figure ref={ref} className={`cb-triage${revealClass(inView)}`}>
+      <div className="cb-triage-controls">
+        <p className="cb-triage-hint">
+          {block.hint ??
+            "Click a category on each chip to place it. Reveal when you're done to see the answers."}
+        </p>
+        <div className="cb-triage-buttons">
+          <span className="cb-triage-progress">
+            {placedCount} of {total}
+            {revealed && allPlaced ? ` · ${correctCount} correct` : ""}
+          </span>
+          <button
+            type="button"
+            className="cb-triage-btn"
+            onClick={reset}
+            disabled={placedCount === 0}
+          >
+            Reset
+          </button>
+          <button
+            type="button"
+            className="cb-triage-btn cb-triage-btn-primary"
+            onClick={() => setRevealed(true)}
+            disabled={!allPlaced}
+          >
+            {revealed ? "Revealed" : "Reveal"}
+          </button>
+        </div>
+      </div>
+
+      <div className="cb-triage-bins">
+        {block.bins.map((bin, binIdx) => {
+          const chips = chipsInBin(binIdx);
+          return (
+            <div
+              key={binIdx}
+              className={`cb-triage-bin cb-triage-bin-${bin.tone}`}
+            >
+              <header className="cb-triage-bin-head">
+                <span className="cb-triage-bin-label">{bin.label}</span>
+                {bin.sublabel && (
+                  <span className="cb-triage-bin-sub">{bin.sublabel}</span>
+                )}
+              </header>
+              <ul className="cb-triage-bin-list">
+                {chips.length === 0 ? (
+                  <li className="cb-triage-bin-empty">empty</li>
+                ) : (
+                  chips.map((p) => {
+                    const isCorrect = p.correctBin === binIdx;
+                    return (
+                      <li
+                        key={p.id}
+                        className={`cb-triage-placed${
+                          revealed
+                            ? isCorrect
+                              ? " is-correct"
+                              : " is-wrong"
+                            : ""
+                        }`}
+                      >
+                        <span
+                          className="cb-triage-placed-glyph"
+                          aria-hidden="true"
+                        >
+                          {p.glyph}
+                        </span>
+                        <span className="cb-triage-placed-label">
+                          {p.label}
+                        </span>
+                        {revealed && (
+                          <span
+                            className={`cb-triage-placed-mark ${
+                              isCorrect
+                                ? "cb-triage-mark-ok"
+                                : "cb-triage-mark-no"
+                            }`}
+                            aria-label={
+                              isCorrect ? "Correct" : "Wrong category"
+                            }
+                          >
+                            {isCorrect ? "✓" : "✗"}
+                          </span>
+                        )}
+                        {!revealed && (
+                          <button
+                            type="button"
+                            className="cb-triage-placed-undo"
+                            onClick={() => unassign(p.id)}
+                            aria-label={`Remove ${p.label} from ${bin.label}`}
+                          >
+                            ×
+                          </button>
+                        )}
+                      </li>
+                    );
+                  })
+                )}
+              </ul>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="cb-triage-tray">
+        <div className="cb-triage-tray-head">
+          <span className="cb-triage-tray-label">Functions</span>
+          <span className="cb-triage-tray-sub">
+            {trayChips.length === 0
+              ? "All assigned. Reveal to check."
+              : "Pick a category for each one."}
+          </span>
+        </div>
+        <ul className="cb-triage-tray-list">
+          {trayChips.map((p) => (
+            <li key={p.id} className="cb-triage-chip">
+              <span className="cb-triage-chip-glyph" aria-hidden="true">
+                {p.glyph}
+              </span>
+              <span className="cb-triage-chip-label">{p.label}</span>
+              <span className="cb-triage-chip-actions">
+                {block.bins.map((bin, binIdx) => (
+                  <button
+                    key={binIdx}
+                    type="button"
+                    className={`cb-triage-chip-btn cb-triage-chip-btn-${bin.tone}`}
+                    onClick={() => assign(p.id, binIdx)}
+                    title={`Assign to ${bin.label}`}
+                    aria-label={`Place ${p.label} as ${bin.label}`}
+                  >
+                    {bin.tone === "owner"
+                      ? "Co"
+                      : bin.tone === "consumer"
+                        ? "Cn"
+                        : "Pa"}
+                  </button>
+                ))}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {revealed && (
+        <div className="cb-triage-reasons" aria-live="polite">
+          <p className="cb-triage-reasons-head">
+            {correctCount === total
+              ? "All eight in the right shape. You're reading the partnerships the way the chapter argues for."
+              : `${correctCount} of ${total} in the right shape. Here's the reasoning behind each placement — disagreement is allowed; the placements are defaults, not laws.`}
+          </p>
+          <ul className="cb-triage-reasons-list">
+            {block.partners.map((p) => {
+              const placedBin = placements[p.id];
+              const correctBin = block.bins[p.correctBin];
+              const isCorrect = placedBin === p.correctBin;
+              return (
+                <li
+                  key={p.id}
+                  className={`cb-triage-reason${
+                    isCorrect ? " is-correct" : " is-wrong"
+                  }`}
+                >
+                  <span
+                    className="cb-triage-reason-glyph"
+                    aria-hidden="true"
+                  >
+                    {p.glyph}
+                  </span>
+                  <div className="cb-triage-reason-body">
+                    <p className="cb-triage-reason-title">
+                      <span className="cb-triage-reason-name">{p.label}</span>
+                      <span className="cb-triage-reason-arrow">→</span>
+                      <span className="cb-triage-reason-bin">
+                        {correctBin.label}
+                      </span>
+                    </p>
+                    <p className="cb-triage-reason-text">
+                      <RichText text={p.reason} />
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
+      {block.caption && (
+        <figcaption className="cb-triage-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+/*
+ * FlipDeck: a small grid of cards. Each card shows a question /
+ * common-trap on the front; click flips it to reveal the answer or
+ * insight. Multiple can be flipped at once. Useful for sections that
+ * read as "here are five things you should ask yourself" — the front
+ * becomes the prompt, the back the payoff.
+ */
+function FlipDeck({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "flipDeck" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  const [flipped, setFlipped] = useState<Set<number>>(() => new Set());
+  const cols = block.columns ?? 2;
+
+  function toggle(i: number) {
+    setFlipped((cur) => {
+      const next = new Set(cur);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
+  }
+
+  const allFlipped = flipped.size === block.items.length;
+
+  return (
+    <figure
+      ref={ref}
+      className={`cb-flip cb-flip-cols-${cols}${revealClass(inView)}`}
+    >
+      <div className="cb-flip-controls">
+        <p className="cb-flip-hint">
+          {block.hint ?? "Tap any card to flip it over."}
+        </p>
+        <button
+          type="button"
+          className="cb-flip-toggle-all"
+          onClick={() =>
+            setFlipped(
+              allFlipped
+                ? new Set()
+                : new Set(block.items.map((_, i) => i)),
+            )
+          }
+        >
+          {allFlipped ? "Reset all" : "Flip all"}
+        </button>
+      </div>
+      <ul className="cb-flip-list">
+        {block.items.map((item, i) => {
+          const isFlipped = flipped.has(i);
+          return (
+            <li
+              key={i}
+              className={`cb-flip-item${isFlipped ? " is-flipped" : ""}`}
+              style={{ ["--i" as string]: String(i) }}
+            >
+              <button
+                type="button"
+                className="cb-flip-card"
+                aria-pressed={isFlipped}
+                onClick={() => toggle(i)}
+              >
+                <span className="cb-flip-face cb-flip-face-front">
+                  {item.eyebrow && (
+                    <span className="cb-flip-eyebrow">{item.eyebrow}</span>
+                  )}
+                  <span className="cb-flip-front-text">
+                    <RichText text={item.front} />
+                  </span>
+                  <span className="cb-flip-cue" aria-hidden="true">
+                    Tap to flip ▸
+                  </span>
+                </span>
+                <span className="cb-flip-face cb-flip-face-back">
+                  <span className="cb-flip-back-label">
+                    {item.backLabel ?? "Behind it"}
+                  </span>
+                  <span className="cb-flip-back-text">
+                    <RichText text={item.back} />
+                  </span>
+                  <span className="cb-flip-cue" aria-hidden="true">
+                    ◂ Tap to flip back
+                  </span>
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      {block.caption && (
+        <figcaption className="cb-flip-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+/*
+ * DragSpectrum: a horizontal track with N labelled stops. The reader
+ * drags a handle (or clicks a stop) and a panel below updates with
+ * the content for that stop. Use it for tradeoff content — anything
+ * a paragraph would have framed as "as you move from X to Y, things
+ * change."
+ */
+function DragSpectrum({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "dragSpectrum" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  const trackRef = useRef<HTMLDivElement>(null);
+  const stops = block.stops;
+  const [active, setActive] = useState(0);
+  const [dragging, setDragging] = useState(false);
+
+  function setFromClientX(clientX: number) {
+    const track = trackRef.current;
+    if (!track) return;
+    const rect = track.getBoundingClientRect();
+    const ratio = (clientX - rect.left) / rect.width;
+    const clamped = Math.max(0, Math.min(1, ratio));
+    const idx = Math.round(clamped * (stops.length - 1));
+    setActive(idx);
+  }
+
+  function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    setDragging(true);
+    try {
+      (e.currentTarget as Element).setPointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+    setFromClientX(e.clientX);
+  }
+
+  function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (!dragging) return;
+    setFromClientX(e.clientX);
+  }
+
+  function onPointerUp(e: React.PointerEvent<HTMLDivElement>) {
+    setDragging(false);
+    try {
+      if ((e.currentTarget as Element).hasPointerCapture(e.pointerId)) {
+        (e.currentTarget as Element).releasePointerCapture(e.pointerId);
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  function onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+      e.preventDefault();
+      setActive((i) => Math.min(stops.length - 1, i + 1));
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+      e.preventDefault();
+      setActive((i) => Math.max(0, i - 1));
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      setActive(0);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      setActive(stops.length - 1);
+    }
+  }
+
+  const pct = stops.length === 1 ? 50 : (active / (stops.length - 1)) * 100;
+  const current = stops[active];
+
+  return (
+    <figure ref={ref} className={`cb-spec${revealClass(inView)}`}>
+      <p className="cb-spec-hint">
+        {block.hint ?? "Drag the handle, or click a stop, to move along the spectrum."}
+      </p>
+      <div className="cb-spec-axis">
+        {block.axis && (
+          <>
+            <span className="cb-spec-axis-end cb-spec-axis-left">
+              {block.axis.left}
+            </span>
+            <span className="cb-spec-axis-end cb-spec-axis-right">
+              {block.axis.right}
+            </span>
+          </>
+        )}
+      </div>
+      <div
+        className={`cb-spec-track${dragging ? " is-dragging" : ""}`}
+        ref={trackRef}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        role="slider"
+        tabIndex={0}
+        aria-valuemin={0}
+        aria-valuemax={stops.length - 1}
+        aria-valuenow={active}
+        aria-valuetext={current.label}
+        onKeyDown={onKeyDown}
+      >
+        <span className="cb-spec-rail" aria-hidden="true" />
+        <span
+          className="cb-spec-fill"
+          style={{ width: `${pct}%` }}
+          aria-hidden="true"
+        />
+        {stops.map((s, i) => (
+          <button
+            key={s.key}
+            type="button"
+            className={`cb-spec-stop${i === active ? " is-active" : ""}`}
+            style={{
+              left: `${stops.length === 1 ? 50 : (i / (stops.length - 1)) * 100}%`,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setActive(i);
+            }}
+            aria-label={`Jump to ${s.label}`}
+          >
+            <span className="cb-spec-stop-dot" aria-hidden="true" />
+            <span className="cb-spec-stop-label">{s.label}</span>
+          </button>
+        ))}
+        <span
+          className={`cb-spec-handle${dragging ? " is-dragging" : ""}`}
+          style={{ left: `${pct}%` }}
+          aria-hidden="true"
+        />
+      </div>
+      <div className="cb-spec-panel" aria-live="polite">
+        <div key={current.key} className="cb-spec-card">
+          {current.eyebrow && (
+            <span className="cb-spec-eyebrow">{current.eyebrow}</span>
+          )}
+          <h3 className="cb-spec-title">{current.title}</h3>
+          <p className="cb-spec-body">
+            <RichText text={current.body} />
+          </p>
+          {current.meta && (
+            <span className="cb-spec-meta">{current.meta}</span>
+          )}
+        </div>
+      </div>
+      {block.caption && (
+        <figcaption className="cb-spec-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+/*
+ * TapTrace: a sentence or short passage with marked-up spans. Click
+ * a marked span and a side note slides in with commentary on that
+ * piece of the sentence. Lets a paragraph operate as a click-through
+ * map of itself.
+ */
+function TapTrace({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "tapTrace" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  const marked = block.segments
+    .map((s, i) => ({ s, i }))
+    .filter(({ s }) => !!s.mark);
+  const [active, setActive] = useState<number | null>(
+    marked.length > 0 ? marked[0].i : null,
+  );
+
+  const activeSeg = active !== null ? block.segments[active] : null;
+
+  return (
+    <figure ref={ref} className={`cb-trace${revealClass(inView)}`}>
+      <p className="cb-trace-hint">
+        {block.hint ?? "Tap any highlighted phrase to read what it carries."}
+      </p>
+      {block.lead && (
+        <p className="cb-trace-lead">
+          <RichText text={block.lead} />
+        </p>
+      )}
+      <p className="cb-trace-passage">
+        {block.segments.map((seg, i) => {
+          if (!seg.mark) {
+            return <Fragment key={i}>{seg.text}</Fragment>;
+          }
+          const isActive = i === active;
+          return (
+            <button
+              key={i}
+              type="button"
+              className={`cb-trace-mark${isActive ? " is-active" : ""}`}
+              onClick={() => setActive(isActive ? null : i)}
+              aria-pressed={isActive}
+              aria-label={`${seg.text}: ${seg.mark.label}`}
+            >
+              <span className="cb-trace-mark-text">{seg.text}</span>
+              <span className="cb-trace-mark-dot" aria-hidden="true" />
+            </button>
+          );
+        })}
+      </p>
+      <div className="cb-trace-panel" aria-live="polite">
+        {activeSeg && activeSeg.mark ? (
+          <div className="cb-trace-note">
+            {activeSeg.mark.eyebrow && (
+              <span className="cb-trace-note-eyebrow">
+                {activeSeg.mark.eyebrow}
+              </span>
+            )}
+            <p className="cb-trace-note-label">{activeSeg.mark.label}</p>
+            <p className="cb-trace-note-text">
+              <RichText text={activeSeg.mark.note} />
+            </p>
+          </div>
+        ) : (
+          <p className="cb-trace-empty">Pick any highlighted phrase.</p>
+        )}
+      </div>
+      {block.caption && (
+        <figcaption className="cb-trace-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+/*
+ * DecisionTree: a small click-through diagnostic. The reader is shown
+ * a question; their choice walks them down a branch until they hit
+ * an outcome. Reset to start over. Useful for "how to tell which X
+ * you're in" sections.
+ */
+type DTreeNode = {
+  prompt?: string;
+  question?: string;
+  outcome?: { eyebrow?: string; title: string; body: string };
+  options?: { label: string; next: DTreeNode }[];
+};
+
+function DecisionTree({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "decisionTree" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  const [path, setPath] = useState<{ label: string; node: DTreeNode }[]>([]);
+
+  const current: DTreeNode =
+    path.length === 0 ? (block.root as DTreeNode) : path[path.length - 1].node;
+
+  function choose(label: string, next: DTreeNode) {
+    setPath((p) => [...p, { label, node: next }]);
+  }
+
+  function reset() {
+    setPath([]);
+  }
+
+  function back() {
+    setPath((p) => p.slice(0, -1));
+  }
+
+  return (
+    <figure ref={ref} className={`cb-tree${revealClass(inView)}`}>
+      <div className="cb-tree-controls">
+        <p className="cb-tree-hint">
+          {block.hint ?? "Walk the questions. The path you take is the answer."}
+        </p>
+        <div className="cb-tree-buttons">
+          <button
+            type="button"
+            className="cb-tree-btn"
+            onClick={back}
+            disabled={path.length === 0}
+          >
+            ◂ Back
+          </button>
+          <button
+            type="button"
+            className="cb-tree-btn"
+            onClick={reset}
+            disabled={path.length === 0}
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+
+      {path.length > 0 && (
+        <ol className="cb-tree-trail">
+          {path.map((step, i) => (
+            <li key={i} className="cb-tree-trail-step">
+              <span className="cb-tree-trail-num">{i + 1}</span>
+              <span className="cb-tree-trail-label">{step.label}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+
+      {current.outcome ? (
+        <div className="cb-tree-outcome">
+          {current.outcome.eyebrow && (
+            <span className="cb-tree-outcome-eyebrow">
+              {current.outcome.eyebrow}
+            </span>
+          )}
+          <h3 className="cb-tree-outcome-title">{current.outcome.title}</h3>
+          <p className="cb-tree-outcome-body">
+            <RichText text={current.outcome.body} />
+          </p>
+        </div>
+      ) : (
+        <div className="cb-tree-question">
+          {current.prompt && (
+            <span className="cb-tree-prompt">{current.prompt}</span>
+          )}
+          {current.question && (
+            <h3 className="cb-tree-q">{current.question}</h3>
+          )}
+          <ul className="cb-tree-options">
+            {(current.options ?? []).map((opt, i) => (
+              <li key={i}>
+                <button
+                  type="button"
+                  className="cb-tree-option"
+                  onClick={() => choose(opt.label, opt.next as DTreeNode)}
+                >
+                  {opt.label}
+                  <span className="cb-tree-option-arrow" aria-hidden="true">
+                    →
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {block.caption && (
+        <figcaption className="cb-tree-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+/*
+ * PromptScope: a vague prompt at the top with N "specificity layers"
+ * the reader can toggle on. Each enabled layer adds a sentence to
+ * the prompt in place. Teaches that specificity is layered — a
+ * component reference, then visual tokens, then behavior, etc. —
+ * not a single adjective.
+ */
+function PromptScope({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "promptScope" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  const [enabled, setEnabled] = useState<Set<string>>(() => new Set());
+
+  function toggle(key: string) {
+    setEnabled((cur) => {
+      const next = new Set(cur);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
+  function reset() {
+    setEnabled(new Set());
+  }
+
+  function addAll() {
+    setEnabled(new Set(block.layers.map((l) => l.key)));
+  }
+
+  const allOn = enabled.size === block.layers.length;
+  const activeLayers = block.layers.filter((l) => enabled.has(l.key));
+
+  return (
+    <figure ref={ref} className={`cb-scope${revealClass(inView)}`}>
+      <div className="cb-scope-controls">
+        <p className="cb-scope-hint">
+          {block.hint ??
+            "Toggle each layer on. Watch the prompt grow from vague to specific."}
+        </p>
+        <button
+          type="button"
+          className="cb-scope-reset"
+          onClick={allOn ? reset : addAll}
+        >
+          {allOn ? "Reset" : "Add all"}
+        </button>
+      </div>
+      <div className="cb-scope-prompt" aria-live="polite">
+        <span className="cb-scope-prompt-eyebrow">The prompt, right now</span>
+        <p className="cb-scope-prompt-body">
+          <span className="cb-scope-prompt-vague">{block.vague}</span>
+          {activeLayers.map((layer) => (
+            <span key={layer.key} className="cb-scope-prompt-addition">
+              {" "}
+              {layer.addition}
+            </span>
+          ))}
+        </p>
+        <span className="cb-scope-meter" aria-hidden="true">
+          <span
+            className="cb-scope-meter-fill"
+            style={{
+              width: `${(enabled.size / block.layers.length) * 100}%`,
+            }}
+          />
+        </span>
+        <span className="cb-scope-meter-label">
+          {enabled.size === 0
+            ? "Vague"
+            : enabled.size === block.layers.length
+              ? "Specific enough to ship"
+              : `${enabled.size} of ${block.layers.length} layers added`}
+        </span>
+      </div>
+      <ul className="cb-scope-layers">
+        {block.layers.map((layer) => {
+          const isOn = enabled.has(layer.key);
+          return (
+            <li key={layer.key} className="cb-scope-layer-item">
+              <button
+                type="button"
+                className={`cb-scope-layer${isOn ? " is-on" : ""}`}
+                onClick={() => toggle(layer.key)}
+                aria-pressed={isOn}
+              >
+                <span className="cb-scope-layer-toggle" aria-hidden="true">
+                  <span className="cb-scope-layer-toggle-dot" />
+                </span>
+                <span className="cb-scope-layer-text">
+                  {layer.eyebrow && (
+                    <span className="cb-scope-layer-eyebrow">
+                      {layer.eyebrow}
+                    </span>
+                  )}
+                  <span className="cb-scope-layer-label">{layer.label}</span>
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      {block.caption && (
+        <figcaption className="cb-scope-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+/*
+ * PodRhythm: an interactive walk-through of a workflow image. The
+ * reader clicks a step chip, the matching column of the image lights
+ * up while the rest dims, and a detail panel below describes the
+ * phase. Region coordinates are percentages of the image.
+ */
+function PodRhythm({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "podRhythm" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  const [active, setActive] = useState<string>(
+    block.defaultActive ?? block.steps[0]?.key ?? "",
+  );
+  const current = block.steps.find((s) => s.key === active) ?? block.steps[0];
+
+  return (
+    <figure ref={ref} className={`cb-rhythm${revealClass(inView)}`}>
+      <p className="cb-rhythm-hint">
+        {block.hint ?? "Click a phase to see where the pod's energy is."}
+      </p>
+      <div className="cb-rhythm-stage">
+        <LightboxThumbnail
+          className="cb-rhythm-image"
+          src={block.image.src}
+          alt={block.image.alt}
+        />
+        {current && (
+          <span
+            className="cb-rhythm-spotlight"
+            style={{
+              left: `${current.region.x}%`,
+              top: `${current.region.y}%`,
+              width: `${current.region.width}%`,
+              height: `${current.region.height}%`,
+            }}
+            aria-hidden="true"
+          />
+        )}
+      </div>
+      <ul className="cb-rhythm-steps">
+        {block.steps.map((s, i) => {
+          const isActive = s.key === active;
+          return (
+            <li key={s.key} className="cb-rhythm-step-item">
+              <button
+                type="button"
+                className={`cb-rhythm-step${isActive ? " is-active" : ""}`}
+                onClick={() => setActive(s.key)}
+                aria-pressed={isActive}
+              >
+                <span className="cb-rhythm-step-num">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="cb-rhythm-step-label">{s.label}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      {current && (
+        <div
+          key={current.key}
+          className="cb-rhythm-panel"
+          aria-live="polite"
+        >
+          {current.eyebrow && (
+            <span className="cb-rhythm-panel-eyebrow">{current.eyebrow}</span>
+          )}
+          <h3 className="cb-rhythm-panel-title">{current.title}</h3>
+          <p className="cb-rhythm-panel-body">
+            <RichText text={current.body} />
+          </p>
+        </div>
+      )}
+      {block.caption && (
+        <figcaption className="cb-rhythm-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+const SEVERITY_ORDER = ["nit", "minor", "major", "blocker"] as const;
+type Severity = (typeof SEVERITY_ORDER)[number];
+
+const SEVERITY_LABEL: Record<Severity, string> = {
+  blocker: "Blocker",
+  major: "Major",
+  minor: "Minor",
+  nit: "Nit",
+};
+
+const SEVERITY_HELP: Record<Severity, string> = {
+  blocker: "Must fix before merge",
+  major: "Should fix before merge if at all possible",
+  minor: "Fix soon, can be deferred",
+  nit: "Preference-level, fix if convenient",
+};
+
+const severityRank = (s: Severity) => SEVERITY_ORDER.indexOf(s);
+
+/**
+ * SeveritySort lets the reader practice the BLOCKER / MAJOR / MINOR / NIT
+ * severity model used inside engineering review. They tag a small batch of
+ * realistic issues, reveal calibration, and get a diagnosis of which way
+ * they're tilted (over-rating, under-rating, balanced, or perfect).
+ */
+function SeveritySort({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "severitySort" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  const [picks, setPicks] = useState<Record<string, Severity>>({});
+  const [revealed, setRevealed] = useState(false);
+
+  const allPicked = block.issues.every((i) => Boolean(picks[i.id]));
+
+  const setPick = (id: string, severity: Severity) => {
+    if (revealed) return;
+    setPicks((prev) => ({ ...prev, [id]: severity }));
+  };
+
+  const reveal = () => {
+    if (allPicked) setRevealed(true);
+  };
+
+  const reset = () => {
+    setPicks({});
+    setRevealed(false);
+  };
+
+  const score = block.issues.reduce(
+    (acc, issue) => {
+      const pick = picks[issue.id];
+      if (!pick) return acc;
+      if (pick === issue.correct) acc.correct += 1;
+      else if (severityRank(pick) > severityRank(issue.correct)) acc.over += 1;
+      else acc.under += 1;
+      return acc;
+    },
+    { correct: 0, over: 0, under: 0 },
+  );
+
+  const total = block.issues.length;
+  const diag = block.diagnoses ?? {};
+
+  let diagnosis = "";
+  if (revealed) {
+    if (score.correct === total) {
+      diagnosis = diag.perfect ?? "Perfect calibration.";
+    } else if (score.over > score.under) {
+      diagnosis = diag.overRated ?? "You're tagging up.";
+    } else if (score.under > score.over) {
+      diagnosis = diag.underRated ?? "You're tagging down.";
+    } else {
+      diagnosis = diag.balanced ?? "Mixed.";
+    }
+  }
+
+  return (
+    <figure ref={ref} className={`cb-sev${revealClass(inView)}`}>
+      {block.hint && <p className="cb-sev-hint">{block.hint}</p>}
+
+      <ol className="cb-sev-list">
+        {block.issues.map((issue, i) => {
+          const pick = picks[issue.id];
+          const isCorrect = revealed && pick === issue.correct;
+          return (
+            <li
+              key={issue.id}
+              className={`cb-sev-item${
+                revealed
+                  ? isCorrect
+                    ? " is-correct"
+                    : " is-wrong"
+                  : ""
+              }`}
+            >
+              <div className="cb-sev-issue">
+                <span className="cb-sev-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="cb-sev-issue-text">
+                  <p className="cb-sev-text">{issue.text}</p>
+                  {issue.context && (
+                    <p className="cb-sev-context">
+                      <RichText text={issue.context} />
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div
+                className="cb-sev-chips"
+                role="radiogroup"
+                aria-label={`Severity for issue ${i + 1}`}
+              >
+                {SEVERITY_ORDER.slice()
+                  .reverse()
+                  .map((sev) => {
+                    const isPicked = pick === sev;
+                    const isAnswer = revealed && sev === issue.correct;
+                    const isWrongPick = revealed && isPicked && !isCorrect;
+                    return (
+                      <button
+                        key={sev}
+                        type="button"
+                        role="radio"
+                        aria-checked={isPicked}
+                        disabled={revealed}
+                        className={`cb-sev-chip cb-sev-chip-${sev}${
+                          isPicked ? " is-picked" : ""
+                        }${isAnswer ? " is-answer" : ""}${
+                          isWrongPick ? " is-wrong-pick" : ""
+                        }`}
+                        onClick={() => setPick(issue.id, sev)}
+                        title={SEVERITY_HELP[sev]}
+                      >
+                        {SEVERITY_LABEL[sev]}
+                      </button>
+                    );
+                  })}
+              </div>
+
+              {revealed && (
+                <div className="cb-sev-explain">
+                  <p className="cb-sev-verdict">
+                    {isCorrect ? (
+                      <>
+                        <span className="cb-sev-mark cb-sev-mark-ok">
+                          Calibrated
+                        </span>{" "}
+                        — {SEVERITY_LABEL[issue.correct]} matches the rev.
+                      </>
+                    ) : (
+                      <>
+                        <span className="cb-sev-mark cb-sev-mark-bad">
+                          Off
+                        </span>{" "}
+                        — engineering rev would call this{" "}
+                        <strong>{SEVERITY_LABEL[issue.correct]}</strong>.
+                      </>
+                    )}
+                  </p>
+                  <p className="cb-sev-reasoning">
+                    <RichText text={issue.reasoning} />
+                  </p>
+                </div>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+
+      <div className="cb-sev-footer">
+        {!revealed ? (
+          <button
+            type="button"
+            className="cb-sev-action"
+            disabled={!allPicked}
+            onClick={reveal}
+          >
+            {block.revealLabel ?? "Reveal calibration"}
+          </button>
+        ) : (
+          <>
+            <div className="cb-sev-summary" aria-live="polite">
+              <span className="cb-sev-score">
+                <strong>{score.correct}</strong>
+                <span className="cb-sev-score-of">/{total}</span> on the rev
+              </span>
+              <p className="cb-sev-diagnosis">{diagnosis}</p>
+            </div>
+            <button
+              type="button"
+              className="cb-sev-action cb-sev-action-ghost"
+              onClick={reset}
+            >
+              {block.resetLabel ?? "Try again"}
+            </button>
+          </>
+        )}
+      </div>
+
+      {block.caption && (
+        <figcaption className="cb-sev-caption">
           <RichText text={block.caption} />
         </figcaption>
       )}

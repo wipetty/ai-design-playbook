@@ -29,7 +29,14 @@ export type IconName =
   | "figma"
   | "wand"
   | "target"
-  | "ruler";
+  | "ruler"
+  | "cursor"
+  | "claude"
+  | "github"
+  | "notion"
+  | "obsidian"
+  | "video"
+  | "slack";
 
 export type SectionBlock =
   | { kind: "paragraph"; text: string }
@@ -46,12 +53,14 @@ export type SectionBlock =
   | {
       kind: "cards";
       columns?: 2 | 3;
+      variant?: "compact";
       items: {
         icon?: IconName;
         eyebrow?: string;
         title: string;
         text: string;
         meta?: string;
+        logo?: { src: string; alt: string };
         image?: {
           src: string;
           alt: string;
@@ -71,7 +80,11 @@ export type SectionBlock =
   | {
       kind: "flow";
       label?: string;
-      steps: { title: string; meta?: string }[];
+      steps: {
+        title: string;
+        meta?: string;
+        image?: { src: string; alt: string };
+      }[];
     }
   | {
       kind: "compareFlow";
@@ -397,7 +410,160 @@ export type SectionBlock =
         timing: string;
         pattern: "linear" | "spring" | "soft" | "snap";
       }[];
+    }
+  | {
+      kind: "podOrbit";
+      caption?: string;
+      hint?: string;
+      center: { label: string; sublabel?: string };
+      partners: {
+        id: string;
+        label: string;
+        glyph: string;
+        owns: string;
+        needs: string;
+        without: string;
+      }[];
+    }
+  | {
+      kind: "queueRelay";
+      caption?: string;
+      queue: {
+        label: string;
+        subtitle?: string;
+        notes: string[];
+      };
+      relay: {
+        label: string;
+        subtitle?: string;
+        notes: string[];
+      };
+    }
+  | {
+      kind: "invisibleStack";
+      caption?: string;
+      hint?: string;
+      items: {
+        eyebrow: string;
+        title: string;
+        visible: string;
+        invisible: string;
+        blocks: string;
+      }[];
+    }
+  | {
+      kind: "partnerTriage";
+      caption?: string;
+      hint?: string;
+      bins: {
+        label: string;
+        sublabel?: string;
+        tone: "owner" | "consumer" | "parallel";
+      }[];
+      partners: {
+        id: string;
+        label: string;
+        glyph: string;
+        correctBin: number;
+        reason: string;
+      }[];
+    }
+  | {
+      kind: "flipDeck";
+      caption?: string;
+      hint?: string;
+      columns?: 2 | 3;
+      items: {
+        eyebrow?: string;
+        front: string;
+        backLabel?: string;
+        back: string;
+      }[];
+    }
+  | {
+      kind: "dragSpectrum";
+      caption?: string;
+      hint?: string;
+      axis?: { left: string; right: string };
+      stops: {
+        key: string;
+        label: string;
+        eyebrow?: string;
+        title: string;
+        body: string;
+        meta?: string;
+      }[];
+    }
+  | {
+      kind: "tapTrace";
+      caption?: string;
+      hint?: string;
+      lead?: string;
+      segments: {
+        text: string;
+        mark?: { eyebrow?: string; label: string; note: string };
+      }[];
+    }
+  | {
+      kind: "decisionTree";
+      caption?: string;
+      hint?: string;
+      root: DecisionNode;
+    }
+  | {
+      kind: "promptScope";
+      caption?: string;
+      hint?: string;
+      vague: string;
+      layers: {
+        key: string;
+        label: string;
+        eyebrow?: string;
+        addition: string;
+      }[];
+    }
+  | {
+      kind: "podRhythm";
+      caption?: string;
+      hint?: string;
+      image: { src: string; alt: string };
+      defaultActive?: string;
+      steps: {
+        key: string;
+        eyebrow?: string;
+        label: string;
+        title: string;
+        body: string;
+        region: { x: number; y: number; width: number; height: number };
+      }[];
+    }
+  | {
+      kind: "severitySort";
+      hint?: string;
+      caption?: string;
+      revealLabel?: string;
+      resetLabel?: string;
+      issues: {
+        id: string;
+        text: string;
+        context?: string;
+        correct: "blocker" | "major" | "minor" | "nit";
+        reasoning: string;
+      }[];
+      diagnoses?: {
+        perfect?: string;
+        overRated?: string;
+        underRated?: string;
+        balanced?: string;
+      };
     };
+
+export interface DecisionNode {
+  prompt?: string;
+  question?: string;
+  outcome?: { eyebrow?: string; title: string; body: string };
+  options?: { label: string; next: DecisionNode }[];
+}
 
 export interface Part {
   id: string;
@@ -421,7 +587,7 @@ export const playbook: Part[] = [
         title: "Why designers should vibe code",
         summary:
           "How AI compresses the gap between Figma and ship — and why this is the moment to widen the kind of designer you can be.",
-        readTime: "5 min",
+        readTime: "8 min",
         sections: [
           {
             heading: "The old handoff is dissolving",
@@ -465,6 +631,43 @@ export const playbook: Part[] = [
                 kind: "wink",
                 text: "Ok, the old loop was rarely this neat. But it was lossy enough that we built whole departments around closing the gap.",
               },
+              {
+                kind: "tapTrace",
+                hint: "Tap any underlined phrase to see what it actually carries.",
+                lead: "What the dissolving handoff means, sentence by sentence",
+                segments: [
+                  { text: "A " },
+                  {
+                    text: "Figma file",
+                    mark: {
+                      eyebrow: "The artifact",
+                      label: "A picture of an interface",
+                      note: "It looks like the product, but it can't be tested, can't be deployed, and can't carry behavior the way a build can. It's a proposal, not a product.",
+                    },
+                  },
+                  { text: " and a " },
+                  {
+                    text: "working build",
+                    mark: {
+                      eyebrow: "The artifact",
+                      label: "The thing users actually feel",
+                      note: "Real states, real timing, real failure modes. It is the product. Everything in design eventually has to survive translation into this.",
+                    },
+                  },
+                  { text: " are " },
+                  {
+                    text: "different materials",
+                    mark: {
+                      eyebrow: "Why it's lossy",
+                      label: "Different physics, different rules",
+                      note: "You can do things in Figma that the browser can't render. You can do things in code that Figma can't depict. Translation between them was expensive — and that's the gap AI is collapsing.",
+                    },
+                  },
+                  { text: "." },
+                ],
+                caption:
+                  "The point isn't that Figma is wrong; it's that the gap between the two materials is what we built whole departments to bridge.",
+              },
             ],
           },
           {
@@ -500,6 +703,51 @@ export const playbook: Part[] = [
                     text: "Code stops being someone else's department. The thing on the screen, the one users actually feel, is now yours to shape directly — not negotiate for.",
                   },
                 ],
+              },
+              {
+                kind: "flipDeck",
+                hint: "What people think vibe coding is, on the front. What it actually is, on the back. Tap to flip.",
+                columns: 3,
+                items: [
+                  {
+                    eyebrow: "Misread #1",
+                    front: "It's autocomplete with a fancier UI.",
+                    backLabel: "What it actually is",
+                    back: "It's a conversation. You describe what you want, the model proposes, you react, the model adjusts. The diff is incidental — what you're really doing is steering a build in real time.",
+                  },
+                  {
+                    eyebrow: "Misread #2",
+                    front: "It's just for engineers.",
+                    backLabel: "What it actually is",
+                    back: "It collapses the translation tax between what a designer imagines and what eventually ships. That tax has been the bottleneck for fifteen years. Designers benefit at least as much as engineers do.",
+                  },
+                  {
+                    eyebrow: "Misread #3",
+                    front: "It produces production code.",
+                    backLabel: "What it actually is",
+                    back: "Sometimes. Usually it produces the *shape* of the product — enough to feel and react to. Whether that shape becomes production code is a separate decision, made in a different mode ([chapter 2](/foundations/knowing-which-mode-youre-in)).",
+                  },
+                  {
+                    eyebrow: "Misread #4",
+                    front: "It makes design taste optional.",
+                    backLabel: "What it actually is",
+                    back: "It does the opposite. When everyone can produce a working UI in an afternoon, the differentiator stops being whether it got built and becomes whether it's any good. Taste matters more, not less.",
+                  },
+                  {
+                    eyebrow: "Misread #5",
+                    front: "It replaces the engineer.",
+                    backLabel: "What it actually is",
+                    back: "It changes what the engineer spends time on. Architecture, performance, security, and production hardening still belong to them — and the conversation between designer and engineer gets sharper because both are now working in the same medium.",
+                  },
+                  {
+                    eyebrow: "Misread #6",
+                    front: "It's a phase. The hype will pass.",
+                    backLabel: "What it actually is",
+                    back: "The infrastructure is already built. The model quality is past the threshold of useful. Whether you call it vibe coding next year or something else, designers participating directly in the build is now permanent.",
+                  },
+                ],
+                caption:
+                  "Most pushback to vibe coding is to a misread of it. The actual practice is smaller and stranger than either the hype or the dismissal suggests.",
               },
             ],
           },
@@ -562,6 +810,55 @@ export const playbook: Part[] = [
           {
             heading: "Why now",
             blocks: [
+              {
+                kind: "dragSpectrum",
+                hint: "Drag the handle, or click any year, to see what designers could actually do at each point.",
+                axis: { left: "Hobbyist territory", right: "Daily practice" },
+                stops: [
+                  {
+                    key: "2022",
+                    label: "2022",
+                    eyebrow: "GPT-3.5 era",
+                    title: "Toy chats and party tricks",
+                    body: "The model could draft a paragraph and write a snippet of HTML. It couldn't read your codebase, couldn't see your Figma, and couldn't keep its story straight across a long conversation. Useful for one-off help, not for building inside a real product.",
+                    meta: "Pattern: copy text into a chat box, paste the result back somewhere else.",
+                  },
+                  {
+                    key: "2023",
+                    label: "2023",
+                    eyebrow: "GPT-4, Copilot in the editor",
+                    title: "Autocomplete that's worth the line in your IDE",
+                    body: "Copilot started suggesting whole functions. ChatGPT could carry an idea across several turns. Designers who could already write a little code got faster. Designers who couldn't were still on the outside.",
+                    meta: "Pattern: write some code, let the model finish a line or two.",
+                  },
+                  {
+                    key: "2024",
+                    label: "2024",
+                    eyebrow: "Cursor, Claude 3.5, agentic editors",
+                    title: "Editors that read the whole repo",
+                    body: "Cursor and a generation of agentic editors arrived. The model could see your project, follow conventions, and propose multi-file changes. The barrier dropped from \"can you write code\" to \"can you describe what you want\" — squarely inside the designer's wheelhouse.",
+                    meta: "Pattern: describe the change you want, review the diff, ship it.",
+                  },
+                  {
+                    key: "2025",
+                    label: "2025",
+                    eyebrow: "Claude Code, Codex, MCP",
+                    title: "Agents wired into the rest of your work",
+                    body: "MCP servers connect the model to Figma, design systems, internal docs, and live services. The conversation extends past the editor — the model can pull from the same sources you do. Vibe coding stops being a clever trick and becomes a rhythm a team can run on.",
+                    meta: "Pattern: a single conversation that touches design, build, and review at once.",
+                  },
+                  {
+                    key: "now",
+                    label: "Now",
+                    eyebrow: "Adobe today",
+                    title: "Pods shipping production this way",
+                    body: "Protopack, the Firefly Platform repo, the Spectrum MCP, the Image Frontier pods. The infrastructure is in place at Adobe, and cross-functional teams are already shipping features through the loop. This isn't a forecast — it's the current state.",
+                    meta: "Pattern: a designer makes the change directly, the engineer reviews and lands it.",
+                  },
+                ],
+                caption:
+                  "Three years compressed into a single horizontal: the curve from \"interesting demo\" to \"how the team actually ships\".",
+              },
               {
                 kind: "cards",
                 columns: 2,
@@ -630,6 +927,75 @@ export const playbook: Part[] = [
                     description: "What happens once it leaves your screen.",
                   },
                 ],
+              },
+              {
+                kind: "decisionTree",
+                hint: "Walk the questions. Where you land is which version of this playbook is for you.",
+                root: {
+                  prompt: "Where are you starting from",
+                  question: "How comfortable are you with the editor today?",
+                  options: [
+                    {
+                      label: "I've barely opened one",
+                      next: {
+                        question:
+                          "Have you ever shipped something a real user touched — even a side project?",
+                        options: [
+                          {
+                            label: "No, never",
+                            next: {
+                              outcome: {
+                                eyebrow: "Path 1 of 4",
+                                title: "Start at the start. You will move faster than you think.",
+                                body: "Read the playbook end to end. Don't skip the setup chapter — the friction it removes is the friction that has kept this kind of work feeling out of reach. By [chapter 7](/working-with-ai/prompting-best-practices) you'll be having genuine conversations with the model. By [chapter 10](/the-craft/from-figma-to-working-ui) you'll be making changes inside a real codebase.",
+                              },
+                            },
+                          },
+                          {
+                            label: "Yes, on my own",
+                            next: {
+                              outcome: {
+                                eyebrow: "Path 2 of 4",
+                                title: "You already have the instinct. You just need the loop.",
+                                body: "Skim [chapter 4](/setup-and-tooling/setting-up-your-environment) for setup, then go to part 3 (Working with AI). You've shipped before, you understand what production-grade looks like — what's missing is the muscle memory of moving through a codebase with the model. That's chapters [7](/working-with-ai/prompting-best-practices)–[9](/working-with-ai/documenting-design-and-handing-it-off).",
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      label: "I'm fluent in Cursor or Claude Code",
+                      next: {
+                        question: "Do you work with engineering inside a real codebase, or solo?",
+                        options: [
+                          {
+                            label: "Solo, mostly side projects",
+                            next: {
+                              outcome: {
+                                eyebrow: "Path 3 of 4",
+                                title: "You're ready for the team chapter. That's the missing piece.",
+                                body: "Skim parts 1–4 for the framing, then read part 5 carefully. The hardest part of this work isn't writing prompts — it's working with engineering, content, brand, legal, and the rest of the org. [Chapter 13](/shipping-and-team/working-inside-an-ai-pod) is the pod model. [Chapter 15](/shipping-and-team/the-invisible-work) is the cross-functional support pod. Read them as the actual practice.",
+                              },
+                            },
+                          },
+                          {
+                            label: "Inside a real codebase, with engineering",
+                            next: {
+                              outcome: {
+                                eyebrow: "Path 4 of 4",
+                                title: "You're already doing this. Use the playbook to sharpen the parts you skip.",
+                                body: "Read parts 4 and 5 in detail. The craft chapters ([10](/the-craft/from-figma-to-working-ui)–[12](/the-craft/accessibility-as-a-prompt-time-concern)) are where most experienced practitioners discover what they've been doing on instinct, named explicitly — accessibility at prompt time, design system as canonical reference, how to read the build for system drift. Then part 5 to scale the practice across a team.",
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+                caption:
+                  "Four paths through the same fifteen chapters. The book is the same; the order it's useful in depends on where you're starting from.",
               },
             ],
           },
@@ -806,6 +1172,96 @@ export const playbook: Part[] = [
                 ],
               },
               {
+                kind: "decisionTree",
+                hint: "Run through the test by clicking. The path you walk lands you in your actual mode.",
+                root: {
+                  prompt: "Mode test · question 1 of 3",
+                  question: "Who is going to see this work?",
+                  options: [
+                    {
+                      label: "Just me, maybe one collaborator",
+                      next: {
+                        prompt: "Question 2 of 3",
+                        question: "What happens if it breaks tomorrow morning?",
+                        options: [
+                          {
+                            label: "I shrug and rebuild it",
+                            next: {
+                              outcome: {
+                                eyebrow: "You're in",
+                                title: "Mode 01 — New ideas",
+                                body: "Throwaway by design. Don't tokenize. Don't tune. Don't write tests. The point is to learn whether the idea has legs. If you find yourself adding production discipline, you're either drifting or you're in the wrong mode.",
+                              },
+                            },
+                          },
+                          {
+                            label: "I'd be annoyed but it's fine",
+                            next: {
+                              outcome: {
+                                eyebrow: "You're in",
+                                title: "Mode 01 — New ideas",
+                                body: "Same answer. The fact that it'd be a little annoying doesn't change the mode — it just means you should commit your work-in-progress to a branch so you don't lose the path you took.",
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      label: "My team, leadership, or research participants",
+                      next: {
+                        prompt: "Question 2 of 3",
+                        question: "Will the code survive past the demo it's built for?",
+                        options: [
+                          {
+                            label: "No — it's for a single moment",
+                            next: {
+                              outcome: {
+                                eyebrow: "You're in",
+                                title: "Mode 02 — Build in context",
+                                body: "Real enough to learn from, not real enough to ship. Use real-feeling content. Hand-tune the moments that matter for the demo. Defaults are fine for the rest. When the demo is over, you can throw it away — but capture what you learned.",
+                              },
+                            },
+                          },
+                          {
+                            label: "Maybe — leadership might want to ship it",
+                            next: {
+                              outcome: {
+                                eyebrow: "You're crossing the slope",
+                                title: "Mode 02, drifting toward 03",
+                                body: "This is where most projects get hurt. Build in mode 02, but mark the drift risk explicitly. Talk to engineering before the demo so the conversation about \"can we ship this\" doesn't catch you flat-footed. Read [chapter 13](/shipping-and-team/working-inside-an-ai-pod) (the pod) early.",
+                              },
+                            },
+                          },
+                          {
+                            label: "Yes — it's the candidate build of the feature",
+                            next: {
+                              outcome: {
+                                eyebrow: "You're in",
+                                title: "Mode 03 — Production build",
+                                body: "Even if it doesn't ship today, you're already in mode 03 territory. Tokenized color, accessibility floor, real data flows, error recovery. Engineering review before any handoff. The bar is the launch bar from now on.",
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      label: "Real users or paying customers",
+                      next: {
+                        outcome: {
+                          eyebrow: "You're in",
+                          title: "Mode 03 — Production build",
+                          body: "No further questions. The moment a paying customer or an unseen user shows up, the rules change. Tokenized color, full accessibility pass, real validation, error recovery, on-call rotation. Read parts 4 and 5 of the playbook before you write another line.",
+                        },
+                      },
+                    },
+                  ],
+                },
+                caption:
+                  "If your answer takes more than thirty seconds, you've already drifted. Stop, decide, and tell whoever else needs to know.",
+              },
+              {
                 kind: "wink",
                 text: "If you can't answer these clearly, you're probably already drifting between modes. Stop and decide.",
               },
@@ -910,6 +1366,63 @@ export const playbook: Part[] = [
                 text: "Most of Parts 2, 3, and 4 are mode-agnostic. Setup, prompting, and the design-to-code loop look the same whether you're building a weekend prototype or a feature for production. Part 5 is where mode matters most.",
               },
               {
+                kind: "flipDeck",
+                hint: "Front: which chapter. Back: when in your mode life it actually pays off. Tap to flip.",
+                columns: 3,
+                items: [
+                  {
+                    eyebrow: "Part 2 · Setup",
+                    front: "[Chapter 4](/setup-and-tooling/setting-up-your-environment) — Setting up your environment.",
+                    backLabel: "When it pays off",
+                    back: "Mode 01 onward. Setup pays the same dividend whether you're sketching for a day or shipping. Skip it and every other chapter is harder than it should be.",
+                  },
+                  {
+                    eyebrow: "Part 2 · Setup",
+                    front: "[Chapter 5](/setup-and-tooling/ai-tooling-at-adobe) — AI tooling at Adobe.",
+                    backLabel: "When it pays off",
+                    back: "All three modes. Knowing what's already in the building (Spectrum MCP, Firefly Platform repo, Protopack) saves time in mode 01, keeps your prototype believable in mode 02, and is the difference between fitting in or fighting the system in mode 03.",
+                  },
+                  {
+                    eyebrow: "Part 2 · Setup",
+                    front: "[Chapter 6](/setup-and-tooling/extending-your-ai) — Extending your AI.",
+                    backLabel: "When it pays off",
+                    back: "Mode 02 and 03. Skills, MCPs, and rules are an investment that compounds over weeks. Worth building once you find yourself doing the same setup work twice.",
+                  },
+                  {
+                    eyebrow: "Part 3 · With AI",
+                    front: "Chapter [7](/working-with-ai/prompting-best-practices)–[9](/working-with-ai/documenting-design-and-handing-it-off) — Prompting, planning, handoff.",
+                    backLabel: "When it pays off",
+                    back: "All three modes. The conversation craft is the same regardless of stakes — what changes is how much rigor you bring to documentation. Read for prompting first, return for handoff when the work crosses into mode 02 or 03.",
+                  },
+                  {
+                    eyebrow: "Part 4 · The craft",
+                    front: "[Chapter 10](/the-craft/from-figma-to-working-ui) — From Figma to working UI.",
+                    backLabel: "When it pays off",
+                    back: "Mode 02 and 03. The Figma-to-build loop only matters once the design system is in play and you're building inside the real product, not a sandbox.",
+                  },
+                  {
+                    eyebrow: "Part 4 · The craft",
+                    front: "[Chapter 11](/the-craft/visual-design-fidelity) — Visual design fidelity.",
+                    backLabel: "When it pays off",
+                    back: "Mode 02 and 03 — and especially mode 03. Spacing, typography, color, motion drift is the slop everyone notices. Skip in mode 01 and people understand. Skip in mode 03 and the build looks broken.",
+                  },
+                  {
+                    eyebrow: "Part 4 · The craft",
+                    front: "[Chapter 12](/the-craft/accessibility-as-a-prompt-time-concern) — Accessibility at prompt time.",
+                    backLabel: "When it pays off",
+                    back: "Mode 03 is non-negotiable; mode 02 is strongly recommended. Building accessibility in at prompt time costs minutes; bolting it on at the end costs days. Read this once and apply forever.",
+                  },
+                  {
+                    eyebrow: "Part 5 · Team",
+                    front: "Chapter [13](/shipping-and-team/working-inside-an-ai-pod)–[15](/shipping-and-team/the-invisible-work) — Pod, support pod, what doesn't shift.",
+                    backLabel: "When it pays off",
+                    back: "Mode 03 only. These chapters describe shipping production work with a team. If you're solo in mode 01 or 02, skim them so you know what you're heading toward — and read them carefully the day someone says \"can we ship this.\"",
+                  },
+                ],
+                caption:
+                  "The playbook is mode-agnostic where the craft is mode-agnostic, and explicit about mode where it matters. Take what serves the mode you're in.",
+              },
+              {
                 kind: "callout",
                 tone: "accent",
                 icon: "target",
@@ -926,7 +1439,7 @@ export const playbook: Part[] = [
         title: "The AI adoption journey",
         summary:
           "Where most designers start, where they grow into, and which habits compound over months instead of days.",
-        readTime: "7 min",
+        readTime: "6 min",
         sections: [
           {
             heading: "There is no single starting line",
@@ -1055,7 +1568,6 @@ export const playbook: Part[] = [
               },
               {
                 kind: "stageStack",
-                attentionLabel: "Where your attention is",
                 stages: [
                   {
                     number: "Stage 01",
@@ -1151,6 +1663,52 @@ export const playbook: Part[] = [
                 text: "Vibe coding is the editor, the model in it, the codebase it can see, and the version-control loop you ship through. Get those four things right and most of the friction disappears. Get any of them wrong and the assistant starts to feel like a chatbot you happen to keep open while you do the real work somewhere else.",
               },
               {
+                kind: "tapTrace",
+                hint: "Tap each pillar to see what \"got it right\" actually looks like.",
+                lead: "The four pillars, broken open",
+                segments: [
+                  { text: "Vibe coding is the " },
+                  {
+                    text: "editor",
+                    mark: {
+                      eyebrow: "Pillar 1",
+                      label: "Cursor or Claude Code, configured once",
+                      note: "The thing on your screen all day. Pick one, learn its shortcuts, stop switching weekly. Configured once means: extensions installed, theme set, MCPs connected, keybindings learned. Not perfectly tuned — usable without thinking.",
+                    },
+                  },
+                  { text: ", the " },
+                  {
+                    text: "model in it",
+                    mark: {
+                      eyebrow: "Pillar 2",
+                      label: "A current frontier model, on the right tier",
+                      note: "Sonnet, Opus, GPT-4 class or better. Older models technically work but you'll spend the savings on prompt-debugging. The model is the most upgradable part of your stack — the one place to spend rather than save.",
+                    },
+                  },
+                  { text: ", the " },
+                  {
+                    text: "codebase it can see",
+                    mark: {
+                      eyebrow: "Pillar 3",
+                      label: "A real product repo, cloned and running",
+                      note: "Not a sandbox. Not a fresh Vite app. The actual product the team is shipping out of. Until the model can see your real components and conventions, every session starts from zero.",
+                    },
+                  },
+                  { text: ", and the " },
+                  {
+                    text: "version-control loop",
+                    mark: {
+                      eyebrow: "Pillar 4",
+                      label: "Branch, commit, push, PR — every day",
+                      note: "Not because the ceremony matters. Because it's how work becomes shareable, reviewable, and recoverable. A branch is a sandbox with a paper trail. A PR is your thinking, not just your output.",
+                    },
+                  },
+                  { text: " you ship through." },
+                ],
+                caption:
+                  "Get all four right and the friction disappears. Miss any one of them and the assistant feels like a chatbot you happen to keep open.",
+              },
+              {
                 kind: "pullquote",
                 text: "If you can't run the real product locally, you're not vibe coding — you're prompting.",
               },
@@ -1160,7 +1718,7 @@ export const playbook: Part[] = [
               },
               {
                 kind: "paragraph",
-                text: "How much of the setup you actually need depends on the mode you're working in. The three modes from chapter 2 each ask for a different amount of this chapter.",
+                text: "How much of the setup you actually need depends on the mode you're working in. The three modes from [chapter 2](/foundations/knowing-which-mode-youre-in) each ask for a different amount of this chapter.",
               },
               {
                 kind: "table",
@@ -1227,7 +1785,7 @@ export const playbook: Part[] = [
                 tone: "neutral",
                 icon: "figma",
                 title: "Don't forget the Figma MCP",
-                text: "The Figma MCP is the connector that lets the model in your editor see your Figma frames as more than screenshots. With it installed, you can paste a Figma link into a prompt and the model can read the layers, components, and tokens directly. Without it, you're describing your design in words — which works, but throws away most of what Figma is for. Chapter 6 covers MCPs in detail.",
+                text: "The Figma MCP is the connector that lets the model in your editor see your Figma frames as more than screenshots. With it installed, you can paste a Figma link into a prompt and the model can read the layers, components, and tokens directly. Without it, you're describing your design in words — which works, but throws away most of what Figma is for. [Chapter 6](/setup-and-tooling/extending-your-ai) covers MCPs in detail.",
               },
             ],
           },
@@ -1267,7 +1825,7 @@ export const playbook: Part[] = [
                 tone: "neutral",
                 icon: "arrow",
                 title: "Prototyping path? There's a shorter route",
-                text: "If most of your work is prototyping rather than landing changes inside a production codebase, Protopack is a faster on-ramp than a full repo clone. It handles the local environment, gives you Spectrum-aligned templates, and makes hosting easy. Chapter 5 walks through it; [#adpt-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) is where the day-to-day questions get answered. Skim the next section and come back to it the day your work starts crossing into a real product repo.",
+                text: "If most of your work is prototyping rather than landing changes inside a production codebase, Protopack is a faster on-ramp than a full repo clone. It handles the local environment, gives you Spectrum-aligned templates, and makes hosting easy. [Chapter 5](/setup-and-tooling/ai-tooling-at-adobe) walks through it; [#adpt-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) is where the day-to-day questions get answered. Skim the next section and come back to it the day your work starts crossing into a real product repo.",
               },
             ],
           },
@@ -1468,7 +2026,7 @@ export const playbook: Part[] = [
                 tone: "neutral",
                 icon: "compass",
                 title: "What this chapter doesn't cover",
-                text: "Prompting practices, MCPs, skills, and rules live in chapter 6. The Adobe-specific tooling — Protopack, Spectrum, the Adobe MCPs, license access — is chapter 5. How a pod actually works once setup is done is chapter 15. Setup is the part you do once per project and mostly forget about. The rest of the playbook is what you do every day.",
+                text: "Prompting practices, MCPs, skills, and rules live in [chapter 6](/setup-and-tooling/extending-your-ai). The Adobe-specific tooling — Protopack, Spectrum, the Adobe MCPs, license access — is [chapter 5](/setup-and-tooling/ai-tooling-at-adobe). How a pod actually works once setup is done is [chapter 14](/shipping-and-team/image-frontier-pod). Setup is the part you do once per project and mostly forget about. The rest of the playbook is what you do every day.",
               },
             ],
           },
@@ -1514,7 +2072,7 @@ export const playbook: Part[] = [
             blocks: [
               {
                 kind: "paragraph",
-                text: "The Adobe stack you'll touch as a designer breaks into four shapes: the everyday editors (chapter 4 covered those), a prototyping environment, the production codebases you cross into when work goes real, and the model context layer that ties everything to the rest of the company. Treat the cards below as a map, not a checklist — install only what the work in front of you actually needs.",
+                text: "The Adobe stack you'll touch as a designer breaks into four shapes: the everyday editors ([chapter 4](/setup-and-tooling/setting-up-your-environment) covered those), a prototyping environment, the production codebases you cross into when work goes real, and the model context layer that ties everything to the rest of the company. Treat the cards below as a map, not a checklist — install only what the work in front of you actually needs.",
               },
               {
                 kind: "cards",
@@ -1698,7 +2256,7 @@ export const playbook: Part[] = [
         title: "Extending your AI: MCPs, skills, and rules",
         summary:
           "What MCPs, skills, and rules each do, when to reach for which, and how CLAUDE.md or AGENTS.md hold them together.",
-        readTime: "4 min",
+        readTime: "7 min",
         sections: [
           {
             heading: "Three knobs, three jobs",
@@ -1730,6 +2288,77 @@ export const playbook: Part[] = [
                     "CLAUDE.md or AGENTS.md at the repo root.",
                   ],
                 ],
+              },
+              {
+                kind: "decisionTree",
+                hint: "Describe what's actually going wrong, and the tree will tell you which knob to turn.",
+                root: {
+                  prompt: "Diagnose first, install second",
+                  question: "What's the symptom you're trying to fix?",
+                  options: [
+                    {
+                      label: "The model can't see something it should",
+                      next: {
+                        prompt: "Question 2 of 2",
+                        question: "Is the missing thing somewhere a person could browse to — Figma, a service, an internal site?",
+                        options: [
+                          {
+                            label: "Yes, it lives in a system we already have",
+                            next: {
+                              outcome: {
+                                eyebrow: "Reach for",
+                                title: "An MCP",
+                                body: "MCPs add *capability* — they let the model read or do something it couldn't before. If the data exists somewhere reachable and you keep pasting it in by hand, an MCP is the move. Start with the Figma MCP; it's the highest-leverage one for designers.",
+                              },
+                            },
+                          },
+                          {
+                            label: "No, I'd have to write it down myself",
+                            next: {
+                              outcome: {
+                                eyebrow: "Reach for",
+                                title: "A rule (CLAUDE.md / AGENTS.md)",
+                                body: "If the missing thing is your team's conventions, your accessibility floor, your voice — context that lives in your head — write it down once in CLAUDE.md or AGENTS.md. Rules add *policy*, things that should always be true.",
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      label: "I keep explaining the same multi-step process",
+                      next: {
+                        outcome: {
+                          eyebrow: "Reach for",
+                          title: "A skill",
+                          body: "Skills add *procedure* — a packaged way of doing a recurring task. Design review, accessibility check, handoff readiness pass. The skill captures the steps, prompts, order, and criteria so you call it by name instead of remembering. Anthropic's [skills best-practices guide](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/best-practices.md) is the long version.",
+                        },
+                      },
+                    },
+                    {
+                      label: "The model keeps doing something I told it not to",
+                      next: {
+                        outcome: {
+                          eyebrow: "Reach for",
+                          title: "A rule, in CLAUDE.md or AGENTS.md",
+                          body: "If something must always be true — \"never use plain HTML buttons,\" \"always import from @react-spectrum/s2,\" \"sentence case for all UI text\" — that's policy. It belongs in a rule at the repo root, not in your per-prompt instructions. Once it's there, you stop having to repeat it.",
+                        },
+                      },
+                    },
+                    {
+                      label: "The model is just slow or not very good",
+                      next: {
+                        outcome: {
+                          eyebrow: "Reach for",
+                          title: "Probably none of the three",
+                          body: "MCPs, skills, and rules don't fix model quality. Check what model you're running, whether you're on the right tier, and whether the context you're passing in is actually useful. The fix is upstream of these knobs.",
+                        },
+                      },
+                    },
+                  ],
+                },
+                caption:
+                  "Three knobs, three problems they actually solve. Most of the time when something feels off, you're reaching for the wrong one.",
               },
             ],
           },
@@ -1960,7 +2589,7 @@ description: Run the accessibility floor before pushing for review. Use any time
         title: "Prompting best practices",
         summary:
           "Specificity, pointers, constraints, showing the pattern. The per-message craft of getting useful output, with examples tuned to UI work rather than backend code.",
-        readTime: "9 min",
+        readTime: "10 min",
         sections: [
           {
             heading: "The per-message craft",
@@ -2017,6 +2646,43 @@ description: Run the accessibility floor before pushing for review. Use any time
               {
                 kind: "wink",
                 text: "Test for whether you've been specific enough: imagine the model returns something that satisfies every word of your prompt and is still wrong. What was missing? That's what should have been on the page.",
+              },
+              {
+                kind: "promptScope",
+                hint: "Toggle each layer on. Watch a vague request grow into a brief the model can actually use.",
+                vague: "Make me a card component for products.",
+                layers: [
+                  {
+                    key: "component",
+                    eyebrow: "Layer 01",
+                    label: "Reference a real component",
+                    addition:
+                      "Match the layout of `src/components/ProductCard.tsx` so it inherits the same shell, spacing rhythm, and image slot.",
+                  },
+                  {
+                    key: "tokens",
+                    eyebrow: "Layer 02",
+                    label: "Pin tokens, not hex",
+                    addition:
+                      "Use design tokens for color, spacing, and radius — no hex values, no magic numbers. 16 px padding, 8 px corner radius, 4:3 image at the top.",
+                  },
+                  {
+                    key: "type",
+                    eyebrow: "Layer 03",
+                    label: "Name the type ramp",
+                    addition:
+                      "Two-line title in `spectrum-body-m`, price in `spectrum-detail-l`. Truncate the title with an ellipsis if it overflows.",
+                  },
+                  {
+                    key: "behavior",
+                    eyebrow: "Layer 04",
+                    label: "Specify behavior + state",
+                    addition:
+                      "Primary `Add to cart` button at the bottom, full-width on mobile. Hover lifts the card 4 px, focus shows a 2 px Spectrum focus ring, keyboard `Enter` activates the primary action.",
+                  },
+                ],
+                caption:
+                  "\"Modern\" and \"clean\" don't narrow the search space. A component reference, real tokens, the type ramp, and the behavior do.",
               },
             ],
           },
@@ -2289,7 +2955,7 @@ description: Run the accessibility floor before pushing for review. Use any time
                     icon: "loop",
                     eyebrow: "Parallel builds",
                     title: "Three variations at the same time",
-                    text: "Three worktrees, three branches, three takes on the same screen — running concurrently instead of in series. Merge the switcher in last. This is the infrastructure for the variation pattern in chapter 8: instead of building A, then B, then C in sequence, you brief three agents on the same problem and compare what comes back in the same hour.",
+                    text: "Three worktrees, three branches, three takes on the same screen — running concurrently instead of in series. Merge the switcher in last. This is the infrastructure for the variation pattern in [chapter 8](/working-with-ai/planning-and-exploring-options): instead of building A, then B, then C in sequence, you brief three agents on the same problem and compare what comes back in the same hour.",
                   },
                   {
                     size: "small",
@@ -2377,7 +3043,7 @@ description: Run the accessibility floor before pushing for review. Use any time
         title: "Planning and exploring options",
         summary:
           "Touring unfamiliar codebases and design systems, sparring on decisions, reading product data, generating alternatives, and turning all of it into a plan you can execute. The work that determines whether the build succeeds.",
-        readTime: "8 min",
+        readTime: "9 min",
         sections: [
           {
             heading: "The work that determines whether the build succeeds",
@@ -2385,6 +3051,70 @@ description: Run the accessibility floor before pushing for review. Use any time
               {
                 kind: "paragraph",
                 text: "By the time the assistant is writing files, most of the important decisions have already been made. What you're building, why, for whom, and against what constraints. The chapter below is the work that earns the build — framing the problem, reading the data, widening the option space with people and the model, preserving the alternatives in a switcher you can demo, and writing it all down as a plan you can hand to the model on turn one.",
+              },
+              {
+                kind: "tapTrace",
+                hint: "Tap each underlined phrase to see what work it actually names.",
+                lead: "The chapter, in one sentence",
+                segments: [
+                  { text: "The chapter below is the work that " },
+                  {
+                    text: "earns the build",
+                    mark: {
+                      eyebrow: "What it means",
+                      label: "The build is the cheap part now",
+                      note: "When the assistant can write files in minutes, the expensive work is the upstream judgment. The chapters about typing — prompting, slicing, reviewing — only pay off if this earlier work is real.",
+                    },
+                  },
+                  { text: " — " },
+                  {
+                    text: "framing the problem",
+                    mark: {
+                      eyebrow: "Section 2",
+                      label: "Describe the problem, not the solution",
+                      note: "Most expensive habit in vibe coding: describing the dropdown when the actual problem was \"users want a quick toggle.\" Frame the problem first, propose solutions second.",
+                    },
+                  },
+                  { text: ", " },
+                  {
+                    text: "reading the data",
+                    mark: {
+                      eyebrow: "Section 3",
+                      label: "Analyst for product data and feedback",
+                      note: "Use the model to surface patterns in support tickets, session recordings, and feedback before you sketch. Most of what's worth knowing is already in the data; nobody read it.",
+                    },
+                  },
+                  { text: ", " },
+                  {
+                    text: "widening the option space",
+                    mark: {
+                      eyebrow: "Sections 4–5",
+                      label: "Figma exploration + alternatives",
+                      note: "Generate three takes, not one. Figma is still where exploration starts; the model is the cheapest way to pressure-test which direction has legs before you build any of them.",
+                    },
+                  },
+                  { text: ", " },
+                  {
+                    text: "preserving the alternatives",
+                    mark: {
+                      eyebrow: "Section 6",
+                      label: "The variation pattern",
+                      note: "Keep the runners-up shippable. A switcher is cheap. The build that survives review is often a remix of two takes you would have thrown away.",
+                    },
+                  },
+                  { text: ", and " },
+                  {
+                    text: "writing it down as a plan",
+                    mark: {
+                      eyebrow: "Section 7",
+                      label: "Plan first, build second",
+                      note: "The plan is the prompt for turn one. If the plan is sharp, the first build is close. If the plan is fuzzy, no amount of follow-up tightens it.",
+                    },
+                  },
+                  { text: "." },
+                ],
+                caption:
+                  "Six pieces of work, one chapter. Skip them and the build still happens — just on weaker foundations than it needed.",
               },
             ],
           },
@@ -2674,6 +3404,67 @@ description: Run the accessibility floor before pushing for review. Use any time
                 text: "Don't plan everything. A copy tweak or a color swap doesn't need a plan. The threshold: if the model gets the approach wrong, will I lose more than fifteen minutes redoing it?",
               },
               {
+                kind: "decisionTree",
+                hint: "Walk through the questions to decide whether your next prompt deserves a plan first.",
+                root: {
+                  prompt: "Plan or build?",
+                  question: "How long would it take you to redo the work if the model gets the approach wrong?",
+                  options: [
+                    {
+                      label: "Less than 15 minutes",
+                      next: {
+                        outcome: {
+                          eyebrow: "Just build",
+                          title: "Skip the plan. Go straight to the prompt.",
+                          body: "If the rebuild cost is under fifteen minutes, planning is overhead. The exploration cycle is the iteration. Save planning energy for the work where rework hurts.",
+                        },
+                      },
+                    },
+                    {
+                      label: "An hour or two",
+                      next: {
+                        prompt: "Question 2 of 2",
+                        question: "Will anyone other than you need to react to it?",
+                        options: [
+                          {
+                            label: "No, just me",
+                            next: {
+                              outcome: {
+                                eyebrow: "Light plan",
+                                title: "Three to five lines of intent, then build",
+                                body: "Write down what you're trying for and the constraints that have to hold, then go. Not a seven-section plan — just enough that future-you remembers what you were after when the build comes back partially right.",
+                              },
+                            },
+                          },
+                          {
+                            label: "Yes, a teammate or a partner",
+                            next: {
+                              outcome: {
+                                eyebrow: "Plan first",
+                                title: "Write the seven-section plan and circulate it",
+                                body: "Two minutes for them to read your plan beats thirty minutes of meeting about half-built screens. The plan is also the prompt for turn one — work you'd have done anyway, just done in the cheap medium first.",
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      label: "Half a day or more",
+                      next: {
+                        outcome: {
+                          eyebrow: "Plan first, no exceptions",
+                          title: "Use Plan Mode. Get one round of design feedback. Then build.",
+                          body: "On any prototype this size, planning isn't optional — it's the cheapest place to discover the flow is wrong. The plan covers intent, surfaces involved, variations to compare. Hand the agreed plan to the model on turn one. Build it once instead of twice.",
+                        },
+                      },
+                    },
+                  ],
+                },
+                caption:
+                  "Plan when the rework is expensive. Build when it's not. The threshold isn't novelty — it's how much you'd lose if the model takes the wrong path.",
+              },
+              {
                 kind: "figureGrid",
                 columns: 2,
                 caption:
@@ -2825,6 +3616,51 @@ description: Run the accessibility floor before pushing for review. Use any time
               {
                 kind: "paragraph",
                 text: "You don't write one master document. You write a screenshot for QE, a Figma frame for the next designer, a copy doc for the content team, and a plan for engineering — each one shaped by who's reading it and what they need to do with it.",
+              },
+              {
+                kind: "flipDeck",
+                hint: "Each card is a reader. Tap to see what they actually need from you.",
+                columns: 3,
+                items: [
+                  {
+                    eyebrow: "Reader 1",
+                    front: "The AI you're about to brief.",
+                    backLabel: "Needs",
+                    back: "Plain-language intent, real file paths to match, a short list of constraints, and a pointer to one or two examples of the pattern you want. Not a comprehensive spec. The model only needs enough rails to start.",
+                  },
+                  {
+                    eyebrow: "Reader 2",
+                    front: "The content strategist writing copy.",
+                    backLabel: "Needs",
+                    back: "The screens with placeholder strings clearly marked, the audience the copy is for, the voice it should match, and the constraints — character limits, locale fallbacks, tone. Not the visual spec. They care about the words inside the components, not the components themselves.",
+                  },
+                  {
+                    eyebrow: "Reader 3",
+                    front: "The engineer reviewing the build.",
+                    backLabel: "Needs",
+                    back: "The diff, the running build, a short PR description that names what changed and why, and the open questions you don't have answers to yet. Not a Figma file — they're already looking at the same artifact you are.",
+                  },
+                  {
+                    eyebrow: "Reader 4",
+                    front: "The QE engineer writing tests.",
+                    backLabel: "Needs",
+                    back: "The states the feature can be in, the edge cases you care about, screen recordings of the happy path and the unhappy paths, and the *known issues* doc that says what's intentional and what's a gap. Not the implementation plan.",
+                  },
+                  {
+                    eyebrow: "Reader 5",
+                    front: "The next designer who inherits the surface.",
+                    backLabel: "Needs",
+                    back: "The decisions and the alternatives that lost — the *why*, not just the *what*. A small README in the variations folder. A pointer to the original brief. The institutional memory the file alone can't carry.",
+                  },
+                  {
+                    eyebrow: "Anti-reader",
+                    front: "The imaginary comprehensive reviewer.",
+                    backLabel: "Doesn't exist",
+                    back: "Documentation written for nobody is documentation read by nobody. If you can't name the specific person reading the artifact, the artifact is a translation step that earns its weight in friction.",
+                  },
+                ],
+                caption:
+                  "Five real readers, five different artifacts. The chapter that follows is each one made concrete.",
               },
               {
                 kind: "paragraph",
@@ -3057,11 +3893,11 @@ description: Run the accessibility floor before pushing for review. Use any time
     chapters: [
       {
         id: "from-figma-to-working-ui",
-        number: 11,
+        number: 10,
         title: "From Figma to working UI and back",
         summary:
           "The design-to-code loop has four moments — starting, mid-build, review, and after shipping — each with a different right answer. Underneath the workflow is the harder craft of reading what Figma and code each tell you about the design.",
-        readTime: "10 min",
+        readTime: "7 min",
         sections: [
           {
             heading: "The wrong question",
@@ -3403,7 +4239,7 @@ description: Run the accessibility floor before pushing for review. Use any time
                 tone: "neutral",
                 icon: "layers",
                 title: "An /explorations file for the rest",
-                text: "Keep abandoned variations in a separate Figma file or page. Light annotation on each — *this version was rejected because the extra column made the table unreadable on smaller viewports* — turns each one from a dead end into institutional knowledge for the next designer who picks up the surface. Pairs with the variation pattern in Chapter 8 and the next-designer handoff in Chapter 9.",
+                text: "Keep abandoned variations in a separate Figma file or page. Light annotation on each — *this version was rejected because the extra column made the table unreadable on smaller viewports* — turns each one from a dead end into institutional knowledge for the next designer who picks up the surface. Pairs with the variation pattern in [Chapter 8](/working-with-ai/planning-and-exploring-options) and the next-designer handoff in [Chapter 9](/working-with-ai/documenting-design-and-handing-it-off).",
               },
             ],
           },
@@ -3424,11 +4260,11 @@ description: Run the accessibility floor before pushing for review. Use any time
       },
       {
         id: "visual-design-fidelity",
-        number: 12,
+        number: 11,
         title: "Visual design fidelity",
         summary:
           "AI lands every build in the *almost right* zone by default. The gap shows up in five places — spacing, typography, color, hierarchy, and motion — and closing it means anchoring the model in a design system: Spectrum tokens, the alias tier, and one Provider that handles light and dark.",
-        readTime: "18 min",
+        readTime: "10 min",
         sections: [
           {
             heading: "The hum of wrongness",
@@ -4032,11 +4868,11 @@ description: Run the accessibility floor before pushing for review. Use any time
       },
       {
         id: "accessibility-as-a-prompt-time-concern",
-        number: 13,
+        number: 12,
         title: "Accessibility as a prompt-time concern",
         summary:
           "Accessibility is the deferral that costs the most. Pull it into the prompt, the rules, the Figma frame, and the partnership cadence — so the floor is higher before any human reviews the build.",
-        readTime: "9 min",
+        readTime: "15 min",
         sections: [
           {
             heading: "The deferral that costs the most",
@@ -4101,6 +4937,51 @@ description: Run the accessibility floor before pushing for review. Use any time
               {
                 kind: "wink",
                 text: "Most of the categories above are exactly what *prompt-time accessibility* prevents. The numbers are the chapter's argument in chart form: the deferral compounds, and the compounded debt is paid by users.",
+              },
+              {
+                kind: "flipDeck",
+                hint: "Each card is a sentence you've heard, or said. Tap to see what the deferral actually buys.",
+                columns: 2,
+                items: [
+                  {
+                    eyebrow: "Excuse",
+                    front: "We'll pass the audit at the end.",
+                    backLabel: "What it actually costs",
+                    back: "The audit returns at launch week with a list of structural issues, half of them rework rather than polish. The structural ones can hold the launch. The audit was the cheap signal — the rework is the expensive consequence.",
+                  },
+                  {
+                    eyebrow: "Excuse",
+                    front: "Accessibility slows the design phase down.",
+                    backLabel: "What it actually costs",
+                    back: "Accessibility at prompt time costs minutes. Bolting it on after the build costs days, and the day it costs is launch week — when nobody has the days. The math only works against accessibility if you ignore the cost of every deferred fix.",
+                  },
+                  {
+                    eyebrow: "Excuse",
+                    front: "Engineering will catch the a11y issues in review.",
+                    backLabel: "What it actually costs",
+                    back: "They catch the keyboard issues. They don't catch the screen-reader issues, the cognitive load issues, or the issues that need someone with lived experience to surface. The audit returns those — at launch week — and the team apologizes to the users who hit them in production.",
+                  },
+                  {
+                    eyebrow: "Excuse",
+                    front: "It's a prototype, we'll fix a11y when it ships.",
+                    backLabel: "What it actually costs",
+                    back: "Prototypes that succeed become production code. The accessibility floor that was *missing in the prototype* is now *missing in the codebase*, and it ships unless someone goes back and rebuilds it. The rebuild is what mode-drift looks like in [chapter 2](/foundations/knowing-which-mode-youre-in) — a real cost, paid in the wrong place.",
+                  },
+                  {
+                    eyebrow: "Excuse",
+                    front: "The corporate accessibility team will tell us what to do.",
+                    backLabel: "What it actually costs",
+                    back: "They tell you what's wrong. They can't fix it for you, and they can't pull a launch off the calendar if you didn't loop them in early. The corporate team is a partner; treating them as a service desk means you're surprising them at the worst possible time.",
+                  },
+                  {
+                    eyebrow: "Excuse",
+                    front: "Most of our users don't have access needs anyway.",
+                    backLabel: "What it actually costs",
+                    back: "About one in four people in the US has a disability that affects how they use software. The European Accessibility Act, ADA Title III, and similar regulations apply regardless of percentages. \"Most don't\" is bad math, bad ethics, and a regulatory exposure waiting to surface.",
+                  },
+                ],
+                caption:
+                  "Six things people say when they push accessibility to the end. None of the trades are the trade they sound like.",
               },
             ],
           },
@@ -4485,7 +5366,7 @@ Example:
                   },
                   {
                     title: "After shipping",
-                    meta: "Schedule an experience audit with your accessibility partner. The screenshots and flow videos from QE handoff (Chapter 9) are inputs. What the audit surfaces becomes the input to the next iteration.",
+                    meta: "Schedule an experience audit with your accessibility partner. The screenshots and flow videos from QE handoff ([Chapter 9](/working-with-ai/documenting-design-and-handing-it-off)) are inputs. What the audit surfaces becomes the input to the next iteration.",
                   },
                 ],
               },
@@ -4575,7 +5456,7 @@ Example:
                     number: "03",
                     title: "Audit and bug bash, after shipping",
                     description:
-                      "Accessibility audit from a partner. QE bug bash on real devices with real assistive tech. Legal sign-off if the surface needed it. The screenshots and flow videos from your QE handoff (Chapter 9) are inputs for all three.",
+                      "Accessibility audit from a partner. QE bug bash on real devices with real assistive tech. Legal sign-off if the surface needed it. The screenshots and flow videos from your QE handoff ([Chapter 9](/working-with-ai/documenting-design-and-handing-it-off)) are inputs for all three.",
                   },
                 ],
               },
@@ -4631,84 +5512,1411 @@ Example:
   {
     id: "shipping-and-team",
     number: 5,
-    title: "Shipping & Team",
+    title: "Shipping",
     description:
-      "What happens once the work leaves your file. Owning the quality, avoiding AI slop, and working as a team on shared, AI-assisted craft.",
+      "The work that turns vibe-coded experiments into real products. What an AI pod is, how a designer gets set up inside one, and the invisible cross-functional work that determines whether the build actually ships.",
     chapters: [
       {
-        id: "quality-and-ownership",
-        number: 14,
-        title: "Quality and ownership: avoiding AI slop",
+        id: "working-inside-an-ai-pod",
+        number: 13,
+        title: "Working inside an AI pod",
         summary:
-          "What slop looks like in design output, using Git as version history, and reviewing AI-generated code with the BLOCKER, MAJOR, MINOR, NIT habit.",
-        readTime: "2 min",
+          "Most of the playbook so far teaches you to vibe code as a designer. This chapter is about what changes when you do it as part of a team organized around the practice — five people, two roles, shared ownership of the build. How a designer plugs in, what you contribute that no one else can, and how quality holds up when designers ship code. [Chapter 14](/shipping-and-team/image-frontier-pod) walks through the Image Frontier pod — 2 weeks, 5 people, 2 features — as the worked example.",
+        readTime: "11 min",
         sections: [
           {
-            heading: "What AI slop looks like in design",
-            body: "Slop is what happens when generation outpaces review. In design output, it has a recognizable shape, and once you can name it, you can refuse to ship it.",
-            bullets: [
-              "Drift: small unexplained deviations from the design system that compound across screens.",
-              "Generic styling: layouts that could be from any product, none of them yours.",
-              "Accessibility regressions: missing labels, broken focus, low contrast, fake controls.",
-              "Plausible nonsense: copy and microcopy that reads well but means nothing.",
+            heading: "From solo to pod",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The previous parts of this playbook taught you how to vibe code as a designer. This chapter is about what changes when you do it as part of a team that's organized around the practice rather than tolerating it.",
+              },
+              {
+                kind: "paragraph",
+                text: "The short version: most of what you've learned so far still applies, but the unit of work shifts. You stop thinking of yourself as a designer who sometimes writes code and start thinking of yourself as one of a small group of people — designer, engineer, PM, sometimes a creator — who together produce a feature in weeks instead of quarters. The pod is the structural answer to a problem the rest of the playbook has been circling: vibe coding lets a single designer move fast, but a single designer can't ship to production alone.",
+              },
+              {
+                kind: "tapTrace",
+                hint: "Tap each underlined word to see what changes from solo work.",
+                lead: "What \"pod\" is actually doing in that sentence",
+                segments: [
+                  { text: "The " },
+                  {
+                    text: "pod",
+                    mark: {
+                      eyebrow: "Definition",
+                      label: "Five people, one product question",
+                      note: "PM, design, engineering, sometimes a creator. Cross-functional, tightly organized, given the autonomy to answer one product question end to end. The pod isn't a project team or a working group — it's a small group structured by the work, not by the org chart.",
+                    },
+                  },
+                  { text: " is what makes the " },
+                  {
+                    text: "speed",
+                    mark: {
+                      eyebrow: "What changes",
+                      label: "Two-week features become normal",
+                      note: "Solo, with vibe coding, you can produce a remarkable prototype in a week. In a pod, that same week becomes the first week of a two-week feature. The speed compounds because translation cost is gone.",
+                    },
+                  },
+                  { text: " " },
+                  {
+                    text: "survive contact",
+                    mark: {
+                      eyebrow: "What changes",
+                      label: "It survives the institutional friction",
+                      note: "A solo designer's prototype hits institutional friction at every centralized service — billing, legal, brand, QE — and stalls. A pod brings that friction inside the room from week one and the prototype keeps moving past the points where solo work dies.",
+                    },
+                  },
+                  { text: " with the " },
+                  {
+                    text: "reality of shipping",
+                    mark: {
+                      eyebrow: "What changes",
+                      label: "Production is a coordination problem, not a fidelity one",
+                      note: "Most production work isn't design-quality work — it's coordination across the dozen places shipping requires consent. The pod is the structural answer to that coordination, the way design systems are the structural answer to fidelity.",
+                    },
+                  },
+                  { text: "." },
+                ],
+                caption:
+                  "Solo gets you the prototype. The pod gets you to production. Both are real practices, and the move from one to the other is what this chapter is about.",
+              },
+              {
+                kind: "pullquote",
+                text: "The pod is what makes the speed survive contact with the reality of shipping.",
+              },
             ],
           },
           {
-            heading: "Git is your design history",
-            body: "Version control is not just for engineers. It is the most honest record of what your assistant changed, and it is the cheapest way to undo a bad turn. Commit early and often, in small, descriptive chunks. A clean Git history doubles as your design log and your safety net.",
-          },
-          {
-            heading: "BLOCKER, MAJOR, MINOR, NIT",
-            body: "A simple severity scale that keeps reviews honest and fast. Tag every comment so the author knows what to fix now, what to fix soon, and what to ignore until next time.",
-            bullets: [
-              "BLOCKER: ship-stoppers. Wrong, unsafe, or broken. Must fix.",
-              "MAJOR: real problems that should be fixed before merge.",
-              "MINOR: worth fixing, but not worth blocking on.",
-              "NIT: preference. Author's call.",
+            heading: "What an AI pod actually is",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Five people or fewer — PM, design, engineering, and an embedded creator — given one product question and the autonomy to answer it end to end. The pod isn't structured by handoffs. It's structured by three modes the whole group runs together.",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    icon: "target",
+                    eyebrow: "Define",
+                    title: "Frame the question together",
+                    text: "The pod writes a one-page brief — problem, user, success signals — that everyone edits and signs off on. Not the PM's deliverable. Not the designer's. The pod's.",
+                  },
+                  {
+                    icon: "code",
+                    eyebrow: "Build",
+                    title: "Make it in the same room",
+                    text: "Every member writes code, including PM and design. Figma intent flows straight into Cursor or Claude Code, in the same repo. No translation tax.",
+                  },
+                  {
+                    icon: "loop",
+                    eyebrow: "Refine",
+                    title: "Run it against real use",
+                    text: "The embedded creator uses the build in close to real time. The pod edits the artifact and the brief in the same hour. Refinement is a mode, not a phase.",
+                  },
+                ],
+              },
+              {
+                kind: "paragraph",
+                text: "What holds the pod together isn't role definitions — it's shared ownership. Disciplines stay legible: engineers own architecture, designers own intent, the creator represents the user honestly. But no one waits on a handoff and no one is the lone author of any decision.",
+              },
+              {
+                kind: "pullquote",
+                text: "Define, build, refine — done together, in the same room, by the same five people.",
+              },
+              {
+                kind: "paragraph",
+                text: "Just outside the core pod is a **cross-functional support pod** — one named contact from each centralized function the product depends on (content, QE, brand, legal, accessibility). The [next chapter](/shipping-and-team/the-invisible-work) picks it up in detail.",
+              },
+              {
+                kind: "wink",
+                text: "The pod isn't a startup pretending to be inside a big company. It's a deliberate attempt to give a small team startup conditions — fast loops, high autonomy, shared ownership — while keeping the institutional scaffolding the company needs to ship.",
+              },
             ],
           },
           {
-            heading: "Own code you didn't type",
-            body: "If your name is on the PR, the code is yours — even when the PR is going to engineering for review and merge. Read every change before you push it. Run it. Test the unhappy paths. Ask the assistant to explain anything you don't understand, then verify the explanation. The shortcut to AI-assisted work you can stand behind is refusing to send anything into review that you can't explain.",
+            heading: "Why production-grade vibe coding needs the pod",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "A designer alone can ship a remarkable prototype in a week. The same designer can't ship a production feature in a month, no matter how good they are.",
+              },
+              {
+                kind: "paragraph",
+                text: "Production isn't a fidelity problem — it's a coordination problem. Billing, metering, rate limits, content policy, legal review, brand, QE, analytics, failure modes, i18n, scale. None of it is design work. All of it blocks shipping.",
+              },
+              {
+                kind: "compareFlow",
+                before: {
+                  label: "Solo designer trying to ship",
+                  steps: [
+                    "Beautiful prototype in a week",
+                    "Six months learning institutional context",
+                    "Stalls at billing, legal, brand, QE",
+                    "Ships a demo, or ships nothing",
+                  ],
+                },
+                after: {
+                  label: "Designer inside a pod",
+                  steps: [
+                    "Same prototype, same week",
+                    "Engineer and PM bring their disciplines' fluency",
+                    "Cross-functional partners already in the room",
+                    "Ships a production feature",
+                  ],
+                },
+              },
+              {
+                kind: "pullquote",
+                text: "Collaboration is the product now.",
+              },
+              {
+                kind: "paragraph",
+                text: "Collaboration used to be overhead — meetings and handoffs between designing and building. In a pod, collaboration *is* the work. Shared ownership gets the feature past the dozen places institutional friction lives.",
+              },
+              {
+                kind: "paragraph",
+                text: "The bottleneck in traditional org work was never execution — it was *translation*. Intent into frames into specs into tickets into code, then back into design QA. Every step lossy. The pod removes the translation: design isn't a precursor to build, it's a real-time input *into* build, often by the person two seats over.",
+              },
+            ],
+          },
+          {
+            heading: "Step 1 — initial alignment",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Before any tooling gets installed, the pod aligns on what it's building. This is the *one-pager* phase — a short document the pod produces together that establishes the problem space (not the solution), the user segments (even if rough), and the success signals (qualitative and directional, not just metrics). The one-pager is the smallest version of a PRD that does real work. Typically a single page in Notion or Figma, written in maybe an hour, edited by everyone.",
+              },
+              {
+                kind: "pullquote",
+                text: "The one-pager isn't the designer's deliverable, and it isn't the PM's. It's the pod's.",
+              },
+              {
+                kind: "paragraph",
+                text: "On the Image Frontier pod, we kept the one-pager in Obsidian — a flat markdown file the whole pod could edit, link out from, and feed straight into the model as context. One feature, one page. Sub-tools listed as rows. Each row carries the title, the behavior, and the notes that tell engineering and the model what's actually being built.",
+              },
+              {
+                kind: "figure",
+                image: {
+                  src: "/images/obsidian-feature-requirements.png",
+                  alt: "Obsidian note titled Feature Requirements showing a Brush Annotation feature broken into Brush (default) and Erase sub-tools, followed by a table with Feature, Title, and Notes columns describing sub-tool toggling and freehand drawing behavior on a canvas.",
+                },
+                eyebrow: "One-pager · Obsidian",
+                caption:
+                  "The whole brief in one markdown file: feature, sub-tools, behavior table. Edited by everyone, signed off by everyone, pasted into the model at the start of every session.",
+              },
+              {
+                kind: "paragraph",
+                text: "Every builder reads it, edits it, and signs off on it before any work starts. The fifteen minutes of alignment friction here saves days of misalignment later. If you've done the planning work from [Chapter 8](/working-with-ai/planning-and-exploring-options), this will feel familiar — same gesture, applied to the team rather than to a solo task.",
+              },
+            ],
+          },
+          {
+            heading: "Step 2 — the tooling stack",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Every builder in the pod runs the same stack. Standardizing this is part of what makes pod work fast — there's no per-person variation in how things are configured, and any builder can pick up any other builder's work mid-stream. The canonical stack, drawing on what the Image Frontier pod runs:",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    logo: { src: "/images/logo-figma.svg", alt: "Figma logo" },
+                    eyebrow: "Design",
+                    title: "Figma",
+                    text: "Used per usual, but with the discipline that the file is *input to the build*, not the deliverable. As little as one frame per feature, defining intent and core experience — not the dozens-to-hundreds of frames the old process required.",
+                  },
+                  {
+                    logo: { src: "/images/logo-cursor.svg", alt: "Cursor logo" },
+                    eyebrow: "Build",
+                    title: "Cursor or Claude Code",
+                    text: "Configured against the product repo. This is where most of the day-to-day work happens. Same tools the engineer uses, with the same access.",
+                  },
+                  {
+                    logo: { src: "/images/logo-github.svg", alt: "GitHub logo" },
+                    eyebrow: "Push and commits",
+                    title: "GitHub or Protopack",
+                    text: "GitHub for production work; Protopack as a faster on-ramp if the work is still in the prototype phase. The branch-and-PR loop from [Chapter 4](/setup-and-tooling/setting-up-your-environment) applies.",
+                  },
+                  {
+                    logo: { src: "/images/logo-notion.svg", alt: "Notion logo" },
+                    eyebrow: "Tracking",
+                    title: "Notion, kept minimal",
+                    text: "The temptation to over-document is high; resist it. The pod's velocity comes from documenting only what actually has to be tracked.",
+                  },
+                  {
+                    logo: { src: "/images/logo-slack.svg", alt: "Slack logo" },
+                    eyebrow: "Async updates",
+                    title: "Slack",
+                    text: "The pod's working channel is where real-time collaboration happens between sync sessions. Threads beat DMs. Decisions get pinned.",
+                  },
+                  {
+                    icon: "check",
+                    eyebrow: "Decision log",
+                    title: "Figma or Notion",
+                    text: "Same place as the design work. Decisions get captured at the moment they're made, not reconstructed at the end of the project.",
+                  },
+                  {
+                    logo: {
+                      src: "/images/logo-quicktime.svg",
+                      alt: "QuickTime logo",
+                    },
+                    eyebrow: "Video recording",
+                    title: "QuickTime, CapCut",
+                    text: "Or any screen recorder. Flow videos for QE, stakeholder review, and documenting what the build actually does. [Chapter 9](/working-with-ai/documenting-design-and-handing-it-off) handoff content, applied at pod scale.",
+                  },
+                  {
+                    logo: {
+                      src: "/images/logo-obsidian.svg",
+                      alt: "Obsidian logo",
+                    },
+                    eyebrow: "Notes",
+                    title: "Obsidian or local",
+                    text: "Any local note app. The point isn't the specific tool; it's that the designer has a place to capture observations, prompts that worked, and reference material to come back to.",
+                  },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "Every tool earns its place by reducing friction, not by adding ceremony. If a tool exists in the stack but you don't know what it's actively reducing friction *on*, that's a tool to drop.",
+              },
+            ],
+          },
+          {
+            heading: "Step 3 — set up Cursor or Claude Code",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "This is the most concrete setup step and the one most likely to trip up designers new to pod work. Three substeps:",
+              },
+              {
+                kind: "steps",
+                items: [
+                  {
+                    title: "Clone the product repo",
+                    text: "For Firefly Platform work, this means cloning `github.com/Adobe-Firefly/firefly-platform` (or whichever repo your pod is working in). The engineer in the pod will help you get access and set up local credentials if you don't have them.",
+                  },
+                  {
+                    title: "Follow the repo's `guidelines.md`",
+                    text: "Most Adobe product repos include a `guidelines.md` (or equivalent — sometimes `CLAUDE.md`, `AGENTS.md`, or `CONTRIBUTING.md`) that documents the architecture, conventions, and how to set up your dev environment. Read it. The model uses it; you should too.",
+                  },
+                  {
+                    title: "Verify the dev environment runs",
+                    text: "Before you start building, you should be able to run the product locally on your machine, hit a localhost URL, and see the actual product. If you can't, stop and fix this. Trying to build features against a dev environment that doesn't run is the most common source of wasted hours in pod onboarding.",
+                  },
+                ],
+              },
+              {
+                kind: "figure",
+                image: {
+                  src: "/images/cursor-firefly-platform-setup.png",
+                  alt: "Cursor IDE with the firefly-platform repo open. The chat panel sits on the left with claude-4.6-opus selected, the Firefly Image Editor runs at localhost:3001 in the middle pane showing a Drag and drop your images empty state, and the file tree on the right is expanded into src/applications/image-editor with docs/guidelines.md highlighted.",
+                },
+                eyebrow: "Cursor · firefly-platform",
+                caption:
+                  "What set up actually looks like: the product repo cloned, the localhost build running, the chapter's `guidelines.md` open in the side panel — all in one window so the model and the human read the same thing.",
+              },
+              {
+                kind: "wink",
+                text: "The engineer in the pod is your collaborator for any of this that doesn't work. Don't spend two hours debugging a setup issue you could have asked about in two minutes.",
+              },
+            ],
+          },
+          {
+            heading: "Step 4 — get into the design ↔ build rhythm",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Once you're set up, the actual work follows a three-step loop that repeats per feature. The discipline that holds it together: *small, frequent commits over large, infrequent ones*.",
+              },
+              {
+                kind: "flow",
+                label: "The inner loop, per feature",
+                steps: [
+                  {
+                    title: "Design",
+                    meta: "Use Figma to create the *key* screens — not every state. Define intent and core experience. The smallest amount of Figma work that'll let the model build something accurate. Once the frame is ready, copy the MCP link to bring it into Cursor or Claude Code.",
+                    image: {
+                      src: "/images/loop-design-figma-explorations.png",
+                      alt: "Figma file with four labeled rows — Annotation_Text, Annotation_Brush, Bounding box, and Image — each row a strip of related screens of the Firefly Image Editor showing the same scene with different annotation tool variations.",
+                    },
+                  },
+                  {
+                    title: "Build",
+                    meta: "Pull latest from main. Branch (`<feature-name>/main`). Implement one isolated piece at a time. Test interactions and edge cases as you go. Make small commits — not one giant commit at the end. When the feature is reviewable, push and open a PR.",
+                    image: {
+                      src: "/images/loop-review-branches.png",
+                      alt: "Git branch picker in Cursor showing several iterative branches — annotationpf-fix-v1, precision-flux-v3, precision-flux-v2, new-annotation-tool-bar-v3, precision-flux-v1, new-annotation-tool-bar-v2 — each with a short commit description and the author handle peitongc_adobe.",
+                    },
+                  },
+                  {
+                    title: "Code review and update",
+                    meta: "Engineering reviews before merge. Feedback comes back. Pull latest, branch again for the new round, address feedback, repeat. Cycle continues until the feature is complete and merged.",
+                    image: {
+                      src: "/images/loop-build-cursor-figma.png",
+                      alt: "Cursor with a Selection submenu chat open. A prompt asks the model to add an object/subject/background/sky picker and pastes a Figma node URL. Below, the model has used the figma-implement-design skill, fetched the screenshot, and started building. The localhost Firefly Image Editor preview is open in the right pane.",
+                    },
+                  },
+                ],
+              },
+              {
+                kind: "pullquote",
+                text: "Small commits keep the model's context fresh. A feature built across forty small commits is a feature whose decisions are legible to the next person — and to the model itself in the next session.",
+              },
+            ],
+          },
+          {
+            heading: "Step 5 — the wider pod rhythm",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The design ↔ build loop sits inside a larger rhythm that the pod runs collectively, across the duration of a feature. The shape, drawing from the Frontier team process:",
+              },
+              {
+                kind: "podRhythm",
+                hint: "Click a phase. The matching column of the workflow lights up; the panel below describes what happens there.",
+                image: {
+                  src: "/images/pod-rhythm-workflow.png",
+                  alt: "End-to-end pod workflow diagram across eight columns: Plan, Set up, Design and feedback and iterate, Code review, Quality evaluation, Prep for shipping, Shipping, Retro and learn. The bottom rail color-codes the branches into feature-name/main, main and release/corp, and external.",
+                },
+                steps: [
+                  {
+                    key: "plan",
+                    eyebrow: "Phase 01",
+                    label: "Plan",
+                    title: "Produce the feature brief together",
+                    body: "Cross-functional alignment on problem and goals. The pod sits in the problem space and writes the one-pager that everyone edits and signs off on.",
+                    region: { x: 0.5, y: 2, width: 10.5, height: 96 },
+                  },
+                  {
+                    key: "setup",
+                    eyebrow: "Phase 02",
+                    label: "Set up",
+                    title: "Spin up environments, capture guidelines",
+                    body: "Service and client dev environments running. Architectural guidelines captured as `guidelines.md`. Cross-functional partners looped in early so they're not surprised at the end.",
+                    region: { x: 10.5, y: 2, width: 11.5, height: 96 },
+                  },
+                  {
+                    key: "design",
+                    eyebrow: "Phase 03",
+                    label: "Design + iterate",
+                    title: "The inner loop, on repeat",
+                    body: "Figma frames define intent. Cursor or Claude Code translates intent into working code. Creators test in real usage and feedback comes back the same week — not a separate phase.",
+                    region: { x: 20.5, y: 2, width: 27.5, height: 96 },
+                  },
+                  {
+                    key: "review",
+                    eyebrow: "Phase 04",
+                    label: "Code review",
+                    title: "Engineering reviews, captures issues",
+                    body: "Client review and merging. Unit-test coverage, architectural compliance, analytics, accessibility. The PRD and design documentation that QE will work from gets written here.",
+                    region: { x: 48.5, y: 2, width: 12, height: 96 },
+                  },
+                  {
+                    key: "qe",
+                    eyebrow: "Phase 05",
+                    label: "Quality evaluation",
+                    title: "QE stabilizes and scales",
+                    body: "QE identifies and fixes major blockers, validates the build against documented behavior, and stress-tests the feature against the constraints prototype mode never surfaced.",
+                    region: { x: 59.5, y: 2, width: 13, height: 96 },
+                  },
+                  {
+                    key: "prep",
+                    eyebrow: "Phase 06",
+                    label: "Prep for shipping",
+                    title: "The centralized service layer earns its keep",
+                    body: "Brand, marketing, legal, BMS, BKS — the cross-functional support pod runs its review work in parallel. The build pod's velocity here depends entirely on having those contacts already in the conversation.",
+                    region: { x: 71.5, y: 2, width: 9.5, height: 96 },
+                  },
+                  {
+                    key: "ship",
+                    eyebrow: "Phase 07",
+                    label: "Shipping",
+                    title: "Feature ships externally",
+                    body: "Value reaches users. The branch graduates from `feature-name/main` through `main` and `release/corp` and into `external`.",
+                    region: { x: 84, y: 2, width: 6.5, height: 96 },
+                  },
+                  {
+                    key: "retro",
+                    eyebrow: "Phase 08",
+                    label: "Retro and learn",
+                    title: "Capture what worked, what didn't",
+                    body: "The pod meets, names what compounded, names what slowed them down, identifies the one or two things to change next time. Part of the process — not the thing you skip when the timeline gets tight.",
+                    region: { x: 93, y: 2, width: 6.5, height: 96 },
+                  },
+                ],
+                caption:
+                  "Each phase has a different rhythm. The design-and-iterate column is the most intense for designers; the review and QE columns are where engineering and QE do their heaviest work. The phases overlap — they're not strictly sequential. Reading where the pod is in the cycle is part of what makes a designer effective inside one.",
+              },
+            ],
+          },
+          {
+            heading: "What this chapter has been arguing",
+            blocks: [
+              {
+                kind: "pullquote",
+                text: "The pod is the structural unit of production-grade vibe coding.",
+              },
+              {
+                kind: "paragraph",
+                text: "A small cross-functional pod, with a wider support pod adjacent. Shared ownership replaces handoffs. Real-time collaboration replaces translation. The designer ships code alongside the engineer and the PM, on the same loop, against the same repo.",
+              },
+              {
+                kind: "paragraph",
+                text: "The setup for a designer is mechanical and learnable: align on a one-pager, install the tooling stack, configure Cursor against the product repo, get into the design ↔ build loop, then work inside the wider rhythm of plan / set up / design / code review / quality / ship / retro. None of these steps requires permission. Each of them, done in order, is what turns a solo vibe-coder into a builder inside a pod.",
+              },
+              {
+                kind: "paragraph",
+                text: "What the pod looks like once it's running — what each builder contributes that no one else can, how quality holds up when designers are writing code, and what's hard about working this way — is the next chapter. The Image Frontier pod is the worked example.",
+              },
+              {
+                kind: "wink",
+                text: "[Chapter 14](/shipping-and-team/image-frontier-pod) walks through the pod itself: two weeks, two features, five people, and the texture behind every step in this chapter. Read it slowly — the moments are easier to remember than the principles.",
+              },
+            ],
           },
         ],
       },
       {
-        id: "working-as-a-team",
-        number: 15,
-        title: "Working as a team",
+        id: "image-frontier-pod",
+        number: 14,
+        title: "The Image Frontier pod",
         summary:
-          "The AI pod rhythm, the design-build-review loop from the IFT playbook, cross-functional coordination, and automating the repetitive parts of your own process.",
-        readTime: "3 min",
+          "A two-week, five-person pod that shipped two new image-editing features for Adobe Firefly. The cleanest worked example of pod work at Adobe so far, and the texture behind every principle in the previous chapter.",
+        readTime: "11 min",
         sections: [
           {
-            heading: "The AI pod rhythm",
-            body: "AI-assisted teams move differently than the ones that came before them. The unit of work is smaller, the loops are tighter, and review happens in hours instead of days. A pod of one designer, one engineer, and one PM, all using the same tools, ships work faster than a much larger team using one tool each.",
-          },
-          {
-            heading: "The design, build, review loop",
-            body: "Borrowed from the IFT playbook and refined in practice: every change runs through a short, named loop. The loop has three stages, each with a clear owner and a clear artifact, so nothing falls through the cracks.",
-            bullets: [
-              "Design: a brief, a frame, or a plan. Owned by design, reviewed by engineering and PM.",
-              "Build: a working change, behind a flag if needed. Owned by whoever is in the editor.",
-              "Review: a structured pass against the original brief. Owned by the team, surfaced in writing.",
+            heading: "Why this pod is worth studying",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The previous chapter described the structure: pod, support pod, design ↔ build loop, the wider rhythm. This chapter is the one pod that ran that structure end to end, in a tractable timeframe, on a real product surface. Two weeks. Five people. Two features that shipped to users. The reason to read it slowly is that almost every principle in [Chapter 13](/shipping-and-team/working-inside-an-ai-pod) has a corresponding moment in this pod's two weeks — and the moments are easier to remember than the principles.",
+              },
             ],
           },
           {
-            heading: "Cross-functional coordination",
-            body: "AI does not change the need for content, engineering, and PM to be in the room. It changes what they do there. Content shapes voice and edits generated copy. Engineering reviews architecture and risk, not syntax. PM keeps the work tied to the customer problem. When everyone uses the same tools, the meetings get shorter and the artifacts get sharper.",
-          },
-          {
-            heading: "Bug bashes and decision logs",
-            body: "Two team practices that work especially well in AI-assisted projects. They are cheap to start and surprisingly hard to sustain, so name an owner for each.",
-            bullets: [
-              "Bug bash: a scheduled hour where the team uses the prototype as adversarial users.",
-              "Decision log: a running record of choices made and rejected, so future-you remembers why.",
+            heading: "The Image Frontier pod, as a worked example",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The Image Frontier team at Adobe ran a two-week experiment that's worth knowing about in detail because it's the cleanest demonstration of pod work at Adobe so far.",
+              },
+              {
+                kind: "stats",
+                items: [
+                  {
+                    value: "5",
+                    label: "People",
+                    meta: "One PM, one designer, one engineer, plus creators sitting alongside the build.",
+                  },
+                  {
+                    value: "2",
+                    label: "Weeks",
+                    meta: "End to end, from kickoff to features ready for production launch.",
+                  },
+                  {
+                    value: "2",
+                    label: "Features",
+                    meta: "Markup and Precision Flow — two new image editing capabilities for Adobe Firefly.",
+                  },
+                  {
+                    value: "1",
+                    label: "Goal",
+                    meta: "Ship something users would actually use.",
+                  },
+                ],
+              },
+              {
+                kind: "figureGrid",
+                columns: 2,
+                framed: true,
+                items: [
+                  {
+                    eyebrow: "Feature 01 · Precision Flow",
+                    caption:
+                      "Generate, then refine a specific region with a precise selection tool. The model edits only that region; the rest of the image is left untouched.",
+                    video: {
+                      src: "/videos/precision-flow.mp4",
+                      alt: "Screen recording of Precision Flow inside Adobe Firefly. The user generates an image, then selects a specific region and refines just that area while the rest of the image stays untouched.",
+                    },
+                  },
+                  {
+                    eyebrow: "Feature 02 · Markup",
+                    caption:
+                      "Sketch and annotate directly on the generated image to direct the next round of edits. The model interprets the drawn marks and the written instructions together.",
+                    video: {
+                      src: "/videos/markup.mp4",
+                      alt: "Screen recording of the Markup feature inside Adobe Firefly. The user draws and writes annotations over the generated image to direct the next round of edits.",
+                    },
+                  },
+                ],
+                caption:
+                  "The two features the pod shipped in the same two-week loop. Both prototyped in Figma, built in Cursor against the firefly-platform repo, and tested with creators in real time.",
+              },
+              {
+                kind: "paragraph",
+                text: "What they did differently from a traditional design org workflow:",
+              },
+              {
+                kind: "checklist",
+                items: [
+                  {
+                    positive: true,
+                    title: "Started with Figma frames, not Figma specs",
+                    text: "Enough Figma to define intent and core experience — sometimes as little as one frame per feature — rather than the dozens of frames a traditional spec process requires. The Figma file went from canonical design document to reference that fed directly into the build.",
+                  },
+                  {
+                    positive: true,
+                    title: "The designer built",
+                    text: "Once the Figma reference was in place, the designer used Cursor and Claude Code to translate the design into working code, in a feature branch off main. The engineer reviewed the code; the designer wasn't replacing the engineer, but was producing PR-ready code that could be reviewed rather than implemented from scratch.",
+                  },
+                  {
+                    positive: true,
+                    title: "The creators tested in real time",
+                    text: "Filmmakers from the GenFilm Lab used the in-progress build and gave feedback in Slack — sometimes within hours of a new capability being added. The feedback didn't have to wait for a usability study; it was happening as the build progressed. Some pushed back on assumptions the team had made. Some confirmed directions. All of it shortened the feedback loop dramatically.",
+                  },
+                  {
+                    positive: true,
+                    title: "Cross-functional partners were already in the conversation",
+                    text: "Brand, content, legal, accessibility — none of these arrived at the end. They were threaded through the two weeks via the support pod model.",
+                  },
+                ],
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "spark",
+                title: "What it produced",
+                text: "Two features ready for production launch, in two weeks, with the level of polish and cross-functional sign-off that traditional org work would have taken months to assemble. The features shipped externally not long after, alongside an Adobe blog post titled — fittingly — [New image editing features in Adobe Firefly get you from 'almost there' to 'exactly right'](https://blog.adobe.com/en/publish/2026/04/09/new-image-editing-features-adobe-firefly-get-you-from-almost-there-to-exactly-right). The headline could have been a description of vibe coding itself.",
+                image: {
+                  src: "/images/firefly-blog-post.png",
+                  alt: "Adobe Blog post titled 'New image editing features in Adobe Firefly get you from almost there to exactly right' by Mike Polner, dated 04-09-2026. The hero shows a fan of seven image variations of a cyclist, transitioning from a bright green grass field on the left to a snowy white scene on the right, with a 'Snow' slider underneath.",
+                  caption:
+                    "The launch announcement on the Adobe Blog, two weeks after the pod started.",
+                },
+              },
+              {
+                kind: "paragraph",
+                text: "What it taught the team:",
+              },
+              {
+                kind: "cards",
+                columns: 2,
+                items: [
+                  {
+                    icon: "bolt",
+                    eyebrow: "Lesson 01",
+                    title: "Shared ownership scales speed",
+                    text: "The pod didn't go fast because individual people worked harder; they went fast because every builder was contributing to every decision, in real time, without translation overhead.",
+                  },
+                  {
+                    icon: "compass",
+                    eyebrow: "Lesson 02",
+                    title: "Less documentation, more observation",
+                    text: "The pod produced fewer artifacts than a traditional team would have, but the artifacts they did produce were higher-leverage — closer to the build, more current, easier to act on.",
+                  },
+                  {
+                    icon: "loop",
+                    eyebrow: "Lesson 03",
+                    title: "Design becomes real-time input into production",
+                    text: "Design wasn't a precursor anymore. It was happening alongside build, sometimes in the same person, sometimes minute-to-minute between teammates.",
+                  },
+                  {
+                    icon: "spark",
+                    eyebrow: "Lesson 04",
+                    title: "The Creator role earns its keep",
+                    text: "The feedback the team got from filmmakers using the in-progress build shaped the features in ways that wouldn't have surfaced from internal-only review. Some of the most consequential decisions — what controls to expose, what defaults to set, what to hide — came from creator feedback.",
+                  },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "Image Frontier isn't the only pod that's run at Adobe and won't be the last. But it's the worked example most worth studying, because it ran short enough to be tractable, with enough cross-functional partners to be realistic, on a real product feature that real users now use.",
+              },
             ],
           },
           {
-            heading: "Automate the repetitive parts of your own process",
-            body: "The meta-skill of AI-assisted design is noticing the work you do over and over and turning it into a prompt, a skill, or a rule. The first time you write a release note by hand, fine. The third time, write a skill that drafts it. Designers who treat their own process as a system improve faster than the ones who treat every project as new.",
+            heading: "What a designer contributes that no one else can",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The temptation in a pod that blurs role boundaries is to think your specific skill matters less. The opposite is true. The pod *needs* deeper specialization, not shallower, because there's no longer a separate handoff phase where your discipline's expertise gets injected into the work. The expertise has to be present continuously, and yours has to be sharp enough to apply on the fly.",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                variant: "compact",
+                items: [
+                  {
+                    eyebrow: "01",
+                    title: "Intent",
+                    text: "What this feature is *for*, from the user's perspective, in the user's vocabulary. Designers are the people who ask *what's the actual experience we're trying to create* and refuse to let the answer drift toward *whatever's easiest to build*.",
+                    image: {
+                      src: "/images/contribution-intent.png",
+                      alt: "Multifaceted iridescent crystal on a dark background — refracted facets reading as the many angles a single piece of intent can be seen from.",
+                    },
+                  },
+                  {
+                    eyebrow: "02",
+                    title: "Behavior",
+                    text: "The interaction model. How states transition, what happens when, what affordances exist for what actions. Engineers can implement behaviors; designers decide which behaviors are right.",
+                    image: {
+                      src: "/images/contribution-behavior.png",
+                      alt: "Looping iridescent ribbons braided through space — the choreography of state transitions and motion.",
+                    },
+                  },
+                  {
+                    eyebrow: "03",
+                    title: "Visual design",
+                    text: "Spacing, typography, color, hierarchy. The [Chapter 11](/the-craft/visual-design-fidelity) content. Nobody else in the pod is going to catch the spacing rhythm being off.",
+                    image: {
+                      src: "/images/contribution-visual.png",
+                      alt: "Vertical iridescent strands resolving into a tight grid — typographic rhythm, baseline grids, and visual hierarchy.",
+                    },
+                  },
+                  {
+                    eyebrow: "04",
+                    title: "Surprise and delight",
+                    text: "The small, considered moments that make a feature feel like someone *designed* it rather than someone *built* it. Engineers won't add these. PMs won't ask for them. The model won't propose them. If they're going to be in the feature, the designer puts them there.",
+                    image: {
+                      src: "/images/contribution-delight.png",
+                      alt: "An iridescent particle burst radiating from a single point — the small considered moment that lights up an otherwise functional feature.",
+                    },
+                  },
+                  {
+                    eyebrow: "05",
+                    title: "Constraints",
+                    text: "The non-negotiables — design system rules, the accessibility floor, the brand voice. The designer is the team member whose job it is to know what's not negotiable and to push back when the build drifts.",
+                    image: {
+                      src: "/images/contribution-constraints.png",
+                      alt: "An iridescent woven crosshatch — interlocking lines suggesting a frame, a grid, the rules a system holds work to.",
+                    },
+                  },
+                  {
+                    eyebrow: "06",
+                    title: "Accessibility",
+                    text: "From [Chapter 12](/the-craft/accessibility-as-a-prompt-time-concern), the prompt-time work and the partnership work. In a pod, accessibility lands with whoever has the most fluency in it — and that's usually the designer.",
+                    image: {
+                      src: "/images/contribution-accessibility.png",
+                      alt: "Close-up of curved iridescent bands sweeping across a dark field — wide, generous arcs that read as inclusion and reach.",
+                    },
+                  },
+                ],
+              },
+              {
+                kind: "paragraph",
+                text: "The corollary is also worth saying. The things you *don't* exclusively own in a pod — even though you contribute to all of them — include the architectural decisions, the API choices, the data model, the deployment strategy, the metering integration. These are still primarily the engineer's domain, even though you may write code that touches them.",
+              },
+              {
+                kind: "pullquote",
+                text: "The skill is in knowing which decisions are yours to lead and which are yours to inform.",
+              },
+              {
+                kind: "paragraph",
+                text: "The pod runs better when each builder owns the parts of the work where their expertise is highest, even as everyone contributes to everything.",
+              },
+            ],
+          },
+          {
+            heading: "Quality and accountability inside the pod",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "There's a question this chapter has been deferring: how does code quality stay high when designers are writing some of it?",
+              },
+              {
+                kind: "paragraph",
+                text: "The traditional answer was that it doesn't, which is why designers shouldn't write production code. The pod model has a different answer: quality is enforced by the team rhythm, not by individual willpower.",
+              },
+              {
+                kind: "checklist",
+                items: [
+                  {
+                    positive: true,
+                    title: "Engineering code review before merge",
+                    text: "Every PR — including the ones from the designer — goes through engineering review before it merges to main. The reviewer checks for unit test coverage, architectural compliance, analytics, accessibility, and the rest. Non-negotiable. The designer isn't exempt from the standards the engineer holds themselves to; the review enforces this.",
+                  },
+                  {
+                    positive: true,
+                    title: "Small commits, frequent reviews",
+                    text: "Reviewing forty small commits is much less risky than reviewing one giant one — each commit can be evaluated in isolation and reverted if needed. The designer who gets in the habit of committing small often produces higher-quality code than they would solo, because the feedback loop is tight enough to catch drift early.",
+                  },
+                  {
+                    positive: true,
+                    title: "Design bug bashes",
+                    text: "Mid-feature, the pod runs a one-to-two-hour session where the team hammers on the in-progress build looking for issues. Bugs get filed, prioritized, fixed in the same session or the next day. The team-scale version of the QA habit [Chapter 9](/working-with-ai/documenting-design-and-handing-it-off) covered for individual handoffs.",
+                  },
+                  {
+                    positive: true,
+                    title: "BLOCKER / MAJOR / MINOR / NIT severity",
+                    text: "Adopted from engineering review practice. Every issue raised gets a severity tag: *blocker* (must fix before merge), *major* (should fix before merge if at all possible), *minor* (fix soon, can be deferred), *nit* (preference-level, fix if convenient). The model keeps the pod from getting stuck on cosmetics while shipping features with real bugs in them.",
+                  },
+                  {
+                    positive: true,
+                    title: "Git as the version history",
+                    text: "Every change is a commit; every commit has a message; every PR has a description; every merge is a recorded event. The designer who learns to use git well — even at a basic level — has access to a kind of accountability and recoverability that isn't possible in Figma. Mistakes can be reverted. Decisions are dated. The history is real.",
+                  },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "Designers tend to rate their own preferences as *major* when they're actually *nit*. The discipline of using the severity model honestly is part of what makes pod review work.",
+              },
+              {
+                kind: "severitySort",
+                hint: "You're the reviewer on a feature shipping next week. Tag each issue, then reveal how the engineering rev would have called it.",
+                revealLabel: "Reveal calibration",
+                resetLabel: "Try again",
+                issues: [
+                  {
+                    id: "double-submit",
+                    text: "Submitting the form twice creates duplicate records on the server.",
+                    context: "Repro: click *Save* twice in under a second. No idempotency key on the request.",
+                    correct: "blocker",
+                    reasoning:
+                      "Data integrity. If this ships, support tickets follow and someone has to write a cleanup script. Hold the merge until the request is idempotent.",
+                  },
+                  {
+                    id: "modal-clipped",
+                    text: "On 320 px-wide phones, the modal close button is clipped — the user can't dismiss the modal without reloading.",
+                    context: "Affects roughly 4 percent of mobile sessions.",
+                    correct: "major",
+                    reasoning:
+                      "Real users on real devices can't escape a modal. *Major*, not *blocker*, only because the modal isn't on the critical revenue path. Engineering rev will push to fix in this PR if at all possible.",
+                  },
+                  {
+                    id: "contrast",
+                    text: "The disclaimer below the consent checkbox fails WCAG AA contrast — required legal copy for low-vision users.",
+                    context: "Reads grey-on-grey at 3.8:1; spec calls for 4.5:1.",
+                    correct: "major",
+                    reasoning:
+                      "Accessibility on legally required copy is closer to *blocker* in some orgs. *Major* is the safe call here: the rev will hold the merge unless the next PR is queued and the fix lands the same day.",
+                  },
+                  {
+                    id: "toast-direction",
+                    text: "The success toast slides in from the right. The design specced it sliding down from the top.",
+                    correct: "minor",
+                    reasoning:
+                      "Wrong, but the user still sees the confirmation and the flow still completes. *Minor* — fix in the next pass; don't hold the merge for it.",
+                  },
+                  {
+                    id: "easing",
+                    text: "Hover easing on the secondary nav feels slightly snappier than the curve in Figma.",
+                    correct: "nit",
+                    reasoning:
+                      "You'll notice it. Users won't. *Nit* — note it, fix when you're already in the file, don't open a ticket.",
+                  },
+                ],
+                diagnoses: {
+                  perfect:
+                    "Calibrated. You'd run a clean rev — issues land at the severity the engineer next to you would have picked, which is exactly what makes pod review work.",
+                  overRated:
+                    "You're rating up. A handful of *nits* and *minors* got marked higher than the engineer would call them. This is the bias the wink above is naming — most designers do it for a few months, then settle.",
+                  underRated:
+                    "You're rating down. A few real issues got tagged *minor* or *nit* — the kind engineering rev would push back up before merge. Worth re-reading the four levels: *blocker* and *major* both have a real-user consequence; the model only works when you use them honestly.",
+                  balanced:
+                    "Mixed: some calls came in high, some came in low. That's normal early — the calibration tightens once you've sat through a few rounds of engineering rev and seen which kinds of issues actually hold a merge.",
+                },
+                caption:
+                  "Severity isn't a feeling about the bug. It's a question about the consequence: does this block the merge, hold it under protest, fix-soon, or fix-when-you're-already-in-the-file? The model only does its job if the people using it agree on what each tier means.",
+              },
+              {
+                kind: "pullquote",
+                text: "Quality isn't depending on individual discipline. It's depending on the team rhythm, which is a stronger system.",
+              },
+            ],
+          },
+          {
+            heading: "What's hard about this",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "It's worth being honest about the costs, because pod work isn't unambiguously better than the work it replaces. Several things are real.",
+              },
+              {
+                kind: "cards",
+                columns: 2,
+                items: [
+                  {
+                    icon: "gauge",
+                    eyebrow: "Cost 01",
+                    title: "The pace creates anxiety",
+                    text: "Two-week features sound exhilarating until you're inside the second week of one and the thing isn't done. The pressure to ship fast is real, and the absence of comfortable scaffolding (long timelines with their own paces) can feel like the work is being done on the edge of falling apart. Some weeks, it is. The discipline is in distinguishing between productive intensity and unsustainable intensity that's about to break the team.",
+                  },
+                  {
+                    icon: "loop",
+                    eyebrow: "Cost 02",
+                    title: "One-off vs pattern is hard to read",
+                    text: "When you're shipping fast across multiple features, every feature has its own learnings, and not all of them generalize. Erring toward *this is a one-off* produces inconsistency. Erring toward *this is a pattern* produces premature systemization that calcifies the wrong way of working. Telling them apart is hard, and getting it wrong in either direction is costly.",
+                  },
+                  {
+                    icon: "compass",
+                    eyebrow: "Cost 03",
+                    title: "The high-altitude view gets harder",
+                    text: "When you're heads-down on a feature for two weeks, the question of *whether this is the right feature to be working on at all* is easy to lose sight of. The pod model trades long-term strategic thinking for short-term execution power. Some teams handle this with deliberate altitude breaks — a weekly hour of *is what we're building still the right thing* reflection. Some teams don't, and pay for it.",
+                  },
+                  {
+                    icon: "x",
+                    eyebrow: "Cost 04",
+                    title: "Not every designer wants this",
+                    text: "The pod model asks designers to spend significant time inside code, alongside engineers, with less time for the open-ended visual exploration that drew many designers to the field. Some find this energizing. Some find it depleting. Both reactions are valid. If the work is grinding you down rather than energizing you, that's information worth taking seriously, not pushing through.",
+                  },
+                ],
+              },
+              {
+                kind: "paragraph",
+                text: "These costs don't invalidate the pod model. They mean it's a real choice with real trade-offs, not a free upgrade. The teams that do pod work well are the teams that name the costs honestly and design the practice to mitigate them, rather than pretending they don't exist.",
+              },
+            ],
+          },
+          {
+            heading: "What to take into the next chapter",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The pod shipped because the work the rest of the org did around it was already in motion — content, brand, legal, accessibility, monetization, the analytics layer. None of that shows up in the two-week story above, because none of it had to be negotiated mid-flight. The next chapter is about that second team: the cross-functional partnerships that determine whether a pod's work actually reaches users.",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: "the-invisible-work",
+        number: 15,
+        title: "The invisible work",
+        summary:
+          "The cross-functional partnerships that don't show up in the build but determine whether it ships: technology research, content, QE, marketing, brand, legal, monetization, and accessibility. The cross-functional support pod — one named person from each function, in conversation with the pod — as the structural answer to centralized-services drag.",
+        readTime: "12 min",
+        sections: [
+          {
+            heading: "What you don't see on the burndown",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "[Chapter 13](/shipping-and-team/working-inside-an-ai-pod) was about the pod — the five people who actually build the thing — and [Chapter 14](/shipping-and-team/image-frontier-pod) walked through the Image Frontier pod as the lived example. This chapter is about the second team that has to exist, half-visibly, around the pod. The work the second team does doesn't show up on the pod's burndown. It shows up in whether the feature ships at all.",
+              },
+              {
+                kind: "paragraph",
+                text: "Most pods that fail in the last mile fail here. The build is done. The Figma is matched. The PRs are merged. And then the feature sits for six weeks because nobody talked to brand about the announcement copy, because legal hadn't seen the prompt template, because marketing didn't know it was happening, because the metering integration was assumed and not confirmed. The pod did its work. The work *around* the pod didn't get done.",
+              },
+              {
+                kind: "pullquote",
+                text: "The pod ships the build. The work around the pod ships the feature.",
+              },
+              {
+                kind: "paragraph",
+                text: "There are two structural things to learn about this work. The first is what it actually is — the eight functions every Adobe product touches on the way to production, and what each of them does that doesn't fit inside the pod. The second is how to engage with it without getting buried by it: the cross-functional support pod, which is the structural answer to the drag that centralized services produce when you talk to them through a queue.",
+              },
+            ],
+          },
+          {
+            heading: "The eight invisible partners",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Eight functions sit between a working build and a shipped feature. One of them — technology research — sits *upstream* of the build, providing the model capability the feature is made of. The other seven sit *alongside and downstream*, shaping or receiving what the pod produces. Each has a one-line story you can tell from inside the pod — the visible part — and a much larger story about what they actually do, which doesn't make it onto any pod artifact. Click any of them to see the part you don't see.",
+              },
+              {
+                kind: "invisibleStack",
+                hint: "Click any function to surface the work that doesn't show up on the pod burndown.",
+                items: [
+                  {
+                    eyebrow: "Research",
+                    title: "Technology research",
+                    visible: "Hands off the model.",
+                    invisible:
+                      "Develops the model capability the feature depends on, often before the pod knows it needs it. Maintains the evaluation suite that says what the model is actually good at, where it fails, and which prompt patterns survive the next training run. Owns the capability roadmap — what's shipping next quarter, what's still a research demo that won't generalize, what's blocked. Knows which of the failure modes you're seeing in your prototype are bugs and which are fundamental. The closest thing Adobe has to authoritative documentation on what an AI feature can and can't do, and most of it lives in their heads.",
+                    blocks:
+                      "Without research in early, the pod designs around a capability that doesn't exist yet, or builds on behavior the current model exhibits but the next version won't. The fix is a redesign mid-build, after the next model drops and the old prompts stop working.",
+                  },
+                  {
+                    eyebrow: "Content",
+                    title: "Content strategy",
+                    visible: "Owns the words.",
+                    invisible:
+                      "Owns voice across surfaces — the running argument that this product is one product, not seventeen. Audits the prompts the model emits, the empty states, the error copy, the tooltips that read fine in isolation and contradict each other in aggregate. Maintains the in-product word list that engineering and legal both reference. Translates the brand voice into the verbs and nouns the product actually uses.",
+                    blocks:
+                      "Without content in early, the feature ships in seven dialects of itself. Empty states that announce a different product than the tooltips. AI-generated microcopy that drifts from the rest of the surface. The fix lands later, costs more, and arrives after users have already formed an impression.",
+                  },
+                  {
+                    eyebrow: "QE",
+                    title: "Quality engineering",
+                    visible: "Files bugs.",
+                    invisible:
+                      "Designs the test plan that proves the feature works at scale, on the devices and in the locales the pod doesn't have. Runs the assistive-technology pass the pod's three laptops can't fake. Stress-tests the prompts that fail in production but pass in the demo. Builds the regression suite that catches the next version's accidents. Owns the *known issues* document that decides what ships now and what gets a fast-follow.",
+                    blocks:
+                      "Without QE in early, you ship to a real device matrix and discover the model returns malformed JSON 3% of the time on Android. The fix is real engineering work, and it lands during the launch week, not before it.",
+                  },
+                  {
+                    eyebrow: "Marketing",
+                    title: "Marketing",
+                    visible: "Writes the launch post.",
+                    invisible:
+                      "Builds the story the feature lives inside — what audience it's for, what need it claims, how it sits next to the rest of the product line. Plans the announcement, the docs, the in-product activation, the follow-up beats. Coordinates with PR if the feature is press-worthy and with sales enablement if it changes what reps can talk about. Owns the moment the feature becomes a thing customers know about.",
+                    blocks:
+                      "Without marketing in early, the feature ships to silence. Or worse, it ships into a story marketing has to retrofit, which means the announcement is late, generic, or wrong about what the product actually does.",
+                  },
+                  {
+                    eyebrow: "Brand",
+                    title: "Brand",
+                    visible: "Reviews the visuals.",
+                    invisible:
+                      "Holds the line on what *Adobe Firefly* (or whichever product) looks, sounds, and feels like, across every surface a customer touches. Owns the brand system the pod is drawing from and the deviations the pod is allowed to make. Reviews not just the icon and the color but the personality — does this AI feature sound like Firefly, or does it sound like a generic LLM with the Firefly logo bolted on. Has a long memory for what the brand has promised and a short tolerance for accidental drift.",
+                    blocks:
+                      "Without brand in early, the feature looks correct in isolation and discordant in the lineup. The brand team finds out at marketing review and the pod has a week to redo work it thought was done.",
+                  },
+                  {
+                    eyebrow: "Legal",
+                    title: "Legal",
+                    visible: "Approves the launch.",
+                    invisible:
+                      "Reads the prompts the model is shipped with, the data the feature collects, the third-party content it touches, and the regions it ships in. Decides whether the feature is exposed to ADA, the EU AI Act, the EU Accessibility Act, GDPR, COPPA, or the next regulation that hasn't been named yet. Negotiates the terms-of-service language. Owns the answer to *can we actually do this here*, which is the question the pod cannot answer for itself.",
+                    blocks:
+                      "Without legal in early, you discover at the last week of the cycle that the feature can't ship in the EU, or that the prompt template needs to be rewritten because it implies a capability the product doesn't have, or that the data flow needs a consent step nobody designed.",
+                  },
+                  {
+                    eyebrow: "Monetization",
+                    title: "BMS, BKS, monetization",
+                    visible: "Adds the price.",
+                    invisible:
+                      "Integrates the feature into the metering system that decides what counts as a *generation*, what tier it lives in, what the limits are, and how it appears on the customer's bill. Reconciles the feature with the existing entitlement model so users on the right plan can use it and users on the wrong plan see the right upsell. Coordinates with finance on revenue recognition. The plumbing that turns a feature into a product line item.",
+                    blocks:
+                      "Without monetization in early, you ship a feature with a beautiful UI and no way to charge for it. Or you ship one that double-counts against quota. Or you ship one that's gated to the wrong tier and customers complain on Twitter.",
+                  },
+                  {
+                    eyebrow: "Accessibility",
+                    title: "Corporate accessibility",
+                    visible: "Runs the WCAG scan.",
+                    invisible:
+                      "Owns the audit cadence, the partner network, the assistive-technology coverage, and the formal sign-off process for products in regulated regions. Maintains the standards documents the pod is supposed to be coding against and updates them when the regulations move. Trains the rest of the org on what *good* looks like. Provides the named accessibility partner who reviews the bluelines from [Chapter 12](/the-craft/accessibility-as-a-prompt-time-concern).",
+                    blocks:
+                      "Without accessibility in early, the audit comes back at launch week with a list of issues, half of them structural. The fix is rework, not polish — and the structural ones can hold the launch.",
+                  },
+                ],
+                caption:
+                  "Eight functions, eight invisible jobs. None of them are sign-off gates. All of them block ship if you find them at the end — or, in research's case, if you find them after it.",
+              },
+              {
+                kind: "paragraph",
+                text: "Read those long enough and the pattern becomes obvious. The visible part of each function fits inside the pod's mental model — *brand reviews the visuals*, *legal approves the launch*. The invisible part is several weeks of upstream work the pod was supposed to engage with and didn't. Each function has the same structural problem from the pod's side: it looks like a step you can do at the end, and it isn't.",
+              },
+            ],
+          },
+          {
+            heading: "The shape of each relationship",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "There's no single playbook for *working with content strategy* or *working with legal*, and this chapter isn't going to pretend to write one. Each of these relationships has its own people, its own institutional history at Adobe, its own rhythms. What a chapter can teach is not the relationships themselves — those you build by doing the work — but the *shape* of them. Recognize the shape and the relationship becomes navigable. Mistake the shape, and you'll make a category error that costs you trust you'll spend the rest of the year earning back.",
+              },
+              {
+                kind: "paragraph",
+                text: "The first useful distinction is between partners who are *co-owners* of the work and partners who are *consumers* of it. A co-owner shapes what gets built. A consumer receives what got built and does something downstream with it. QE sits in its own bucket — neither co-owner nor consumer, but a parallel track that runs alongside the build the whole way through.",
+              },
+              {
+                kind: "partnerTriage",
+                hint: "Drop each function into the category that matches the shape of the partnership. Reveal when you're done — disagreement is allowed.",
+                bins: [
+                  {
+                    label: "Co-owner",
+                    sublabel:
+                      "Shapes what gets built. Treat as a check at the end and the check fails.",
+                    tone: "owner",
+                  },
+                  {
+                    label: "Consumer with gating power",
+                    sublabel:
+                      "Receives the work, but can stop or reshape it on review. Surprise them and the launch slips.",
+                    tone: "consumer",
+                  },
+                  {
+                    label: "Parallel track",
+                    sublabel:
+                      "Runs alongside the build, in the conversation but not in the artifacts.",
+                    tone: "parallel",
+                  },
+                ],
+                partners: [
+                  {
+                    id: "research",
+                    label: "Technology research",
+                    glyph: "Re",
+                    correctBin: 0,
+                    reason:
+                      "The model is the material. A pod that designs without research is designing against a capability surface they can only guess at — and missing the next model release that would have changed the build.",
+                  },
+                  {
+                    id: "content",
+                    label: "Content strategy",
+                    glyph: "Co",
+                    correctBin: 0,
+                    reason:
+                      "The strings *are* the product on most surfaces. Brought in late, the content team is being asked to ratify language they didn't write — and they know.",
+                  },
+                  {
+                    id: "a11y",
+                    label: "Accessibility",
+                    glyph: "A11",
+                    correctBin: 0,
+                    reason:
+                      "Accessibility is a design decision, not a polish pass. The pod-level move is to share intent before the build and check in once during, not to submit at the end.",
+                  },
+                  {
+                    id: "brand",
+                    label: "Brand",
+                    glyph: "Br",
+                    correctBin: 0,
+                    reason:
+                      "The product's voice and look are a co-owned argument across surfaces. Brand finding out at marketing review means the pod has to redo work it thought was done.",
+                  },
+                  {
+                    id: "marketing",
+                    label: "Marketing",
+                    glyph: "Mk",
+                    correctBin: 1,
+                    reason:
+                      "Marketing can't stop a launch, but they can substantially blunt its impact if surprised. They need lead time to plan the moment and a working build to write against.",
+                  },
+                  {
+                    id: "legal",
+                    label: "Legal",
+                    glyph: "Lg",
+                    correctBin: 1,
+                    reason:
+                      "Legal *can* stop a launch. The right model is consumer with gating power: bring questions early, give them visibility into prompts and data flows, get the answer to *can we ship this here* before the build is locked.",
+                  },
+                  {
+                    id: "monetization",
+                    label: "Monetization",
+                    glyph: "$$",
+                    correctBin: 1,
+                    reason:
+                      "BMS, BKS, and the metering system can't co-own a feature — they support too many surfaces. They can absolutely delay shipping if the integration work hasn't been scoped.",
+                  },
+                  {
+                    id: "qe",
+                    label: "QE",
+                    glyph: "Qe",
+                    correctBin: 2,
+                    reason:
+                      "QE is the partner most often mistaken for a downstream consumer. The good ones want to be in the conversation while the design is moving — testing assumptions before they ossify into bugs.",
+                  },
+                ],
+                caption:
+                  "These are defaults, not laws. Content on a string-heavy onboarding flow is a co-owner; content on a settings panel with three labels is closer to a check. Same partner, different shape, depending on the work.",
+              },
+              {
+                kind: "paragraph",
+                text: "The same partner can be a co-owner one quarter and a consumer the next. That's why the practical move is to name each partner explicitly when the pod kicks off a feature and decide which category they're in for *this* piece of work. Knowing which is which is a triage skill, and the cost of getting it wrong is one-directional — you almost never regret bringing a partner in early, and you frequently regret bringing them in late.",
+              },
+              {
+                kind: "wink",
+                text: "The category errors that cost the most: treating an upstream input as a downstream check, or treating a co-owner as a service desk.",
+              },
+            ],
+          },
+          {
+            heading: "The centralized-services drag",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The reason these functions get engaged late, when they get engaged at all, is structural. Most of them are centralized — one team serving every product line — and most of them work through queues. You file a ticket, you wait, you get prioritized against everyone else's work, you get a slot, you get the review, you discover the review surfaced something you have to redo, and you file another ticket. The cycle is real, the cost is real, and the rational response from a fast-moving pod is to delay engaging with the queue until you absolutely have to. Which is exactly the wrong move.",
+              },
+              {
+                kind: "queueRelay",
+                queue: {
+                  label: "The centralized queue",
+                  subtitle:
+                    "File a ticket. Wait for prioritization. Get reviewed against everyone else's work. Discover something. Re-file.",
+                  notes: [
+                    "Each gate is a function that doesn't know the pod yet.",
+                    "Re-prioritization on every handoff. Context lost between gates.",
+                    "Two-week round-trips on items that take twenty minutes once you're talking.",
+                  ],
+                },
+                relay: {
+                  label: "The support pod relay",
+                  subtitle:
+                    "One named person from each function. Already in the conversation. Direct line, both ways.",
+                  notes: [
+                    "One hop, not five. The contact already has context.",
+                    "Async by default. Slack, not Jira.",
+                    "Issues surface in hours, not weeks. Most never become tickets.",
+                  ],
+                },
+                caption:
+                  "Press the button to send the same request through both. The animation is the argument.",
+              },
+              {
+                kind: "paragraph",
+                text: "The drag is the cost of treating cross-functional work as ticketed work. Even when each individual ticket is reasonable — fifteen minutes of someone's time, a week's wait — the aggregate across eight functions is enough to consume the time advantage the pod created in the first place. A two-week pod cycle that needs eight cross-functional reviews, each on a one-week ticket loop, is structurally a ten-week feature. Which means the speed the pod paid for in [chapter 13](/shipping-and-team/working-inside-an-ai-pod) doesn't actually arrive.",
+              },
+              {
+                kind: "pullquote",
+                text: "Speed inside the pod is paid for by drag outside it. Both numbers have to be small.",
+              },
+            ],
+          },
+          {
+            heading: "The cross-functional support pod",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The structural answer is the support pod. The shape is simple: one named person from each function, in conversation with the build pod from kickoff onward, with a direct line — Slack, calendar, name, face — back to the team. Not the whole content team. One content strategist. Not the whole legal team. One lawyer. Not the whole research org. One technology researcher who knows the model the feature is built on. Together they form a second pod, around the first — eight or so people who collectively have enough institutional context to keep the build pod's velocity alive through the rest of the org.",
+              },
+              {
+                kind: "paragraph",
+                text: "The support pod isn't a status meeting. It isn't a steering committee. It isn't a chain of approvals. It's a Slack channel, a shared doc, and a standing thirty-minute weekly sync. The structural innovation is that the contacts are *named and in the room*, not pulled from a queue when the pod is ready for them. Drag the chips below to feel the model — every partner is tethered to the core pod, and pulled out, they snap back.",
+              },
+              {
+                kind: "podOrbit",
+                hint: "Drag any partner to feel the tether stretch. Click to read what they own and what they need from the pod.",
+                center: {
+                  label: "Core pod",
+                },
+                partners: [
+                  {
+                    id: "research",
+                    label: "Research",
+                    glyph: "Re",
+                    owns:
+                      "Model capability, evaluations, the capability roadmap, prompt patterns that survive training updates. Knows which failure modes are bugs and which are fundamental.",
+                    needs:
+                      "Early visibility into the feature concept and the prompts under consideration. A heads-up before the pod commits to behavior that depends on a model version still in training.",
+                    without:
+                      "The pod designs around capability that doesn't exist or won't survive the next model update. The fix is a redesign mid-build.",
+                  },
+                  {
+                    id: "content",
+                    label: "Content",
+                    glyph: "Co",
+                    owns:
+                      "Voice, in-product copy, prompt language, the word list. The argument that this product is one product.",
+                    needs:
+                      "To see the prompts and microcopy in flight, not after they ship. A standing channel for fast voice questions.",
+                    without:
+                      "The feature ships in seven dialects of itself. Empty states announce a different product than the tooltips.",
+                  },
+                  {
+                    id: "qe",
+                    label: "QE",
+                    glyph: "Qe",
+                    owns:
+                      "The test plan, the device matrix, the assistive-tech pass, the *known issues* doc.",
+                    needs:
+                      "The feature scope by week one, screenshots and flow videos by mid-cycle, real builds to test against by mid-cycle.",
+                    without:
+                      "Real-device failures land in launch week. The fix is rework. The launch slips.",
+                  },
+                  {
+                    id: "marketing",
+                    label: "Marketing",
+                    glyph: "Mk",
+                    owns:
+                      "The story, the launch post, the activation plan, the announcement timing.",
+                    needs:
+                      "Lead time to plan the moment. A working build to write against, not a Figma deck.",
+                    without:
+                      "The feature ships into silence, or into a story that's wrong about what the product actually does.",
+                  },
+                  {
+                    id: "brand",
+                    label: "Brand",
+                    glyph: "Br",
+                    owns:
+                      "The product's look, sound, and feel across every customer-facing surface. The line between *on brand* and *accidentally generic*.",
+                    needs:
+                      "Visual review at the directional stage and again before launch. The personality of the AI surface, not just the visuals.",
+                    without:
+                      "The feature looks correct in isolation and wrong next to the rest of the product line. Brand finds out at marketing review.",
+                  },
+                  {
+                    id: "legal",
+                    label: "Legal",
+                    glyph: "Lg",
+                    owns:
+                      "Regulatory exposure, terms of service, the prompts and data flows the feature ships with, the regions it can ship in.",
+                    needs:
+                      "Visibility into prompts and data collection from the start. A heads-up on anything novel before it's built.",
+                    without:
+                      "Launch-week discoveries that the feature can't ship as designed in the EU, or that a prompt needs rewriting, or that consent is missing.",
+                  },
+                  {
+                    id: "monetization",
+                    label: "Monetization",
+                    glyph: "$$",
+                    owns:
+                      "Metering, entitlements, billing, revenue recognition. The plumbing that turns a feature into a product line item.",
+                    needs:
+                      "The unit-of-cost decision early — what counts as a generation. Confirmation that the metering integration exists.",
+                    without:
+                      "A beautiful UI with no way to charge for it. Or one that double-counts. Or one gated to the wrong tier.",
+                  },
+                  {
+                    id: "a11y",
+                    label: "Accessibility",
+                    glyph: "A11",
+                    owns:
+                      "The audit cadence, the partner network, the formal sign-off process, the standards the pod is supposed to be coding against.",
+                    needs:
+                      "Annotated Figma frames before the build. Bluelines mid-cycle. Real builds for the audit pass.",
+                    without:
+                      "Launch-week audit returns structural issues. Half are rework, not polish. The structural ones can hold the launch.",
+                  },
+                ],
+                caption:
+                  "The same eight functions, modeled as a tethered orbit. Each one is one named person, not a queue. Pull a chip out and feel the connection — release and it snaps back into the conversation.",
+              },
+              {
+                kind: "wink",
+                text: "The pod is what makes the build go fast. The support pod is what keeps it going fast all the way to ship.",
+              },
+            ],
+          },
+          {
+            heading: "How a designer engages with the support pod",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "From inside the build pod, the support pod is an audience and a resource — not a gauntlet. The designer's specific work with it has a different shape than the engineer's or the PM's, and it's worth being concrete about.",
+              },
+              {
+                kind: "cards",
+                columns: 2,
+                items: [
+                  {
+                    icon: "compass",
+                    eyebrow: "Show, don't summarize",
+                    title: "Bring the build, not the spec",
+                    text: "When you bring something to a support-pod contact, bring the running prototype if you can, the screenshot if you can't, and the Figma frame only as a last resort. Brand can react to a real surface in a way they can't react to a description. Legal can read a prompt template in five seconds — they can't read your summary of one. The pod's velocity advantage applies here too: the artifact is the conversation.",
+                  },
+                  {
+                    icon: "loop",
+                    eyebrow: "Engage at directional, not at done",
+                    title: "Twenty minutes early, not two days late",
+                    text: "Every support-pod contact will tell you the same thing: catching it directionally is twenty minutes. Catching it at the end is two days. The designer's job is to be the person who knows when each contact needs to be looped in — usually earlier than feels natural — and who actually does it instead of putting it on the team's todo list.",
+                  },
+                  {
+                    icon: "chat",
+                    eyebrow: "One channel, one thread per topic",
+                    title: "Async beats meeting, threads beat DMs",
+                    text: "The support pod's working surface is a Slack channel with the build pod and all eight contacts. Topics live in threads. Decisions get pinned. Standing weekly meeting is thirty minutes max, only when there's something to decide together. Side-channel DMs are how things get lost.",
+                  },
+                  {
+                    icon: "check",
+                    eyebrow: "Treat their feedback as feedback, not as a gate",
+                    title: "BLOCKER, MAJOR, MINOR, NIT — same scale",
+                    text: "When a support-pod contact raises an issue, ask them to tag the severity using the same scale the build pod uses internally. Not every brand note is a blocker. Not every legal flag is a launch-stopper. The severity model the pod uses for its own reviews works for cross-functional reviews too — it keeps the conversation honest in both directions.",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            heading: "Building the support pod for your own work",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "If your team doesn't already have a support pod, the work to build one is mostly mechanical. The harder part is being the person who insists on it.",
+              },
+              {
+                kind: "steps",
+                items: [
+                  {
+                    title: "Inventory the eight functions for your product",
+                    text: "Some products will skip a few — a B2B tool with no monetization story, an internal preview with no marketing beat, a feature built on a stable existing model that doesn't need an active research contact. Most will have all eight. For each one, identify the team that owns it inside Adobe and the specific person who already has context on your product or domain.",
+                  },
+                  {
+                    title: "Ask, don't assign",
+                    text: "Reach out to each candidate contact directly. Explain the model — one named person, in conversation, low overhead, named in advance. Make it clear you're asking for their time as a peer, not nominating them through their manager. Most people say yes. The ones who don't will tell you who else to ask.",
+                  },
+                  {
+                    title: "Set up the channel",
+                    text: "One Slack channel with the build pod and all confirmed contacts. Pin a one-page doc with the project goal, the pod members, the support-pod members, and the ship target. Set a standing thirty-minute weekly sync, optional attendance, used only when there's a cross-functional decision to make.",
+                  },
+                  {
+                    title: "Engage every contact in the first week",
+                    text: "Even if it's just a five-minute introduction. The structural value of the support pod is that contacts are *already in the conversation* when you need them — that requires being in the conversation before you need them. Skipping this and the support pod degrades to a contact list, which is no faster than a queue.",
+                  },
+                  {
+                    title: "Kill it if it doesn't work",
+                    text: "Some support pods don't gel. People ghost the channel. The weekly sync becomes status theater. When this happens, name it and either restart or dissolve it. A support pod nobody uses is worse than no support pod, because it gives the build pod false confidence the cross-functional work is happening.",
+                  },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "*Find your partners before you need them* — the cheapest investment in shipping speed available, applied at the team scale this time instead of the individual one.",
+              },
+            ],
+          },
+          {
+            heading: "What it costs not to do this",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Worth being concrete about the failure modes, because the cost of skipping the support pod doesn't show up where you'd expect it. It shows up as the build pod's speed disappearing into the gap between the build and the launch.",
+              },
+              {
+                kind: "checklist",
+                items: [
+                  {
+                    positive: false,
+                    title: "The four-week feature that takes twelve",
+                    text: "The build is done in four weeks. The cross-functional reviews — discovered late, queued sequentially, each surfacing rework — take eight more. The pod's speed advantage is consumed entirely by the work that wasn't planned for. From the outside, it looks like the team is slow.",
+                  },
+                  {
+                    positive: false,
+                    title: "The launch that ships and isn't announced",
+                    text: "The feature is in production. Marketing finds out at launch week. The announcement is generic, late, or missing. Customers discover the feature themselves, in dribs and drabs, and the team can't tell whether it's working because the activation moment never happened.",
+                  },
+                  {
+                    positive: false,
+                    title: "The accessibility recall",
+                    text: "The audit comes back two weeks after launch with structural issues. The team has to choose between living with them and pulling the feature for fixes. Either choice is bad. The cost of the recall is several times the cost of the audit done in week three.",
+                  },
+                  {
+                    positive: false,
+                    title: "The brand drift the pod doesn't see",
+                    text: "The feature ships looking and sounding subtly different from the rest of the product. Brand notices but it's already live. The team agrees to clean it up *next iteration*, which means the inconsistency lives in production for the next six months and shapes the next team's decisions about what's allowed.",
+                  },
+                  {
+                    positive: false,
+                    title: "The legal block",
+                    text: "Two weeks before launch, legal reviews the feature and surfaces a regulatory issue that requires a redesign. The launch slips by a quarter. The pod loses momentum. Some of the pod's wins from the cycle don't survive the slip.",
+                  },
+                ],
+              },
+              {
+                kind: "paragraph",
+                text: "None of these are recoverable from inside the build pod. They all require the cross-functional contacts to have been in the conversation early enough to surface the issue when it was cheap. Which means the support pod isn't optional infrastructure — it's load-bearing. The pod that thinks it's saving time by skipping it is consistently the pod that ships latest.",
+              },
+            ],
+          },
+          {
+            heading: "What doesn't shift",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The playbook started with an argument about why this way of working is now possible — the infrastructure in place, the design tools and AI tools and codebase access converging — and it has spent fifteen chapters teaching the practice. It would feel strange to end without a sentence about what this practice asks of you that *isn't* new.",
+              },
+              {
+                kind: "paragraph",
+                text: "What isn't new is everything that matters most. The taste that lets you tell a good interface from a bad one. The user-centered instinct that makes you ask who the feature is for and what would help them do their thing better. The systems thinking that makes you recognize when a local fix is making a global problem worse. The collaboration skill that makes you a partner people want to work with. The design vision that lets you see further than the next sprint.",
+              },
+              {
+                kind: "paragraph",
+                text: "The tools have changed. The bottleneck has moved. The shape of the team is different. The cross-functional partnerships are more numerous and more concurrent. But the core thing — the part of design work that was always the hard part — is unchanged. Vibe coding doesn't replace it. The pod model doesn't replace it. The cross-functional support structure doesn't replace it. Everything in this playbook is in service of letting that core thing — taste, judgment, care — show up in the work more often, more quickly, and with less of it lost in translation.",
+              },
+              {
+                kind: "pullquote",
+                text: "The invisible work is the work of letting the visible work mean something. That's the chapter, and it's the playbook.",
+              },
+            ],
           },
         ],
       },

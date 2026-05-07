@@ -4,6 +4,7 @@ import { playbook, getTotalChapters } from "../data/playbook";
 import Seal from "../components/Seal";
 import { CountUp } from "../components/CountUp";
 import { MagneticLink } from "../components/MagneticLink";
+import { RichText } from "../components/SectionBlocks";
 
 const minutesFromReadTime = (s: string) => parseInt(s.replace(/[^\d]/g, ""), 10);
 
@@ -68,7 +69,7 @@ export function Home() {
   ];
 
   return (
-    <div className="page-enter">
+    <div className="page-enter home-page">
       {/* HERO */}
       <section className="hero hero-grid">
         <div className="hero-bg" aria-hidden="true">
@@ -221,7 +222,9 @@ export function Home() {
                 Part 01 · Foundations
               </span>
               <h3 className="featured-card-title">{featured.title}</h3>
-              <p className="featured-card-summary">{featured.summary}</p>
+              <p className="featured-card-summary">
+                <RichText text={featured.summary} disableLinks />
+              </p>
               <span className="featured-card-cta">Read chapter →</span>
             </div>
           </Link>
@@ -259,7 +262,9 @@ export function Home() {
                         </span>
                         <div className="chapter-main">
                           <h4 className="chapter-title">{chapter.title}</h4>
-                          <p className="chapter-summary">{chapter.summary}</p>
+                          <p className="chapter-summary">
+                            <RichText text={chapter.summary} disableLinks />
+                          </p>
                         </div>
                         <span className="chapter-readtime">
                           {chapter.readTime}
@@ -365,6 +370,26 @@ export function Home() {
               question of how AI and design fit together feel personal. This
               playbook is a quiet attempt to think it through in public.
             </p>
+            <aside className="about-author-callout">
+              <span className="about-author-callout-label">
+                Contributions welcome
+              </span>
+              Collaboration is welcomed. If a chapter sparks a disagreement,
+              a missing case, or a thread worth pulling on together, reach
+              out.
+            </aside>
+
+            <a
+              href="https://venmo.com/u/wipetty"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="about-author-coffee"
+            >
+              <span className="about-author-coffee-icon" aria-hidden="true">
+                ☕
+              </span>
+              If this helped, buy me a coffee
+            </a>
           </div>
         </div>
       </section>

@@ -106,6 +106,57 @@ const PATHS: Record<IconName, JSX.Element> = {
       <path d="M15 9l2 2" />
     </>
   ),
+  cursor: (
+    <>
+      <path d="M5 4l5 16 3-7 7-3z" />
+      <path d="M14 14l5 5" />
+    </>
+  ),
+  claude: (
+    <>
+      <path d="M12 4v6" />
+      <path d="M12 14v6" />
+      <path d="M4 12h6" />
+      <path d="M14 12h6" />
+      <path d="M6.5 6.5l3.2 3.2" />
+      <path d="M14.3 14.3l3.2 3.2" />
+      <path d="M17.5 6.5l-3.2 3.2" />
+      <path d="M9.7 14.3l-3.2 3.2" />
+      <circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none" />
+    </>
+  ),
+  github: (
+    <>
+      <path d="M9 19c-3 1-3-1-4-1.5" />
+      <path d="M15 21v-3.2c0-1 .1-1.4-.6-2 3-.3 5.6-1.5 5.6-6.4 0-1.4-.5-2.5-1.3-3.4.1-.3.6-1.6-.1-3.3 0 0-1-.3-3.4 1.2a11 11 0 0 0-6 0C6.7 1 5.7 1.3 5.7 1.3c-.7 1.7-.2 3-.1 3.3-.8.9-1.3 2-1.3 3.4 0 4.9 2.7 6 5.6 6.4-.4.3-.7.9-.8 1.7-.7.4-2.6 1-3.7-1 0 0-.7-1.3-2-1.3" />
+    </>
+  ),
+  notion: (
+    <>
+      <path d="M4 5.5c0-1 .8-1.6 1.8-1.6L17 3a2 2 0 0 1 2.4.5l1.4 1.6c.3.4.2 1 0 1.4l-1 1.7v9.5c0 1-.6 1.7-1.6 1.8l-12 1c-1 .1-1.7-.5-2-1.5l-.7-1.7V5.5z" />
+      <path d="M9 8.5l5 6.5V8.5" strokeLinejoin="miter" />
+    </>
+  ),
+  obsidian: (
+    <>
+      <path d="M12 3l7 5v8l-7 5-7-5V8l7-5z" />
+      <path d="M9 9l3 5 3-5" />
+    </>
+  ),
+  video: (
+    <>
+      <rect x="3" y="6" width="13" height="12" rx="2" />
+      <path d="M16 10l5-3v10l-5-3z" />
+    </>
+  ),
+  slack: (
+    <>
+      <rect x="3" y="10" width="6" height="3" rx="1.5" />
+      <rect x="11" y="3" width="3" height="6" rx="1.5" />
+      <rect x="15" y="11" width="6" height="3" rx="1.5" />
+      <rect x="10" y="15" width="3" height="6" rx="1.5" />
+    </>
+  ),
 };
 
 export function Icon({
