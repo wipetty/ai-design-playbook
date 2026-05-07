@@ -2131,7 +2131,7 @@ export const playbook: Part[] = [
                   },
                   {
                     title: "Wire the MCPs you'll actually use",
-                    text: "Figma MCP, the relevant service MCPs, anything tied to the product you ship. Skip the rest. A wired-in MCP you don't use is a tax on every session.",
+                    text: "[Figma MCP](https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server), the relevant service MCPs, anything tied to the product you ship. Skip the rest. A wired-in MCP you don't use is a tax on every session.",
                   },
                   {
                     title: "Join the channels where help happens",
