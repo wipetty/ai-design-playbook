@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import type { SectionBlock } from "../data/playbook";
 import Icon from "./Icon";
 import LightboxThumbnail from "./LightboxThumbnail";
@@ -264,24 +264,49 @@ function Block({ block }: { block: SectionBlock }) {
     case "checklist":
       return (
         <ul className="cb-checklist">
-          {block.items.map((item, i) => (
-            <li
-              key={i}
-              className={`cb-check-item cb-check-${item.positive ? "yes" : "no"}`}
-            >
-              <span className="cb-check-mark" aria-hidden="true">
-                <Icon name={item.positive ? "check" : "x"} size={14} />
-              </span>
-              <div className="cb-check-body">
-                <span className="cb-check-title">
-                  {item.positive ? "Does" : "Doesn't"}: {item.title}
+          {block.items.map((item, i) => {
+            const hasMedia = Boolean(item.image || item.video);
+            return (
+              <li
+                key={i}
+                className={`cb-check-item cb-check-${item.positive ? "yes" : "no"}${hasMedia ? " cb-check-has-media" : ""}`}
+              >
+                <span className="cb-check-mark" aria-hidden="true">
+                  <Icon name={item.positive ? "check" : "x"} size={14} />
                 </span>
-                <span className="cb-check-text">
-                  <RichText text={item.text} />
-                </span>
-              </div>
-            </li>
-          ))}
+                <div className="cb-check-body">
+                  <span className="cb-check-title">
+                    {item.positive ? "Does" : "Doesn't"}: {item.title}
+                  </span>
+                  <span className="cb-check-text">
+                    <RichText text={item.text} />
+                  </span>
+                </div>
+                {hasMedia && (
+                  <div className="cb-check-media">
+                    {item.video ? (
+                      <video
+                        className="cb-video-player"
+                        src={item.video.src}
+                        poster={item.video.poster}
+                        aria-label={item.video.alt}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="metadata"
+                      />
+                    ) : item.image ? (
+                      <LightboxThumbnail
+                        src={item.image.src}
+                        alt={item.image.alt}
+                      />
+                    ) : null}
+                  </div>
+                )}
+              </li>
+            );
+          })}
         </ul>
       );
 
@@ -398,16 +423,33 @@ function Block({ block }: { block: SectionBlock }) {
 
     case "figureGrid": {
       const columns = block.columns ?? 2;
+      const framedClass = block.framed ? " cb-figure-grid-framed" : "";
       return (
-        <figure className={`cb-figure-grid cb-figure-grid-${columns}`}>
+        <figure
+          className={`cb-figure-grid cb-figure-grid-${columns}${framedClass}`}
+        >
           <div className="cb-figure-grid-track">
             {block.items.map((item, i) => (
               <figure key={i} className="cb-figure-tile">
                 <div className="cb-figure-frame">
-                  <LightboxThumbnail
-                    src={item.image.src}
-                    alt={item.image.alt}
-                  />
+                  {item.video ? (
+                    <video
+                      className="cb-video-player"
+                      src={item.video.src}
+                      poster={item.video.poster}
+                      aria-label={item.video.alt}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="metadata"
+                    />
+                  ) : item.image ? (
+                    <LightboxThumbnail
+                      src={item.image.src}
+                      alt={item.image.alt}
+                    />
+                  ) : null}
                 </div>
                 <figcaption className="cb-figure-caption">
                   {item.eyebrow && (
@@ -558,6 +600,45 @@ function Block({ block }: { block: SectionBlock }) {
 
     case "bento":
       return <BentoGrid block={block} />;
+
+    case "loopOrbit":
+      return <LoopOrbit block={block} />;
+
+    case "lensCompare":
+      return <LensCompare block={block} />;
+
+    case "driftMeter":
+      return <DriftMeter block={block} />;
+
+    case "signGrid":
+      return <SignGrid block={block} />;
+
+    case "typeStack":
+      return <TypeStack block={block} />;
+
+    case "swatchSet":
+      return <SwatchSet block={block} />;
+
+    case "themeTokens":
+      return <ThemeTokens block={block} />;
+
+    case "themeLayers":
+      return <ThemeLayers block={block} />;
+
+    case "colorRoles":
+      return <ColorRoles block={block} />;
+
+    case "driftAudit":
+      return <DriftAudit block={block} />;
+
+    case "weightMap":
+      return <WeightMap block={block} />;
+
+    case "spacingRhythm":
+      return <SpacingRhythm block={block} />;
+
+    case "motionTrace":
+      return <MotionTrace block={block} />;
   }
 }
 
@@ -1304,6 +1385,1239 @@ function SlopeChart({
 
       {block.caption && (
         <figcaption className="cb-slope-caption">{block.caption}</figcaption>
+      )}
+    </figure>
+  );
+}
+
+function LoopOrbit({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "loopOrbit" }>;
+}) {
+  const center = block.center ?? "The design";
+  const stations = block.stations.slice(0, 4);
+  const [ref, inView] = useInView<HTMLElement>();
+
+  /*
+   * Coordinate system: viewBox 800×560, center at (400, 280), orbit r=220.
+   * Stations sit at the four cardinal points; arcs span 30° between cards
+   * so the trace passes through the diagonal whitespace, never overlapping.
+   */
+  const cx = 400;
+  const cy = 280;
+  const r = 220;
+  const positions = [
+    { x: cx, y: cy - r },
+    { x: cx + r, y: cy },
+    { x: cx, y: cy + r },
+    { x: cx - r, y: cy },
+  ];
+  const cardW = 200;
+  const cardH = 88;
+
+  const polar = (deg: number) => {
+    const rad = (deg * Math.PI) / 180;
+    return {
+      x: cx + r * Math.cos(rad),
+      y: cy - r * Math.sin(rad),
+    };
+  };
+
+  const arcSegments: { d: string }[] = [
+    { from: 60, to: 30 },
+    { from: -30, to: -60 },
+    { from: -120, to: -150 },
+    { from: 150, to: 120 },
+  ].map(({ from, to }) => {
+    const a = polar(from);
+    const b = polar(to);
+    return {
+      d: `M ${a.x.toFixed(1)} ${a.y.toFixed(1)} A ${r} ${r} 0 0 1 ${b.x.toFixed(1)} ${b.y.toFixed(1)}`,
+    };
+  });
+
+  return (
+    <figure ref={ref} className={`cb-orbit${revealClass(inView)}`}>
+      <svg
+        className="cb-orbit-svg"
+        viewBox="0 0 800 560"
+        role="img"
+        aria-label="The four moments arranged as a continuous loop around the design at the center"
+      >
+        <defs>
+          <marker
+            id="cb-orbit-arrow"
+            viewBox="0 0 10 10"
+            refX="8"
+            refY="5"
+            markerWidth="9"
+            markerHeight="9"
+            orient="auto"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+        </defs>
+
+        <circle
+          cx={cx}
+          cy={cy}
+          r={r}
+          className="cb-orbit-ring"
+        />
+
+        {arcSegments.map((a, i) => (
+          <path
+            key={i}
+            d={a.d}
+            className="cb-orbit-arc"
+            markerEnd="url(#cb-orbit-arrow)"
+            style={{ ["--i" as string]: String(i) }}
+          />
+        ))}
+
+        <g className="cb-orbit-center">
+          <circle cx={cx} cy={cy} r="78" className="cb-orbit-center-halo" />
+          <circle cx={cx} cy={cy} r="58" className="cb-orbit-center-disc" />
+          <text
+            x={cx}
+            y={cy + 5}
+            textAnchor="middle"
+            className="cb-orbit-center-label"
+          >
+            {center}
+          </text>
+        </g>
+
+        {stations.map((s, i) => {
+          const p = positions[i];
+          const left = p.x - cardW / 2;
+          const top = p.y - cardH / 2;
+          return (
+            <g
+              key={i}
+              className="cb-orbit-station"
+              style={{ ["--i" as string]: String(i) }}
+            >
+              <rect
+                x={left}
+                y={top}
+                width={cardW}
+                height={cardH}
+                rx="18"
+                className="cb-orbit-card"
+              />
+              {s.number && (
+                <g>
+                  <circle
+                    cx={left + 22}
+                    cy={top + 22}
+                    r="14"
+                    className="cb-orbit-number-bg"
+                  />
+                  <text
+                    x={left + 22}
+                    y={top + 26}
+                    textAnchor="middle"
+                    className="cb-orbit-number"
+                  >
+                    {s.number}
+                  </text>
+                </g>
+              )}
+              <text
+                x={p.x}
+                y={p.y - 2}
+                textAnchor="middle"
+                className="cb-orbit-label"
+              >
+                {s.label}
+              </text>
+              {s.meta && (
+                <text
+                  x={p.x}
+                  y={p.y + 22}
+                  textAnchor="middle"
+                  className="cb-orbit-meta"
+                >
+                  {s.meta}
+                </text>
+              )}
+            </g>
+          );
+        })}
+      </svg>
+      {block.caption && (
+        <figcaption className="cb-orbit-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function LensCompare({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "lensCompare" }>;
+}) {
+  const center = block.center ?? "The design";
+  const [ref, inView] = useInView<HTMLElement>();
+
+  return (
+    <figure ref={ref} className={`cb-lens${revealClass(inView)}`}>
+      <div className="cb-lens-stage">
+        <div className="cb-lens-panel cb-lens-panel-left">
+          <div className="cb-lens-panel-head">
+            <span className="cb-lens-panel-label">{block.left.label}</span>
+            {block.left.subtitle && (
+              <span className="cb-lens-panel-subtitle">
+                {block.left.subtitle}
+              </span>
+            )}
+          </div>
+          <ul className="cb-lens-chips">
+            {block.left.reveals.map((r, i) => (
+              <li
+                key={i}
+                className="cb-lens-chip"
+                style={{ ["--i" as string]: String(i) }}
+              >
+                {r}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="cb-lens-axis" aria-hidden="true">
+          <span className="cb-lens-beam cb-lens-beam-left" />
+          <span className="cb-lens-beam cb-lens-beam-right" />
+          <span className="cb-lens-center">
+            <span className="cb-lens-center-pulse cb-lens-center-pulse-1" />
+            <span className="cb-lens-center-pulse cb-lens-center-pulse-2" />
+            <span className="cb-lens-center-disc" />
+            <span className="cb-lens-center-label">{center}</span>
+          </span>
+        </div>
+
+        <div className="cb-lens-panel cb-lens-panel-right">
+          <div className="cb-lens-panel-head">
+            <span className="cb-lens-panel-label">{block.right.label}</span>
+            {block.right.subtitle && (
+              <span className="cb-lens-panel-subtitle">
+                {block.right.subtitle}
+              </span>
+            )}
+          </div>
+          <ul className="cb-lens-chips">
+            {block.right.reveals.map((r, i) => (
+              <li
+                key={i}
+                className="cb-lens-chip"
+                style={{ ["--i" as string]: String(i) }}
+              >
+                {r}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      {block.caption && (
+        <figcaption className="cb-lens-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function SignDiagram({
+  kind,
+}: {
+  kind: "collapse" | "lag" | "break" | "dwarf";
+}) {
+  switch (kind) {
+    case "collapse":
+      return (
+        <svg
+          className="cb-sign-svg cb-sign-collapse"
+          viewBox="0 0 120 72"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient
+              id="cb-collapse-grad"
+              x1="0"
+              x2="1"
+              y1="0"
+              y2="0"
+            >
+              <stop offset="0%" stopColor="var(--accent)" />
+              <stop
+                offset="100%"
+                stopColor="var(--accent)"
+                stopOpacity="0.55"
+              />
+            </linearGradient>
+            <clipPath id="cb-collapse-clip">
+              <rect x="8" y="8" width="104" height="56" rx="10" />
+            </clipPath>
+          </defs>
+          <rect
+            className="cb-sign-frame"
+            x="8"
+            y="8"
+            width="104"
+            height="56"
+            rx="10"
+          />
+          <g clipPath="url(#cb-collapse-clip)">
+            <rect
+              className="cb-collapse-title"
+              x="16"
+              y="20"
+              width="42"
+              height="1.6"
+              rx="0.8"
+            />
+            <rect
+              className="cb-collapse-row cb-collapse-row-a"
+              x="16"
+              y="34"
+              width="58"
+              height="1.2"
+              rx="0.6"
+            />
+            <rect
+              className="cb-collapse-row cb-collapse-row-b"
+              x="16"
+              y="40.6"
+              width="58"
+              height="3"
+              rx="1.5"
+            />
+            <rect
+              className="cb-collapse-row cb-collapse-row-c"
+              x="16"
+              y="49"
+              width="58"
+              height="1.2"
+              rx="0.6"
+            />
+          </g>
+        </svg>
+      );
+
+    case "lag":
+      return (
+        <svg
+          className="cb-sign-svg cb-sign-lag"
+          viewBox="0 0 120 72"
+          aria-hidden="true"
+        >
+          <defs>
+            <filter
+              id="cb-lag-trail"
+              x="-100%"
+              y="-100%"
+              width="300%"
+              height="300%"
+            >
+              <feGaussianBlur stdDeviation="2.5" />
+            </filter>
+          </defs>
+          <line
+            className="cb-lag-track"
+            x1="22"
+            y1="36"
+            x2="98"
+            y2="36"
+          />
+          <rect
+            className="cb-lag-source"
+            x="14"
+            y="28"
+            width="16"
+            height="16"
+            rx="4"
+          />
+          <rect
+            className="cb-lag-target"
+            x="90"
+            y="28"
+            width="16"
+            height="16"
+            rx="4"
+          />
+          <g className="cb-lag-ghost-group">
+            <circle className="cb-lag-ghost" cx="22" cy="36" r="1.6" />
+          </g>
+          <g className="cb-lag-actual-group">
+            <circle
+              className="cb-lag-actual-glow"
+              cx="22"
+              cy="36"
+              r="6"
+              filter="url(#cb-lag-trail)"
+            />
+            <circle className="cb-lag-actual" cx="22" cy="36" r="3.4" />
+          </g>
+        </svg>
+      );
+
+    case "break":
+      return (
+        <svg
+          className="cb-sign-svg cb-sign-break"
+          viewBox="0 0 120 72"
+          aria-hidden="true"
+        >
+          <line
+            className="cb-break-line cb-break-line-1"
+            x1="28"
+            y1="36"
+            x2="50"
+            y2="36"
+          />
+          <rect
+            className="cb-break-node cb-break-node-1"
+            x="8"
+            y="24"
+            width="20"
+            height="24"
+            rx="6"
+          />
+          <rect
+            className="cb-break-node cb-break-node-2"
+            x="50"
+            y="24"
+            width="20"
+            height="24"
+            rx="6"
+          />
+          <g className="cb-break-tail">
+            <line
+              className="cb-break-line cb-break-line-2"
+              x1="70"
+              y1="36"
+              x2="92"
+              y2="36"
+            />
+            <rect
+              className="cb-break-node cb-break-node-3"
+              x="92"
+              y="24"
+              width="20"
+              height="24"
+              rx="6"
+            />
+          </g>
+        </svg>
+      );
+
+    case "dwarf":
+      return (
+        <svg
+          className="cb-sign-svg cb-sign-dwarf"
+          viewBox="0 0 120 72"
+          aria-hidden="true"
+        >
+          <defs>
+            <clipPath id="cb-dwarf-clip">
+              <rect x="8" y="8" width="104" height="56" rx="10" />
+            </clipPath>
+          </defs>
+          <rect
+            className="cb-sign-frame"
+            x="8"
+            y="8"
+            width="104"
+            height="56"
+            rx="10"
+          />
+          <g clipPath="url(#cb-dwarf-clip)">
+            <rect
+              className="cb-dwarf-title"
+              x="16"
+              y="18"
+              width="32"
+              height="1.4"
+              rx="0.7"
+            />
+            <g className="cb-dwarf-content-group">
+              <rect
+                className="cb-dwarf-content cb-dwarf-content-1"
+                x="16"
+                y="29"
+                width="86"
+                height="2.4"
+                rx="1.2"
+              />
+              <rect
+                className="cb-dwarf-content cb-dwarf-content-2"
+                x="16"
+                y="35"
+                width="86"
+                height="2.4"
+                rx="1.2"
+              />
+              <rect
+                className="cb-dwarf-content cb-dwarf-content-3"
+                x="16"
+                y="41"
+                width="72"
+                height="2.4"
+                rx="1.2"
+              />
+            </g>
+          </g>
+        </svg>
+      );
+  }
+}
+
+function SignGrid({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "signGrid" }>;
+}) {
+  const [ref, inView] = useInView<HTMLUListElement>();
+  return (
+    <ul ref={ref} className={`cb-signs${revealClass(inView)}`}>
+      {block.items.map((item, i) => (
+        <li
+          key={i}
+          className={`cb-sign cb-sign-${item.diagram}`}
+          style={{ ["--i" as string]: String(i) }}
+        >
+          <div className="cb-sign-diagram">
+            <SignDiagram kind={item.diagram} />
+          </div>
+          <span className="cb-sign-eyebrow">{item.eyebrow}</span>
+          <h3 className="cb-sign-title-text">{item.title}</h3>
+          <p className="cb-sign-text">
+            <RichText text={item.text} />
+          </p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function DriftMeter({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "driftMeter" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  const total = block.zones.reduce((sum, z) => sum + z.weight, 0) || 1;
+
+  return (
+    <figure ref={ref} className={`cb-drift${revealClass(inView)}`}>
+      <div
+        className="cb-drift-track"
+        role="img"
+        aria-label={`Drift breakdown: ${block.zones
+          .map(
+            (z) =>
+              `${z.title} ${Math.round((z.weight / total) * 100)} percent`,
+          )
+          .join(", ")}.`}
+      >
+        {block.zones.map((zone, i) => {
+          const pct = (zone.weight / total) * 100;
+          return (
+            <span
+              key={i}
+              className={`cb-drift-segment cb-drift-segment-${zone.tone}`}
+              style={{
+                ["--target" as string]: `${pct}%`,
+                ["--i" as string]: String(i),
+              }}
+            >
+              {zone.hint && (
+                <span className="cb-drift-segment-hint">{zone.hint}</span>
+              )}
+              <span className="cb-drift-segment-pct">
+                {Math.round(pct)}
+                <span className="cb-drift-segment-pct-unit">%</span>
+              </span>
+            </span>
+          );
+        })}
+      </div>
+
+      <div className="cb-drift-cards">
+        {block.zones.map((zone, i) => (
+          <article
+            key={i}
+            className={`cb-drift-card cb-drift-card-${zone.tone}`}
+            style={{ ["--i" as string]: String(i) }}
+          >
+            <span className="cb-drift-card-marker" aria-hidden="true" />
+            <span className="cb-drift-card-eyebrow">{zone.eyebrow}</span>
+            <h3 className="cb-drift-card-title">{zone.title}</h3>
+            <p className="cb-drift-card-text">
+              <RichText text={zone.text} />
+            </p>
+          </article>
+        ))}
+      </div>
+
+      {block.caption && (
+        <figcaption className="cb-drift-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function TypeStack({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "typeStack" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  return (
+    <figure ref={ref} className={`cb-typestack${revealClass(inView)}`}>
+      <div className="cb-typestack-grid">
+        {block.ramps.map((ramp, i) => (
+          <div
+            key={i}
+            className={`cb-typestack-col ${
+              i === 0 ? "cb-typestack-col-muted" : "cb-typestack-col-active"
+            }`}
+            style={{ ["--i" as string]: String(i) }}
+          >
+            <header className="cb-typestack-header">
+              <span className="cb-typestack-eyebrow">{ramp.label}</span>
+              {ramp.range && (
+                <span className="cb-typestack-range">{ramp.range}</span>
+              )}
+              {ramp.note && (
+                <span className="cb-typestack-note">{ramp.note}</span>
+              )}
+            </header>
+            <ul className="cb-typestack-tiers">
+              {ramp.tiers.map((tier, j) => (
+                <li key={j} className="cb-typestack-tier">
+                  <span className="cb-typestack-meta">
+                    <span className="cb-typestack-tag">{tier.tag}</span>
+                    <span className="cb-typestack-size">
+                      {tier.size}
+                      <span className="cb-typestack-size-unit">px</span>
+                    </span>
+                    {tier.token && (
+                      <span className="cb-typestack-token">{tier.token}</span>
+                    )}
+                  </span>
+                  <span
+                    className="cb-typestack-sample"
+                    style={{
+                      fontSize: `${tier.size}px`,
+                      fontWeight: tier.weight ?? 500,
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    {tier.sample}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      {block.caption && (
+        <figcaption className="cb-typestack-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function SwatchSet({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "swatchSet" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  return (
+    <figure ref={ref} className={`cb-swatch${revealClass(inView)}`}>
+      <div className="cb-swatch-grid">
+        {block.groups.map((group, i) => (
+          <div
+            key={i}
+            className={`cb-swatch-col ${
+              i === 0 ? "cb-swatch-col-muted" : "cb-swatch-col-active"
+            }`}
+            style={{ ["--i" as string]: String(i) }}
+          >
+            <header className="cb-swatch-header">
+              <span className="cb-swatch-eyebrow">{group.label}</span>
+              {group.note && (
+                <span className="cb-swatch-note">{group.note}</span>
+              )}
+            </header>
+            <ul className="cb-swatch-list">
+              {group.swatches.map((s, j) => (
+                <li
+                  key={j}
+                  className="cb-swatch-row"
+                  style={{ ["--j" as string]: String(j) }}
+                >
+                  <span
+                    className="cb-swatch-chip"
+                    style={{ background: s.hex }}
+                    aria-hidden="true"
+                  />
+                  <span className="cb-swatch-meta">
+                    <span className="cb-swatch-role">{s.role}</span>
+                    <span className="cb-swatch-usage">{s.usage}</span>
+                    {s.token && (
+                      <span className="cb-swatch-token">{s.token}</span>
+                    )}
+                  </span>
+                  <span className="cb-swatch-hex">{s.hex}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      {block.caption && (
+        <figcaption className="cb-swatch-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function ThemeTokens({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "themeTokens" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  return (
+    <figure ref={ref} className={`cb-theme${revealClass(inView)}`}>
+      <div className="cb-theme-legend" aria-hidden="true">
+        <span className="cb-theme-legend-item">
+          <span className="cb-theme-legend-dot cb-theme-legend-dot-light" />
+          Light
+        </span>
+        <span className="cb-theme-legend-item">
+          <span className="cb-theme-legend-dot cb-theme-legend-dot-dark" />
+          Dark
+        </span>
+      </div>
+      <ul className="cb-theme-grid">
+        {block.tokens.map((t, i) => (
+          <li
+            key={i}
+            className="cb-theme-card"
+            style={{ ["--i" as string]: String(i) }}
+          >
+            <div
+              className="cb-theme-chip"
+              aria-hidden="true"
+              style={{
+                ["--theme-light" as string]: t.light,
+                ["--theme-dark" as string]: t.dark,
+              }}
+            >
+              <span className="cb-theme-chip-light" />
+              <span className="cb-theme-chip-dark" />
+              <span className="cb-theme-chip-divider" />
+            </div>
+            <div className="cb-theme-body">
+              <span className="cb-theme-token">{t.name}</span>
+              <span className="cb-theme-role">{t.role}</span>
+              <p className="cb-theme-usage">{t.usage}</p>
+              <div className="cb-theme-values">
+                <span className="cb-theme-value">
+                  <span className="cb-theme-value-label">Light</span>
+                  <span className="cb-theme-value-hex">{t.light}</span>
+                </span>
+                <span className="cb-theme-value">
+                  <span className="cb-theme-value-label">Dark</span>
+                  <span className="cb-theme-value-hex">{t.dark}</span>
+                </span>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+      {block.caption && (
+        <figcaption className="cb-theme-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function ThemeLayers({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "themeLayers" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  const get = (slot: string) => block.layers.find((l) => l.slot === slot);
+  const renderScene = (scheme: "light" | "dark") => {
+    const pasteboard = get("pasteboard");
+    const base = get("base");
+    const layer1 = get("layer-1");
+    const layer2 = get("layer-2");
+    const elevated = get("elevated");
+    const sceneStyle = {
+      ["--cb-pasteboard" as string]:
+        scheme === "light" ? pasteboard?.light : pasteboard?.dark,
+      ["--cb-base" as string]: scheme === "light" ? base?.light : base?.dark,
+      ["--cb-layer-1" as string]:
+        scheme === "light" ? layer1?.light : layer1?.dark,
+      ["--cb-layer-2" as string]:
+        scheme === "light" ? layer2?.light : layer2?.dark,
+      ["--cb-elevated" as string]:
+        scheme === "light" ? elevated?.light : elevated?.dark,
+    } as React.CSSProperties;
+    return (
+      <div
+        className={`cb-layers-scene cb-layers-scene-${scheme}`}
+        style={sceneStyle}
+      >
+        <span className="cb-layers-scene-label">{scheme}</span>
+        <div className="cb-layers-pasteboard">
+          <span className="cb-layers-pin cb-layers-pin-pasteboard">
+            pasteboard
+          </span>
+          <div className="cb-layers-base">
+            <span className="cb-layers-pin cb-layers-pin-base">base</span>
+            <div className="cb-layers-layer-1">
+              <span className="cb-layers-pin cb-layers-pin-layer-1">
+                layer-1
+              </span>
+              <div className="cb-layers-cards">
+                <div className="cb-layers-layer-2">
+                  <span className="cb-layers-pin cb-layers-pin-layer-2">
+                    layer-2
+                  </span>
+                </div>
+                <div className="cb-layers-layer-2" aria-hidden="true" />
+              </div>
+            </div>
+            <div className="cb-layers-elevated">
+              <span className="cb-layers-pin cb-layers-pin-elevated">
+                elevated
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  return (
+    <figure ref={ref} className={`cb-layers${revealClass(inView)}`}>
+      <div className="cb-layers-scenes">
+        {renderScene("light")}
+        {renderScene("dark")}
+      </div>
+      <ul className="cb-layers-list">
+        {block.layers.map((layer, i) => (
+          <li
+            key={i}
+            className="cb-layers-item"
+            style={{ ["--i" as string]: String(i) }}
+          >
+            <div className="cb-layers-item-meta">
+              <span className="cb-layers-item-token">{layer.name}</span>
+              <span className="cb-layers-item-role">{layer.role}</span>
+              {layer.note && (
+                <span className="cb-layers-item-note">{layer.note}</span>
+              )}
+            </div>
+            <div className="cb-layers-item-values">
+              <span className="cb-layers-item-value">
+                <span
+                  className="cb-layers-item-chip"
+                  style={{ background: layer.light }}
+                  aria-hidden="true"
+                />
+                <span className="cb-layers-item-label">Light</span>
+                <span className="cb-layers-item-hex">{layer.light}</span>
+              </span>
+              <span className="cb-layers-item-value">
+                <span
+                  className="cb-layers-item-chip"
+                  style={{ background: layer.dark }}
+                  aria-hidden="true"
+                />
+                <span className="cb-layers-item-label">Dark</span>
+                <span className="cb-layers-item-hex">{layer.dark}</span>
+              </span>
+            </div>
+          </li>
+        ))}
+      </ul>
+      {block.caption && (
+        <figcaption className="cb-layers-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function ColorRoles({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "colorRoles" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  return (
+    <figure ref={ref} className={`cb-roles${revealClass(inView)}`}>
+      <div className="cb-roles-grid">
+        {block.roles.map((role, i) => (
+          <article
+            key={i}
+            className="cb-roles-card"
+            style={{ ["--i" as string]: String(i) }}
+          >
+            <header className="cb-roles-head">
+              <span className="cb-roles-name">{role.name}</span>
+              <span className="cb-roles-purpose">{role.purpose}</span>
+            </header>
+            <div className="cb-roles-tier">
+              <div className="cb-roles-tier-label">Strong</div>
+              <div className="cb-roles-pair">
+                <span
+                  className="cb-roles-chip"
+                  style={{ background: role.strong.light }}
+                >
+                  <span className="cb-roles-chip-mode">L</span>
+                  <span className="cb-roles-chip-hex">
+                    {role.strong.light}
+                  </span>
+                </span>
+                <span
+                  className="cb-roles-chip cb-roles-chip-dark"
+                  style={{ background: role.strong.dark }}
+                >
+                  <span className="cb-roles-chip-mode">D</span>
+                  <span className="cb-roles-chip-hex">
+                    {role.strong.dark}
+                  </span>
+                </span>
+              </div>
+              <code className="cb-roles-token">{role.strong.token}</code>
+            </div>
+            <div className="cb-roles-tier">
+              <div className="cb-roles-tier-label">Subtle bg</div>
+              <div className="cb-roles-pair">
+                <span
+                  className="cb-roles-chip"
+                  style={{ background: role.subtle.light }}
+                >
+                  <span className="cb-roles-chip-mode">L</span>
+                  <span className="cb-roles-chip-hex">
+                    {role.subtle.light}
+                  </span>
+                </span>
+                <span
+                  className="cb-roles-chip cb-roles-chip-dark"
+                  style={{ background: role.subtle.dark }}
+                >
+                  <span className="cb-roles-chip-mode">D</span>
+                  <span className="cb-roles-chip-hex">
+                    {role.subtle.dark}
+                  </span>
+                </span>
+              </div>
+              <code className="cb-roles-token">{role.subtle.token}</code>
+            </div>
+          </article>
+        ))}
+      </div>
+      {block.caption && (
+        <figcaption className="cb-roles-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function DriftAudit({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "driftAudit" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  return (
+    <figure ref={ref} className={`cb-audit${revealClass(inView)}`}>
+      <ol className="cb-audit-list">
+        {block.items.map((item, i) => (
+          <li
+            key={i}
+            className="cb-audit-item"
+            style={{ ["--i" as string]: String(i) }}
+          >
+            <header className="cb-audit-head">
+              <span className="cb-audit-index">{item.index}</span>
+              <span className="cb-audit-title">{item.title}</span>
+            </header>
+            <div className="cb-audit-diff">
+              <pre className="cb-audit-code cb-audit-code-drift">
+                <span className="cb-audit-tag">drift</span>
+                <code>{item.drift}</code>
+              </pre>
+              <span className="cb-audit-arrow" aria-hidden="true">
+                →
+              </span>
+              <pre className="cb-audit-code cb-audit-code-fix">
+                <span className="cb-audit-tag">fix</span>
+                <code>{item.fix}</code>
+              </pre>
+            </div>
+            <p className="cb-audit-note">{item.note}</p>
+          </li>
+        ))}
+      </ol>
+      {block.caption && (
+        <figcaption className="cb-audit-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function WeightMap({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "weightMap" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  return (
+    <figure ref={ref} className={`cb-weightmap${revealClass(inView)}`}>
+      <div className="cb-weightmap-grid">
+        {block.views.map((view, i) => (
+          <div
+            key={i}
+            className={`cb-weightmap-view ${
+              i === 0 ? "cb-weightmap-view-muted" : "cb-weightmap-view-active"
+            }`}
+            style={{ ["--i" as string]: String(i) }}
+          >
+            <header className="cb-weightmap-header">
+              <span className="cb-weightmap-eyebrow">{view.label}</span>
+              {view.note && (
+                <span className="cb-weightmap-note">{view.note}</span>
+              )}
+            </header>
+            <div className="cb-weightmap-page" aria-hidden="true">
+              <div className="cb-weightmap-row cb-weightmap-row-header">
+                <span
+                  className={`cb-weightmap-block cb-weightmap-block-header cb-weightmap-tier-${view.tiers.header}`}
+                >
+                  Header
+                </span>
+              </div>
+              <div className="cb-weightmap-row cb-weightmap-row-hero">
+                <span
+                  className={`cb-weightmap-block cb-weightmap-block-hero cb-weightmap-tier-${view.tiers.hero}`}
+                >
+                  Hero
+                </span>
+              </div>
+              <div className="cb-weightmap-row cb-weightmap-row-cards">
+                <span
+                  className={`cb-weightmap-block cb-weightmap-block-card cb-weightmap-tier-${view.tiers.card1}`}
+                >
+                  Card
+                </span>
+                <span
+                  className={`cb-weightmap-block cb-weightmap-block-card cb-weightmap-tier-${view.tiers.card2}`}
+                >
+                  Card
+                </span>
+                <span
+                  className={`cb-weightmap-block cb-weightmap-block-card cb-weightmap-tier-${view.tiers.card3}`}
+                >
+                  Card
+                </span>
+              </div>
+              <div className="cb-weightmap-row cb-weightmap-row-cta">
+                <span
+                  className={`cb-weightmap-block cb-weightmap-block-cta cb-weightmap-tier-${view.tiers.cta}`}
+                >
+                  CTA
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      {block.caption && (
+        <figcaption className="cb-weightmap-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function SpacingElement({
+  type,
+}: {
+  type: "heading" | "body" | "button" | "card" | "section";
+}) {
+  switch (type) {
+    case "heading":
+      return (
+        <div className="cb-spacing-el cb-spacing-el-heading" aria-hidden="true">
+          <span className="cb-spacing-bar cb-spacing-bar-heading" />
+        </div>
+      );
+    case "body":
+      return (
+        <div className="cb-spacing-el cb-spacing-el-body" aria-hidden="true">
+          <span className="cb-spacing-line" />
+          <span className="cb-spacing-line" />
+          <span className="cb-spacing-line cb-spacing-line-short" />
+        </div>
+      );
+    case "card":
+      return (
+        <div className="cb-spacing-el cb-spacing-el-card" aria-hidden="true">
+          <span className="cb-spacing-card-title" />
+          <span className="cb-spacing-card-line" />
+          <span className="cb-spacing-card-line cb-spacing-card-line-short" />
+        </div>
+      );
+    case "button":
+      return (
+        <div className="cb-spacing-el cb-spacing-el-button" aria-hidden="true">
+          <span className="cb-spacing-pill" />
+        </div>
+      );
+    case "section":
+      return (
+        <div className="cb-spacing-el cb-spacing-el-section" aria-hidden="true">
+          <span className="cb-spacing-divider" />
+        </div>
+      );
+  }
+}
+
+function SpacingRhythm({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "spacingRhythm" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  return (
+    <figure ref={ref} className={`cb-spacing${revealClass(inView)}`}>
+      <div className="cb-spacing-grid">
+        {block.layouts.map((layout, i) => (
+          <div
+            key={i}
+            className={`cb-spacing-col ${
+              i === 0 ? "cb-spacing-col-muted" : "cb-spacing-col-active"
+            }`}
+            style={{ ["--i" as string]: String(i) }}
+          >
+            <header className="cb-spacing-header">
+              <span className="cb-spacing-eyebrow">{layout.label}</span>
+              {layout.note && (
+                <span className="cb-spacing-note">{layout.note}</span>
+              )}
+            </header>
+            <div className="cb-spacing-stack">
+              {layout.elements.map((el, j) => {
+                const isLast = j === layout.elements.length - 1;
+                const gap = layout.gaps[j];
+                const token = layout.tokens?.[j];
+                return (
+                  <Fragment key={j}>
+                    <SpacingElement type={el.type} />
+                    {!isLast && gap !== undefined && (
+                      <div
+                        className="cb-spacing-gap"
+                        style={{ ["--gap" as string]: `${gap}px` }}
+                        aria-label={
+                          token
+                            ? `${gap} pixel gap, token ${token}`
+                            : `${gap} pixel gap`
+                        }
+                      >
+                        <span className="cb-spacing-gap-tick">
+                          {gap}
+                          <span className="cb-spacing-gap-unit">px</span>
+                        </span>
+                        {token && (
+                          <span className="cb-spacing-gap-token">{token}</span>
+                        )}
+                      </div>
+                    )}
+                  </Fragment>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+      {block.caption && (
+        <figcaption className="cb-spacing-caption">
+          <RichText text={block.caption} />
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function MotionTrace({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "motionTrace" }>;
+}) {
+  const [ref, inView] = useInView<HTMLElement>();
+  return (
+    <figure ref={ref} className={`cb-motion${revealClass(inView)}`}>
+      <div className="cb-motion-grid">
+        {block.tracks.map((track, i) => (
+          <div
+            key={i}
+            className={`cb-motion-col ${
+              i === 0 ? "cb-motion-col-muted" : "cb-motion-col-active"
+            }`}
+            style={{ ["--i" as string]: String(i) }}
+          >
+            <header className="cb-motion-header">
+              <span className="cb-motion-eyebrow">{track.label}</span>
+              <span className="cb-motion-timing">{track.timing}</span>
+              {track.note && (
+                <span className="cb-motion-note">{track.note}</span>
+              )}
+            </header>
+            <div className={`cb-motion-track cb-motion-track-${track.pattern}`}>
+              <span className="cb-motion-rail" aria-hidden="true" />
+              <span className="cb-motion-trail" aria-hidden="true" />
+              <span className="cb-motion-puck" aria-hidden="true" />
+            </div>
+            <div className="cb-motion-stops" aria-hidden="true">
+              <span className="cb-motion-stop">Start</span>
+              <span className="cb-motion-stop">End</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      {block.caption && (
+        <figcaption className="cb-motion-caption">
+          <RichText text={block.caption} />
+        </figcaption>
       )}
     </figure>
   );

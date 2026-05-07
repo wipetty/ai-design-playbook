@@ -81,7 +81,13 @@ export type SectionBlock =
   | { kind: "wink"; text: string }
   | {
       kind: "checklist";
-      items: { positive: boolean; title: string; text: string }[];
+      items: {
+        positive: boolean;
+        title: string;
+        text: string;
+        image?: { src: string; alt: string };
+        video?: { src: string; alt: string; poster?: string };
+      }[];
     }
   | {
       kind: "steps";
@@ -142,10 +148,12 @@ export type SectionBlock =
       kind: "figureGrid";
       columns?: 2 | 3;
       caption?: string;
+      framed?: boolean;
       items: {
         eyebrow?: string;
         caption: string;
-        image: { src: string; alt: string };
+        image?: { src: string; alt: string };
+        video?: { src: string; alt: string; poster?: string };
       }[];
     }
   | {
@@ -216,6 +224,159 @@ export type SectionBlock =
         text: string;
         icon?: IconName;
         accent?: boolean;
+      }[];
+    }
+  | {
+      kind: "loopOrbit";
+      center?: string;
+      caption?: string;
+      stations: {
+        number?: string;
+        label: string;
+        meta?: string;
+      }[];
+    }
+  | {
+      kind: "lensCompare";
+      caption?: string;
+      center?: string;
+      left: { label: string; subtitle?: string; reveals: string[] };
+      right: { label: string; subtitle?: string; reveals: string[] };
+    }
+  | {
+      kind: "driftMeter";
+      caption?: string;
+      zones: {
+        weight: number;
+        tone: "positive" | "warn" | "signal";
+        eyebrow: string;
+        title: string;
+        text: string;
+        hint?: string;
+      }[];
+    }
+  | {
+      kind: "signGrid";
+      caption?: string;
+      items: {
+        diagram: "collapse" | "lag" | "break" | "dwarf";
+        eyebrow: string;
+        title: string;
+        text: string;
+      }[];
+    }
+  | {
+      kind: "typeStack";
+      caption?: string;
+      ramps: {
+        label: string;
+        note?: string;
+        range?: string;
+        tiers: {
+          tag: string;
+          size: number;
+          weight?: 400 | 500 | 600 | 700;
+          sample: string;
+          token?: string;
+        }[];
+      }[];
+    }
+  | {
+      kind: "swatchSet";
+      caption?: string;
+      groups: {
+        label: string;
+        note?: string;
+        swatches: {
+          hex: string;
+          role: string;
+          usage: string;
+          token?: string;
+        }[];
+      }[];
+    }
+  | {
+      kind: "themeTokens";
+      caption?: string;
+      tokens: {
+        name: string;
+        role: string;
+        light: string;
+        dark: string;
+        usage: string;
+      }[];
+    }
+  | {
+      kind: "themeLayers";
+      caption?: string;
+      layers: {
+        slot: "pasteboard" | "base" | "layer-1" | "layer-2" | "elevated";
+        name: string;
+        role: string;
+        light: string;
+        dark: string;
+        note?: string;
+      }[];
+    }
+  | {
+      kind: "colorRoles";
+      caption?: string;
+      roles: {
+        name: string;
+        purpose: string;
+        strong: { token: string; light: string; dark: string };
+        subtle: { token: string; light: string; dark: string };
+      }[];
+    }
+  | {
+      kind: "driftAudit";
+      caption?: string;
+      items: {
+        index: string;
+        title: string;
+        drift: string;
+        fix: string;
+        note: string;
+      }[];
+    }
+  | {
+      kind: "weightMap";
+      caption?: string;
+      views: {
+        label: string;
+        note?: string;
+        tiers: {
+          header: "primary" | "secondary" | "tertiary" | "ambient";
+          hero: "primary" | "secondary" | "tertiary" | "ambient";
+          card1: "primary" | "secondary" | "tertiary" | "ambient";
+          card2: "primary" | "secondary" | "tertiary" | "ambient";
+          card3: "primary" | "secondary" | "tertiary" | "ambient";
+          cta: "primary" | "secondary" | "tertiary" | "ambient";
+        };
+      }[];
+    }
+  | {
+      kind: "spacingRhythm";
+      caption?: string;
+      layouts: {
+        label: string;
+        note?: string;
+        elements: {
+          type: "heading" | "body" | "button" | "card" | "section";
+          label: string;
+        }[];
+        gaps: number[];
+        tokens?: string[];
+      }[];
+    }
+  | {
+      kind: "motionTrace";
+      caption?: string;
+      tracks: {
+        label: string;
+        note?: string;
+        timing: string;
+        pattern: "linear" | "spring" | "soft" | "snap";
       }[];
     };
 
@@ -1572,9 +1733,9 @@ export const playbook: Part[] = [
                   },
                   {
                     icon: "ruler",
-                    eyebrow: "Spectrum / design-system MCP",
+                    eyebrow: "Spectrum MCPs",
                     title: "Reach into the system",
-                    text: "Look up tokens, components, and patterns by name. The assistant stops inventing close-but-wrong UI and starts using what's already approved.",
+                    text: "`@react-spectrum/mcp` is the official S2 server — components, props, examples. `@adobe/spectrum-design-data-mcp` exposes tokens and component anatomy. `@adobe/s2-docs-mcp` exposes usage and accessibility. Wired alongside Figma, the model stops inventing close-but-wrong UI and starts using what's already approved.",
                   },
                   {
                     icon: "wand",
@@ -2094,6 +2255,60 @@ description: Run the accessibility floor before pushing for review. Use any time
             ],
           },
           {
+            heading: "Run agents in parallel",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Once the slices are small enough that they don't depend on each other, you stop running them in sequence. Cursor and Claude Code both let you spin up more than one agent at a time — a subagent for a side question, a worktree for a parallel build, a cloud agent grinding on something autonomously while you keep working on the main thread. The per-message craft from earlier in this chapter still applies. What changes is that you're now briefing a session, not a turn. There's no follow-up message coming, so the brief has to stand on its own.",
+              },
+              {
+                kind: "bento",
+                items: [
+                  {
+                    size: "hero",
+                    accent: true,
+                    icon: "loop",
+                    eyebrow: "Parallel builds",
+                    title: "Three variations at the same time",
+                    text: "Three worktrees, three branches, three takes on the same screen — running concurrently instead of in series. Merge the switcher in last. This is the infrastructure for the variation pattern in chapter 8: instead of building A, then B, then C in sequence, you brief three agents on the same problem and compare what comes back in the same hour.",
+                  },
+                  {
+                    size: "small",
+                    icon: "compass",
+                    eyebrow: "Subagents",
+                    title: "Delegate the side quest",
+                    text: "Hand the \"audit which tokens this screen actually uses\" task to a fresh session. A clean summary comes back. Your main thread stays sharp.",
+                  },
+                  {
+                    size: "small",
+                    icon: "check",
+                    eyebrow: "Reviewer agents",
+                    title: "A second pass on the diff",
+                    text: "Spawn an agent to read the change as a critic — token drift, voice slips, missed accessibility, Spectrum violations. It reads the diff, not the conversation.",
+                  },
+                  {
+                    size: "wide",
+                    icon: "spark",
+                    eyebrow: "Background and cloud agents",
+                    title: "Hand off, walk away",
+                    text: "Long-running autonomous work. Convert every custom button to a Spectrum component. Review the last twenty PRs for copy issues. The unit of work shifts from a prompt to a brief that runs while you do something else.",
+                  },
+                ],
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "wand",
+                title: "How this looks today",
+                text: "In Cursor, parallel chats, background agents, and cloud agents in their own worktrees. In Claude Code, the Task tool spawns a subagent inline, and git worktrees give you parallel branches to run agents against. The product names will shift; the patterns won't. Anthropic's [multi-agent research post](https://www.anthropic.com/engineering/built-multi-agent-research-system) and Cursor's [background agents docs](https://cursor.com/docs/background-agent) are the clearest current references.",
+              },
+              {
+                kind: "wink",
+                text: "The hardest part isn't running three agents — it's writing a brief sharp enough that one of them doesn't need a second message. If you can't, the slice is still too big to parallelize.",
+              },
+            ],
+          },
+          {
             heading: "Two anti-patterns worth naming",
             blocks: [
               {
@@ -2143,7 +2358,7 @@ description: Run the accessibility floor before pushing for review. Use any time
         title: "Planning and exploring options",
         summary:
           "Touring unfamiliar codebases and design systems, sparring on decisions, reading product data, generating alternatives, and turning all of it into a plan you can execute. The work that determines whether the build succeeds.",
-        readTime: "10 min",
+        readTime: "8 min",
         sections: [
           {
             heading: "The work that determines whether the build succeeds",
@@ -2475,7 +2690,7 @@ description: Run the accessibility floor before pushing for review. Use any time
         title: "Documenting design and handing it off",
         summary:
           "Handoff isn't a single act anymore. It's a network of small handoffs — to the model, to content, to QE, to engineering, and to the next designer — each with its own audience and its own artifact.",
-        readTime: "6 min",
+        readTime: "13 min",
         sections: [
           {
             heading: "Handoff isn't a single act anymore",
@@ -2826,38 +3041,364 @@ description: Run the accessibility floor before pushing for review. Use any time
         number: 11,
         title: "From Figma to working UI and back",
         summary:
-          "The design-to-code loop in practice: when to design first, when to skip Figma, when to go back to Figma after the build, and how each round-trip serves a different purpose.",
-        readTime: "6 min",
+          "The design-to-code loop has four moments — starting, mid-build, review, and after shipping — each with a different right answer. Underneath the workflow is the harder craft of reading what Figma and code each tell you about the design.",
+        readTime: "10 min",
         sections: [
           {
-            heading: "The design-to-code loop",
-            body: "The loop is shorter than it used to be: sketch or design, generate, run, react, and revise. Each pass narrows the gap between the picture in your head and the thing on the screen. The skill is staying in the loop instead of bouncing between disconnected tools.",
-          },
-          {
-            heading: "When to design first, when to skip Figma",
-            body: "Figma still earns its keep when you are aligning with stakeholders, exploring visual direction, or capturing decisions for the team. It is often the wrong tool when you are exploring a single interaction or trying to feel an actual flow. Some work goes from sketch to prototype faster without the round trip through frames.",
-            bullets: [
-              "Design in Figma when alignment, hand-off, or systems thinking is the goal.",
-              "Skip to code when interaction, motion, or feel is the goal.",
-              "Use both when the project crosses from exploration into shipping.",
+            heading: "The wrong question",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Every vibe-coded project starts with a question, and it's the wrong one. *Should I design this in Figma first, or just go straight to code?* It assumes the choice is binary and one-time. In practice the choice is plural and continuous — you'll move between Figma and code many times in any non-trivial project, and each round-trip serves a different purpose.",
+              },
+              {
+                kind: "pullquote",
+                text: "Figma and code aren't substitutes. They're different views of the same design — each better at exposing different parts of it.",
+              },
+              {
+                kind: "paragraph",
+                text: "This chapter is about the loop. Four moments, four reasons to make the trip. And underneath the workflow, the craft question that runs through all of them: what is each surface telling you about the design that the other one can't?",
+              },
             ],
           },
           {
-            heading: "Screenshot vs. frame vs. spec",
-            body: "Three common ways to feed a design into the assistant, each with a different cost and outcome. Pick deliberately: a sloppy screenshot can buy you a great first pass, and a perfect spec is sometimes overkill for an exploration.",
-            bullets: [
-              "Screenshot: fastest, lowest fidelity, useful for vibe and rough layout.",
-              "Frame via Figma MCP: structured, names and tokens preserved, best for systems-aware output.",
-              "Written spec: best when the design does not exist yet, or when constraints matter more than visuals.",
+            heading: "Two surfaces, two kinds of feedback",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The two tools don't just *do* different things. They *reveal* different things. Figma surfaces composition problems — when type sizes don't have a clear hierarchy, when spacing rhythm is off, when visual weight is unbalanced. Code surfaces behavioral problems — when an interaction feels cheap, when a layout doesn't accommodate the real range of content, when a transition is a fraction of a second too slow to feel responsive.",
+              },
+              {
+                kind: "lensCompare",
+                center: "The design",
+                left: {
+                  label: "Figma",
+                  subtitle: "Static surface",
+                  reveals: [
+                    "Hierarchy",
+                    "Spacing rhythm",
+                    "Alignment",
+                    "Color relationships",
+                    "Parallel options",
+                  ],
+                },
+                right: {
+                  label: "Code",
+                  subtitle: "Live surface",
+                  reveals: [
+                    "Interaction quality",
+                    "Real-data layout",
+                    "Motion timing",
+                    "State transitions",
+                    "Flow at speed",
+                  ],
+                },
+                caption:
+                  "A design only ever evaluated in one surface has only been half-evaluated. Almost every real project has both kinds of problems in it.",
+              },
+              {
+                kind: "wink",
+                text: "The question isn't *which tool*. It's *which tool, for which part, when — and what is each one teaching me that the other can't?*",
+              },
             ],
           },
           {
-            heading: "Going back to Figma after the build",
-            body: "The loop is not finished when the prototype runs. The working build almost always teaches you something the static design missed — a state you forgot, a transition that needed a softer curve, a layout that only feels right at one breakpoint. Those discoveries belong back in Figma if the work is going to be picked up by the team.",
-            bullets: [
-              "For hand-off: capture the final states and edge cases the build surfaced, so engineering inherits the decisions instead of re-deriving them.",
-              "For the design system: feed novel patterns back into the library, with the version of the component the build actually used.",
-              "For the record: keep a frame that matches what shipped, so the next round of exploration starts from reality rather than an older intent.",
+            heading: "Four moments in the loop",
+            blocks: [
+              {
+                kind: "loopOrbit",
+                center: "The design",
+                caption:
+                  "The four moments tend to happen in order, but not strictly — late-stage projects loop back to early-stage moves, and that's fine. Each moment has a different right answer, and a craft question attached.",
+                stations: [
+                  {
+                    number: "01",
+                    label: "Starting",
+                    meta: "Where to think",
+                  },
+                  {
+                    number: "02",
+                    label: "Mid-build",
+                    meta: "When the design evolves",
+                  },
+                  {
+                    number: "03",
+                    label: "Review",
+                    meta: "Which artifact to share",
+                  },
+                  {
+                    number: "04",
+                    label: "After shipping",
+                    meta: "Reconciling the file",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            heading: "Moment one — should you start in Figma at all?",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The default for most designers is to start in Figma. It's the tool you know, the tool where exploration is cheapest. For most projects that default is correct. But the craft question underneath is sharper than the workflow one: *what kind of design problem am I solving — a composition problem, or a behavior problem?*",
+              },
+              {
+                kind: "pullquote",
+                text: "Composition problems live in Figma. Behavior problems live in code.",
+              },
+              {
+                kind: "checklist",
+                items: [
+                  {
+                    positive: true,
+                    title: "Start in Figma when you don't yet know what you're making",
+                    text: "Shape exploration belongs in Figma — code adds friction at the exact moment exploration needs to be frictionless.",
+                    image: {
+                      src: "/images/figma-firefly-edit-exploration.png",
+                      alt: "Figma frame of an early Firefly Edit exploration — a dark canvas with a generated landscape and a floating *Describe the specific change needed here* popup, surrounded by alternate placements of the prompt input and tool stack.",
+                    },
+                  },
+                  {
+                    positive: false,
+                    title: "Skip Figma when the design only makes sense in motion",
+                    text: "Scroll-driven animation, gesture interactions, state machines with conditional transitions — these don't compress to static frames.",
+                    video: {
+                      src: "/images/motion-only-makes-sense-in-motion.mp4",
+                      alt: "Screen recording of Dakota's board view — a dark gallery grid of AI-generated images and short looping videos sitting side by side, with the user scrolling as videos play in place.",
+                    },
+                  },
+                  {
+                    positive: false,
+                    title: "Skip Figma when the design is a function of real data",
+                    text: "A list whose density depends on what comes back. A dashboard shaped by the actual numbers. Placeholder data hides the design problem.",
+                  },
+                  {
+                    positive: false,
+                    title: "Skip Figma when you're extending an existing surface",
+                    text: "A new state on a shipping component, a tweak to a flow in production. The cheapest place to design is inside the running product.",
+                  },
+                  {
+                    positive: true,
+                    title: "Start in Figma when sign-off is required before any of it is built",
+                    text: "Code is harder to review at that fidelity, harder to revise from feedback, and signals a commitment that's expensive to back out of.",
+                  },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "The mistake isn't starting in Figma when you should. It's *staying* in Figma after Figma has stopped being useful — which is what the next moment is about.",
+              },
+            ],
+          },
+          {
+            heading: "Moment two — when to go back to Figma during the build",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The build is partway done. You're looking at it, and you can see what's wrong — the hierarchy isn't quite right, the layout doesn't accommodate long content, a state surfaces you didn't think of when you started. The question is whether to fix it in code, or go back to Figma, redesign, and update the code.",
+              },
+              {
+                kind: "pullquote",
+                text: "Is the build telling me something Figma couldn't?",
+              },
+              {
+                kind: "paragraph",
+                text: "The most underweighted moment in vibe coding is the moment you look at the build and feel that something is off. The reflex is to treat it as an implementation problem and push the build closer to the file. Sometimes that's right. But sometimes the build is right and the file was wrong — and the discomfort is the build telling you that the design as drawn doesn't survive contact with reality.",
+              },
+              {
+                kind: "signGrid",
+                items: [
+                  {
+                    diagram: "collapse",
+                    eyebrow: "Real content",
+                    title: "The layout collapses at the extremes",
+                    text: "The Figma version had ideal-length copy. The build has the actual range — and the rhythm breaks at one end of it.",
+                  },
+                  {
+                    diagram: "lag",
+                    eyebrow: "In motion",
+                    title: "What felt fine in your head feels slow",
+                    text: "The Figma file couldn't have shown this. The build can. Trust the feeling — it's design feedback, not implementation friction.",
+                  },
+                  {
+                    diagram: "break",
+                    eyebrow: "In sequence",
+                    title: "States break the flow",
+                    text: "Each state looks reasonable in isolation. Click through three in a row and one of them is wrong.",
+                  },
+                  {
+                    diagram: "dwarf",
+                    eyebrow: "Real data",
+                    title: "Hierarchy the placeholder hid",
+                    text: "Headings that read as primary in Figma are dwarfed by the actual content beside them once it's there.",
+                  },
+                ],
+              },
+              {
+                kind: "compareFlow",
+                before: {
+                  label: "Fix it in code",
+                  steps: [
+                    "Local visual tweaks — spacing, color, type",
+                    "Behavioral changes — states, transitions, interactions",
+                    "Anything cheaper to see than to draw",
+                  ],
+                },
+                after: {
+                  label: "Go back to Figma",
+                  steps: [
+                    "Structural changes that ripple through components",
+                    "Information architecture, page-level reorganization",
+                    "When you've lost track of what the design is supposed to be",
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            heading: "Moment three — which artifact for which question?",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Most reviews go badly because the artifact and the question don't match. A polished build invites detail feedback when you wanted direction feedback. A Figma file invites direction feedback when you wanted experience feedback. The craft is matching the artifact to the question — and being explicit about both when you walk into the room.",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    icon: "bolt",
+                    eyebrow: "Experience",
+                    title: "Show the build",
+                    text: "When you want feedback at the level of *I clicked submit and it took too long.* Working prototypes produce grounded, specific feedback that frames can't.",
+                  },
+                  {
+                    icon: "compass",
+                    eyebrow: "Direction",
+                    title: "Show Figma",
+                    text: "When the experience doesn't exist yet and you want feedback on shape, approach, vibe. A working prototype shown too early invites detail feedback for a stage that hasn't earned it.",
+                  },
+                  {
+                    icon: "loop",
+                    eyebrow: "Decision",
+                    title: "Show both",
+                    text: "Frames anchor the intent; the prototype shows where the build is now. The gap between them is where the conversation lives — the highest-quality review available.",
+                  },
+                ],
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "chat",
+                title: "Frame the artifact when you share it",
+                text: "*\"This is a build for review, not a build that's near shipping — we expect to throw most of this away based on what you tell us.\"* Saying this out loud calibrates the room. The build is more impressive than the file, and stakeholders will treat a working prototype as more committed-to than it is unless you tell them otherwise.",
+              },
+              {
+                kind: "wink",
+                text: "Some questions don't need an artifact at all. The vibe-coded reflex is to build something to ask a question. Sometimes the right move is to ask the question first.",
+              },
+            ],
+          },
+          {
+            heading: "Moment four — reconciling Figma after the build ships",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The feature shipped. Spacing adjusted. Variants got added. The Figma file no longer matches what users see. The craft question for each change is the same: *did the build improve the design, or dilute it?*",
+              },
+              {
+                kind: "driftMeter",
+                caption:
+                  "Most drift is the build teaching you something — read it that way before you reconcile.",
+                zones: [
+                  {
+                    weight: 65,
+                    tone: "positive",
+                    hint: "Most",
+                    eyebrow: "Most drift",
+                    title: "Improvement",
+                    text: "The build taught you something the file couldn't. Update Figma — the new version is canonical.",
+                  },
+                  {
+                    weight: 25,
+                    tone: "warn",
+                    hint: "Some",
+                    eyebrow: "Some drift",
+                    title: "Dilution",
+                    text: "Constraints hit, time ran short. Capture what shipped *and* what you'd come back to with more time.",
+                  },
+                  {
+                    weight: 10,
+                    tone: "signal",
+                    hint: "Rare",
+                    eyebrow: "Rare drift",
+                    title: "A wrong original",
+                    text: "The build improved on intentions the file expressed badly. Update the underlying pattern, not just the screen.",
+                  },
+                ],
+              },
+              {
+                kind: "pathway",
+                items: [
+                  {
+                    number: "01",
+                    title: "Screenshot what shipped",
+                    description:
+                      "Capture every state before opening Figma. These reference shots ship to QE and the next designer too.",
+                  },
+                  {
+                    number: "02",
+                    title: "Update components, not screens",
+                    description:
+                      "Change the button once and let it propagate. Updating screens directly breeds inconsistency between instances.",
+                  },
+                  {
+                    number: "03",
+                    title: "Add the variants the build revealed",
+                    description:
+                      "Empty states, errors, the edge cases you didn't know you needed. The file deserves to know about them now.",
+                  },
+                  {
+                    number: "04",
+                    title: "Note what changed and why",
+                    description:
+                      "One short comment at the top — *empty state added, header tightened from real content* — tells the next person what they're looking at.",
+                  },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "Don't keep Figma synced *during* the build. You'll redo the same update two hours later. Reconcile at the end, when the answers have stabilized.",
+              },
+            ],
+          },
+          {
+            heading: "Where the variations go",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Most variations you produced during the build don't belong in the canonical Figma file. They were exploration, not the design. But they're worth keeping somewhere — they're some of the most valuable artifacts the project produced.",
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "layers",
+                title: "An /explorations file for the rest",
+                text: "Keep abandoned variations in a separate Figma file or page. Light annotation on each — *this version was rejected because the extra column made the table unreadable on smaller viewports* — turns each one from a dead end into institutional knowledge for the next designer who picks up the surface. Pairs with the variation pattern in Chapter 8 and the next-designer handoff in Chapter 9.",
+              },
+            ],
+          },
+          {
+            heading: "What this chapter is really arguing",
+            blocks: [
+              {
+                kind: "pullquote",
+                text: "The trip between Figma and code is not workflow overhead. It's where the design gets better.",
+              },
+              {
+                kind: "paragraph",
+                text: "Figma reveals composition. Code reveals behavior. The four moments — starting, mid-build, review, shipping — each ask a different question of the loop, and each rewards different judgment. The instinct most designers need to fight isn't *use Figma less* or *use Figma more.* It's *stop treating the choice as one-time.* The next chapter, on visual fidelity, picks up where this one ends — once you have a build to evaluate, what specifically are you looking at, and how do you tell when the model has drifted from the design.",
+              },
             ],
           },
         ],
@@ -2867,91 +3408,1023 @@ description: Run the accessibility floor before pushing for review. Use any time
         number: 12,
         title: "Visual design fidelity",
         summary:
-          "Spacing, typography, color, hierarchy. Using Spectrum or your design system as the canonical reference, and recognizing the visual tells that mark AI output as AI output.",
-        readTime: "6 min",
+          "AI lands every build in the *almost right* zone by default. The gap shows up in five places — spacing, typography, color, hierarchy, and motion — and closing it means anchoring the model in a design system: Spectrum tokens, the alias tier, and one Provider that handles light and dark.",
+        readTime: "18 min",
         sections: [
           {
-            heading: "Tokens, not magic numbers",
-            body: "AI-generated UI loves to invent values. A 13-pixel padding here, a 17-pixel radius there, a color two clicks off Spectrum blue. Force the assistant to use your tokens by name. The output looks consistent on the first pass instead of needing a polish round to undo the drift.",
-          },
-          {
-            heading: "Spectrum as the canonical reference",
-            body: "Inside Adobe, Spectrum is the answer to most visual questions. When the assistant proposes a custom button, picker, or modal, redirect it to the Spectrum equivalent before you accept the change. The team conversation gets shorter when everyone is pointing at the same source of truth.",
-          },
-          {
-            heading: "AI's visual tells",
-            body: "There is a recognizable look to under-edited AI UI. Once you can name it, you can fix it on the first review pass.",
-            bullets: [
-              "Sloppy hierarchy: too many sizes, weights, and colors fighting for the same level.",
-              "Generic illustration and stock-feeling iconography.",
-              "Off-brand spacing rhythm, especially in cards and lists.",
-              "Plausible-looking but slightly wrong contrast on secondary text.",
-              "Buttons that almost match the system but use the wrong corner radius or shadow.",
-            ],
-          },
-        ],
-      },
-      {
-        id: "motion-and-real-content",
-        number: 13,
-        title: "Motion and real content",
-        summary:
-          "Replacing placeholder transitions and lorem ipsum with motion that matches your product's vocabulary and content that reflects what users will actually see. Why this changes how stakeholders react.",
-        readTime: "5 min",
-        sections: [
-          {
-            heading: "Describe motion the way a director would",
-            body: "Models are bad at guessing motion intent and good at executing motion that is described well. Tell the assistant the trigger, the property, the duration, the easing, and the feeling. Motion is one of the few places where a paragraph of language outperforms a screenshot.",
-            bullets: [
-              "Trigger: what user action starts it.",
-              "Property: what is animating, in concrete terms.",
-              "Duration and easing: the timing and the curve.",
-              "Feeling: snappy, calm, playful, mechanical.",
+            heading: "The hum of wrongness",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "There's a moment in every vibe-coded build where the model produces something that's almost right. Nothing is broken. A stakeholder would say it looked fine. But you can feel something off — a low hum of wrongness you can't immediately point to.",
+              },
+              {
+                kind: "pullquote",
+                text: "The gap between *almost right* and *right* is where most of design lives — and AI output lands in the *almost* zone by default.",
+              },
+              {
+                kind: "paragraph",
+                text: "This chapter is about that hum. Naming what's wrong, training your eye on the dimension, and pushing the build toward the standard.",
+              },
             ],
           },
           {
-            heading: "A short list of libraries worth knowing",
-            body: "You do not need to memorize every animation library, but a small mental shortlist makes prompts more productive. Name the library you want and the assistant produces idiomatic code instead of invented APIs.",
-            bullets: [
-              "Framer Motion or Motion for React component animation.",
-              "CSS transitions and view transitions for the smallest, fastest cases.",
-              "Lottie when you need a designed motion asset, not a coded one.",
+            heading: "The five things you're actually looking at",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "When a build looks off but the designer can't say why, the wrongness is almost always in one of five places. Each fails differently. Each wants a different kind of attention. Train your eye to check them in sequence and the diagnosis gets dramatically faster.",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    icon: "ruler",
+                    eyebrow: "Dimension 01",
+                    title: "Spacing",
+                    text: "What holds a layout together. AI distributes air uniformly — every element gets the same polite breathing room, and nothing claims the space it actually needs.",
+                    image: {
+                      src: "/images/visual-fidelity-spacing-bars.png",
+                      alt: "Vertical chromatic bars of varying widths set against a dark background, separated by deliberate gaps — light columns of blue, magenta, and silver tracing the rhythm of a layout grid.",
+                      position: "center",
+                    },
+                  },
+                  {
+                    icon: "layers",
+                    eyebrow: "Dimension 02",
+                    title: "Typography",
+                    text: "What tells the user what to read first. AI compresses the ramp — heading 18, body 16, caption 14 — so the hierarchy reads as 'present' rather than 'pointing.'",
+                    image: {
+                      src: "/images/visual-fidelity-typography-glitch.png",
+                      alt: "The word TYPOGRAPHY rendered in tall vertical letters with a fractured chromatic-aberration glitch effect — blue, magenta, and silver bands cutting through each character.",
+                      position: "center",
+                    },
+                  },
+                  {
+                    icon: "spark",
+                    eyebrow: "Dimension 03",
+                    title: "Color",
+                    text: "What carries brand and signals state. AI defaults to generic palettes and applies color aesthetically rather than meaningfully. Nothing earns its hue.",
+                    image: {
+                      src: "/images/visual-fidelity-color-spectrum.png",
+                      alt: "Vertical streaks of refracted light forming a full prismatic spectrum — blue, magenta, green, gold, and white — across a dark surface, a palette caught mid-shimmer.",
+                      position: "center",
+                    },
+                  },
+                  {
+                    icon: "target",
+                    eyebrow: "Dimension 04",
+                    title: "Hierarchy",
+                    text: "Spacing, type, and color combined. AI produces output where every level is technically present but compressed — primary and secondary read as siblings, not parent and child.",
+                    image: {
+                      src: "/images/visual-fidelity-hierarchy-orb.png",
+                      alt: "A bright central orb of light flanked by softer chromatic columns of blue, magenta, and silver — one element claiming the eye, the rest receding to support it.",
+                      position: "center",
+                    },
+                  },
+                  {
+                    icon: "wand",
+                    eyebrow: "Dimension 05",
+                    title: "Motion",
+                    text: "What makes the design feel like the product. AI defaults to generic 300-millisecond fades. The right motion has a trigger, a property, a duration, an easing, and a feeling — and matches the product's voice.",
+                    image: {
+                      src: "/images/visual-fidelity-motion-blur.png",
+                      alt: "Diagonal streaks of motion blur with chromatic light trails — blue, magenta, and white — across a dark surface, capturing the feel of designed motion.",
+                      position: "center",
+                    },
+                  },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "Five failure modes, by design. Your job is to put the edges back.",
+              },
             ],
           },
           {
-            heading: "Real content beats lorem ipsum",
-            body: "A prototype with realistic data exposes problems a prototype with placeholder text hides. Long names break layouts. Empty states feel different from full ones. Numbers with commas look different from numbers without. Ask the assistant to populate the prototype with data that looks like the real thing, and you will catch design issues that lorem ipsum politely covers up.",
+            heading: "Spacing",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "AI tends toward uniform, polite, slightly-too-much-everywhere distribution. Cards in a grid get the same gap as section breaks. Everything sits on the same rhythm, and the layout flattens — because nothing is allowed to be *closer* than something else.",
+              },
+              {
+                kind: "spacingRhythm",
+                caption:
+                  "Same elements, two compositions. The raw column sits on a single hard-coded value. The token column reaches for the everyday S2 sizes — `size-100`, `size-200`, `size-300`, `size-400`, `size-600` — and the rhythm appears for free.",
+                layouts: [
+                  {
+                    label: "AI default",
+                    note: "Every gap on the same rhythm, hard-coded.",
+                    elements: [
+                      { type: "heading", label: "Heading" },
+                      { type: "body", label: "Body" },
+                      { type: "card", label: "Card" },
+                      { type: "card", label: "Card" },
+                      { type: "button", label: "Action" },
+                      { type: "section", label: "Next section" },
+                    ],
+                    gaps: [16, 16, 16, 16, 16],
+                  },
+                  {
+                    label: "S2 tokens",
+                    note: "Tight inside groups. Loose between them.",
+                    elements: [
+                      { type: "heading", label: "Heading" },
+                      { type: "body", label: "Body" },
+                      { type: "card", label: "Card" },
+                      { type: "card", label: "Card" },
+                      { type: "button", label: "Action" },
+                      { type: "section", label: "Next section" },
+                    ],
+                    gaps: [8, 24, 16, 32, 48],
+                    tokens: [
+                      "size-100",
+                      "size-300",
+                      "size-200",
+                      "size-400",
+                      "size-600",
+                    ],
+                  },
+                ],
+              },
+              {
+                kind: "pullquote",
+                text: "The fix isn't about absolute numbers. It's about *relationships between numbers* — which spacings should be tighter, which should be looser, and which middle-ground ones stay where they are.",
+              },
+              {
+                kind: "paragraph",
+                text: "The full ramp — every `size-*` token, the t-shirt-sized layout sizes that scale with density, and the rules for when to reach for which — lives in the [S2 spacing reference](https://s2.spectrum.corp.adobe.com/page/spacing/). Point the model at it the same way you point it at the colors page: a single canonical source for the names, so the assistant stops inventing pixel values and starts reaching for tokens that already exist.",
+              },
+            ],
           },
           {
-            heading: "Why this changes how stakeholders react",
-            body: "A prototype with the right motion and the right content stops feeling like a sketch and starts feeling like the product. The conversation moves off layout and onto the decisions that actually matter — what the feature does, who it serves, and whether it earns its place. Placeholder transitions and lorem ipsum invite placeholder feedback. Real motion and real content invite real critique.",
+            heading: "Typography",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The most common typography failure: type sizes too close together. Heading 18, body 16, caption 14 — three sizes inside four pixels of each other. The hierarchy is technically present and visually invisible. The user's eye can't find the entry point because nothing is meaningfully larger than anything else.",
+              },
+              {
+                kind: "typeStack",
+                caption:
+                  "Same body size; very different hierarchy. Compressed ramps read as *there is a hierarchy here.* Open ramps, anchored in S2 type tokens, read as *this is what matters.*",
+                ramps: [
+                  {
+                    label: "Compressed",
+                    note: "What AI tends to produce — three sizes inside a four-pixel range, no token references.",
+                    range: "Range: 14 → 18px",
+                    tiers: [
+                      { tag: "Heading", size: 18, weight: 600, sample: "Quarterly review" },
+                      { tag: "Body", size: 16, weight: 400, sample: "Quarterly review" },
+                      { tag: "Caption", size: 14, weight: 400, sample: "Quarterly review" },
+                    ],
+                  },
+                  {
+                    label: "S2 ramp",
+                    note: "What the design wants — sizes named, hierarchy obvious, the eye lands.",
+                    range: "Range: 12 → 32px",
+                    tiers: [
+                      { tag: "Heading", size: 32, weight: 700, sample: "Quarterly review", token: "font-size-800" },
+                      { tag: "Body", size: 16, weight: 400, sample: "Quarterly review", token: "font-size-200" },
+                      { tag: "Caption", size: 12, weight: 500, sample: "Quarterly review", token: "font-size-75" },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            heading: "Color",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Color fidelity has two layers. The brand layer — using the right colors — and the meaning layer — using each color for the right purpose. AI fails generically at the brand layer: the blues, grays, and accent reds it produces are statistically average, which means they don't look like anyone's brand in particular. The meaning layer fails more interestingly.",
+              },
+              {
+                kind: "swatchSet",
+                caption:
+                  "AI applies color for visual interest. A UI applies color to communicate. The fix is the alias tier — every color reserved for a job, every job named.",
+                groups: [
+                  {
+                    label: "Aesthetic",
+                    note: "How AI tends to apply color — raw hex, same hue, different jobs.",
+                    swatches: [
+                      { hex: "#2563eb", role: "Primary buttons", usage: "Brand blue, applied because it looks right." },
+                      { hex: "#2563eb", role: "Secondary actions", usage: "Same blue, slightly different opacity." },
+                      { hex: "#2563eb", role: "Highlighted card", usage: "Same blue, used as accent decoration." },
+                      { hex: "#2563eb", role: "Section header", usage: "Same blue, again, for visual interest." },
+                    ],
+                  },
+                  {
+                    label: "Semantic — S2 aliases",
+                    note: "What the design wants — every color named, every name a job.",
+                    swatches: [
+                      { hex: "#3b63fb", role: "Primary action", usage: "Buttons, focused states, brand moments.", token: "accent-color-900" },
+                      { hex: "#3b63fb", role: "Information", usage: "Neutral status, info banners, helpful hints.", token: "informative-color-900" },
+                      { hex: "#d73220", role: "Destructive", usage: "Errors, deletion, irreversible actions.", token: "negative-color-900" },
+                      { hex: "#c24e00", role: "Warning", usage: "Cautions and reversible problems.", token: "notice-color-900" },
+                      { hex: "#05834e", role: "Success", usage: "Confirmation states and positive results.", token: "positive-color-900" },
+                      { hex: "#292929", role: "Body text", usage: "Default foreground, paragraphs, labels.", token: "neutral-content-color-default" },
+                    ],
+                  },
+                ],
+              },
+              {
+                kind: "paragraph",
+                text: "S2 organizes color into six *roles*, each a small family of paired tokens. The strong tier (`-color-900`) is the saturated voice; the subtle background tier is the same role at low intensity. They're designed to be used together — strong text on subtle background — and both swap between schemes automatically.",
+              },
+              {
+                kind: "colorRoles",
+                caption:
+                  "Six roles, two tiers each, light and dark values. Reach for the role token, not the underlying palette — `negative-color-900`, never `red-900`.",
+                roles: [
+                  {
+                    name: "Accent",
+                    purpose: "Brand · primary action",
+                    strong: { token: "accent-color-900", light: "#3b63fb", dark: "#5681ff" },
+                    subtle: { token: "accent-subtle-background-color-default", light: "#e5f0fe", dark: "#0c2175" },
+                  },
+                  {
+                    name: "Informative",
+                    purpose: "Information · neutral status",
+                    strong: { token: "informative-color-900", light: "#3b63fb", dark: "#5681ff" },
+                    subtle: { token: "informative-subtle-background-color-default", light: "#e5f0fe", dark: "#0c2175" },
+                  },
+                  {
+                    name: "Negative",
+                    purpose: "Errors · destructive action",
+                    strong: { token: "negative-color-900", light: "#d73220", dark: "#fc432e" },
+                    subtle: { token: "negative-subtle-background-color-default", light: "#ffebe8", dark: "#571107" },
+                  },
+                  {
+                    name: "Notice",
+                    purpose: "Warnings · reversible cautions",
+                    strong: { token: "notice-color-900", light: "#c24e00", dark: "#e06400" },
+                    subtle: { token: "notice-subtle-background-color-default", light: "#ffeccf", dark: "#501b00" },
+                  },
+                  {
+                    name: "Positive",
+                    purpose: "Success · confirmations",
+                    strong: { token: "positive-color-900", light: "#05834e", dark: "#099d59" },
+                    subtle: { token: "positive-subtle-background-color-default", light: "#d7f7e1", dark: "#003326" },
+                  },
+                  {
+                    name: "Neutral",
+                    purpose: "Default text · UI surfaces",
+                    strong: { token: "neutral-content-color-default", light: "#292929", dark: "#dbdbdb" },
+                    subtle: { token: "neutral-subtle-background-color-default", light: "#e9e9e9", dark: "#393939" },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            heading: "Light, dark, and the layer system",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Spectrum 2's color system doesn't think in pages. It thinks in *layers*. The pasteboard is the frame outside the document. The base is the page itself. `layer-1` is a section or a well sitting on the page. `layer-2` is a card cluster sitting on `layer-1`. The elevated layer is the modal floating over everything. Each layer has a token. Each token resolves to a different value depending on the theme.",
+              },
+              {
+                kind: "pullquote",
+                text: "The model doesn't need to know what each layer *is*. It needs to know which layer the thing it's drawing belongs to.",
+              },
+              {
+                kind: "themeLayers",
+                caption:
+                  "Same composition, same five tokens, both schemes. As a surface rises in dark mode, it gets *lighter* — the inverse of light mode. The Provider does the swap.",
+                layers: [
+                  {
+                    slot: "pasteboard",
+                    name: "background-pasteboard-color",
+                    role: "Outer frame",
+                    light: "#e9e9e9",
+                    dark: "#111111",
+                    note: "The area outside the document. Gives the page a visible boundary in light mode; recedes into the deepest gray in dark.",
+                  },
+                  {
+                    slot: "base",
+                    name: "background-base-color",
+                    role: "Page canvas",
+                    light: "#ffffff",
+                    dark: "#111111",
+                    note: "The page itself. Anchors every other surface above it.",
+                  },
+                  {
+                    slot: "layer-1",
+                    name: "background-layer-1-color",
+                    role: "Section · well",
+                    light: "#f8f8f8",
+                    dark: "#1b1b1b",
+                    note: "Sidebars, wells, anything that wants to sit visibly above the base without claiming much elevation.",
+                  },
+                  {
+                    slot: "layer-2",
+                    name: "background-layer-2-color",
+                    role: "Card · panel",
+                    light: "#ffffff",
+                    dark: "#222222",
+                    note: "Card surfaces sitting on a section. Lifts in dark mode by going lighter — opposite of how light mode would do it.",
+                  },
+                  {
+                    slot: "elevated",
+                    name: "background-elevated-color",
+                    role: "Modal · popover · dialog",
+                    light: "#ffffff",
+                    dark: "#222222",
+                    note: "Anything that floats over the document with a shadow. Same value as layer-2 — shadow does the elevation work.",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            heading: "Hierarchy",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Hierarchy is the integration of spacing, typography, and color. It's also the dimension that goes wrong most often, because it's an emergent property of the others — you can fix all three individually and still have a hierarchy that doesn't read.",
+              },
+              {
+                kind: "weightMap",
+                caption:
+                  "Same wireframe, different weight distribution. The competing-primaries page has every element shouting. The hierarchy page lets one element claim the eye, and the rest support it.",
+                views: [
+                  {
+                    label: "Competing primaries",
+                    note: "Every element claims the eye. Nothing wins.",
+                    tiers: {
+                      header: "primary",
+                      hero: "primary",
+                      card1: "primary",
+                      card2: "primary",
+                      card3: "primary",
+                      cta: "primary",
+                    },
+                  },
+                  {
+                    label: "Clear hierarchy",
+                    note: "One primary, ranked support. The eye lands.",
+                    tiers: {
+                      header: "ambient",
+                      hero: "primary",
+                      card1: "secondary",
+                      card2: "secondary",
+                      card3: "tertiary",
+                      cta: "secondary",
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            heading: "Motion",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Motion is the dimension static frames can't show — and the one where the gap between *almost right* and *right* is widest. A layout that looks fine on paper can feel cheap, slow, or twitchy in motion, and you only learn which when the build runs.",
+              },
+              {
+                kind: "paragraph",
+                text: "Models are bad at guessing motion intent and good at executing motion that's described well. Tell the assistant the trigger, the property, the duration, the easing, and the feeling. Skip any of those and you get the AI default: a 300-millisecond linear fade no real product would ship.",
+              },
+              {
+                kind: "motionTrace",
+                caption:
+                  "Same start and end. Same total distance. The default cruises through; the crafted curve hits its mark, holds for a beat, and returns. The difference reads as *responsiveness* even though no one could explain why.",
+                tracks: [
+                  {
+                    label: "AI default",
+                    timing: "300ms · linear",
+                    note: "Generic fade. No anticipation, no settle. Reads as flat.",
+                    pattern: "linear",
+                  },
+                  {
+                    label: "Designed",
+                    timing: "260ms · spring",
+                    note: "Anticipation, overshoot, brief dwell. Reads as tactile.",
+                    pattern: "spring",
+                  },
+                ],
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "wand",
+                title: "Describe motion the way a director would",
+                text: "Trigger — what user action starts it. Property — what is animating, in concrete terms. Duration and easing — the timing and the curve. Feeling — snappy, calm, playful, mechanical. A prompt that names all four produces idiomatic motion. A prompt that names none gets the average.",
+              },
+              {
+                kind: "paragraph",
+                text: "The vocabulary that works is more specific than designers tend to use. *Add a smooth transition* is too vague. *Make it bounce* is too literal. The middle register — describing the *intent* of the motion — produces the best results. Four patterns that consistently land:",
+              },
+              {
+                kind: "cards",
+                columns: 2,
+                items: [
+                  {
+                    icon: "spark",
+                    eyebrow: "01 · Curve",
+                    title: "Feel-language tied to a reference",
+                    text: "*An easing curve that feels confident — quick to start, smooth to settle. Similar to `ease-out-quart` in Framer Motion.* The reference anchors the model; the feel-language gives it the goal.",
+                  },
+                  {
+                    icon: "ruler",
+                    eyebrow: "02 · Duration",
+                    title: "Specify timings explicitly",
+                    text: "*100ms for hover, 200ms for state change, 350ms for view transitions.* Numbers are unambiguous. Don't leave them to the model to pick — it averages toward 300ms and stops thinking.",
+                  },
+                  {
+                    icon: "compass",
+                    eyebrow: "03 · Restraint",
+                    title: "Name what's moving and what's not",
+                    text: "*On hover, the background color changes but nothing translates or scales — the button stays in place.* Restraint specified positively is more reliable than restraint specified by exclusion.",
+                  },
+                  {
+                    icon: "layers",
+                    eyebrow: "04 · Reference",
+                    title: "Point at an existing pattern",
+                    text: "*Use the same transition style as the Card component in the codebase.* Most products don't have a formal motion system, but most have de facto patterns the model can pick up from existing components.",
+                  },
+                ],
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "compass",
+                title: "Use the system's vocabulary when there is one",
+                text: "If you're working in a system with its own motion vocabulary — Spectrum has motion tokens; your product may have its own — reach for those first. The principle is the same: reference an established vocabulary rather than describing motion from scratch. Framer Motion is the fallback, not the default.",
+              },
+              {
+                kind: "wink",
+                text: "Motion is craft language by default — the same words a designer would use out loud are the words the model needs to build it.",
+              },
+            ],
+          },
+          {
+            heading: "The design system as the canonical reference",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Eye-training is half the work. Pointing the model at the right reference is the other.",
+              },
+              {
+                kind: "pullquote",
+                text: "The design system is the canonical reference, not the model's training data.",
+              },
+              {
+                kind: "paragraph",
+                text: "`@react-spectrum/mcp` is the front door. Alongside it, `spectrum-design-data-mcp` exposes the token graph and `s2-docs-mcp` covers usage. Wire all three with the Figma MCP and the system becomes the path of least resistance.",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    icon: "wand",
+                    eyebrow: "01 · MCP server",
+                    title: "Live answers, on demand",
+                    text: "`@react-spectrum/mcp` answers component, prop, and accessibility queries in the working session.",
+                  },
+                  {
+                    icon: "spark",
+                    eyebrow: "02 · Agent Skill",
+                    title: "Knowledge it can load",
+                    text: "`npx skills add https://react-spectrum.adobe.com` installs Spectrum as a skill the model pulls in when relevant.",
+                  },
+                  {
+                    icon: "compass",
+                    eyebrow: "03 · Markdown + llms.txt",
+                    title: "The docs as text",
+                    text: "Every React Spectrum page exposes a `.md` URL, and `llms.txt` lists them all. Best for offline work or one-shot prompts.",
+                  },
+                ],
+              },
+              {
+                kind: "pathway",
+                items: [
+                  {
+                    number: "01",
+                    title: "Reference components by name",
+                    description:
+                      "*Use the Button component, accent variant* resolves to a real import. *Add a brand-blue button* invites the model to invent.",
+                  },
+                  {
+                    number: "02",
+                    title: "Reference tokens, never hex",
+                    description:
+                      "*`size-200` between cards*, *`accent-color-900` for the primary action* are queries the data MCP can answer. *Some space*, *a dark gray* are guesses.",
+                  },
+                  {
+                    number: "03",
+                    title: "Show, don't just tell",
+                    description:
+                      "When a component is hard to describe, paste a screenshot or a Figma frame. The Figma MCP reads layers and variables directly.",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            heading: "Reading the build for system drift",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Four smoke tests, run on any AI-generated component, surface most fidelity issues in under a minute. Each one looks for a specific drift pattern in the code itself — what to search for, and what should be there instead.",
+              },
+              {
+                kind: "driftAudit",
+                caption:
+                  "Drift on the left, fix on the right. The number of times each pattern appears is a rough proxy for how lost the model was on this component.",
+                items: [
+                  {
+                    index: "01",
+                    title: "UNSAFE_style overrides",
+                    drift: '<View UNSAFE_style={{ padding: 8, marginTop: 12 }}>',
+                    fix: '<View padding="size-100" marginTop="size-200">',
+                    note: "Every inline override is a place the model didn't know the Spectrum way. The count scales with how lost it was.",
+                  },
+                  {
+                    index: "02",
+                    title: "Raw hex in component code",
+                    drift: 'color: #1a1a1a;\nbackground: #e1e1e1;',
+                    fix: 'color: var(--spectrum-neutral-content-color-default);\nbackground: var(--spectrum-background-layer-2-color);',
+                    note: "A lone hex is the alias tier the model didn't reach for. Swapping to the alias fixes both light and dark in one move.",
+                  },
+                  {
+                    index: "03",
+                    title: "S1 import labelled as S2",
+                    drift: 'import { Provider, defaultTheme } from "@adobe/react-spectrum";',
+                    fix: 'import { Provider } from "@react-spectrum/s2";',
+                    note: "A comment saying *Spectrum 2* sitting over an S1 import is the most common silent failure. The s2-docs-mcp exists to prevent this.",
+                  },
+                  {
+                    index: "04",
+                    title: "HTML where a Spectrum component exists",
+                    drift: '<div className="btn btn-primary" onClick={save}>\n  Save\n</div>',
+                    fix: '<Button variant="accent" onPress={save}>\n  Save\n</Button>',
+                    note: "Output that looks correct in the preview can be rebuilt entirely in raw HTML underneath. The test fails the moment you open the file.",
+                  },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "If you're running these checks every time, the chapter has already done its job. The skill is in noticing the drift before it ships.",
+              },
+            ],
+          },
+          {
+            heading: "How to give the model fidelity feedback",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "When the build comes back and the fidelity is off, the temptation is to fix it yourself. Open the file, adjust the values, re-run. This works for one-off fixes. It doesn't work as a practice — the model never learns what you wanted, and the next build has the same issues as the last one. The better pattern is to give the model fidelity feedback in language it can apply forward.",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    icon: "compass",
+                    eyebrow: "Habit 01",
+                    title: "Name the dimension",
+                    text: "Not *this looks off* but *the spacing rhythm is too uniform — tighter inside cards, looser between.* The dimension tells the model what to attend to.",
+                  },
+                  {
+                    icon: "figma",
+                    eyebrow: "Habit 02",
+                    title: "Reference the standard",
+                    text: "Not *make the heading bigger* but *use `heading-l`, not `heading-m`.* The reference points to a decision already made.",
+                  },
+                  {
+                    icon: "wand",
+                    eyebrow: "Habit 03",
+                    title: "Explain the principle",
+                    text: "Not *don't use red for primary* but *red is reserved for destructive; primary uses `accent-color-900`.* The principle generalizes; the correction doesn't.",
+                  },
+                ],
+              },
+            ],
           },
         ],
       },
       {
         id: "accessibility-as-a-prompt-time-concern",
-        number: 14,
+        number: 13,
         title: "Accessibility as a prompt-time concern",
         summary:
-          "Keyboard nav, focus, semantic markup, contrast, screen readers. Treating accessibility as a constraint the model honors during the build, not a cleanup pass after.",
-        readTime: "5 min",
+          "Accessibility is the deferral that costs the most. Pull it into the prompt, the rules, the Figma frame, and the partnership cadence — so the floor is higher before any human reviews the build.",
+        readTime: "9 min",
         sections: [
           {
-            heading: "Accessibility belongs in the prompt",
-            body: "Accessibility regressions are the easiest AI mistake to ship and the hardest to catch in design review. The fix is to put accessibility into the brief from the start, not to schedule a sweep at the end. A short accessibility paragraph in your prompt or rules file pays for itself the first time it prevents a redo.",
-          },
-          {
-            heading: "The keyboard, focus, and semantics test",
-            body: "Three checks you can run on any AI-generated UI in under a minute, before you decide it is ready for review.",
-            bullets: [
-              "Keyboard: can you reach and operate every interactive element with Tab, Shift+Tab, Enter, and Space?",
-              "Focus: is the focus ring visible and is the order sensible?",
-              "Semantics: are headings, landmarks, labels, and roles real, not styled divs pretending to be controls?",
+            heading: "The deferral that costs the most",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Of the three deferrals from the previous chapter — motion, content, and accessibility — accessibility is the one with the highest cost when it gets pushed to the end. Motion fixed late is fixed badly. Content fixed late is fixed against constraints set without it. Accessibility fixed late is, in many cases, *not actually fixed* — it's spot-fixed where automated scanners notice gaps, and left untouched everywhere else.",
+              },
+              {
+                kind: "pullquote",
+                text: "The result is a build that passes a check and fails a user.",
+              },
+              {
+                kind: "paragraph",
+                text: "This chapter is about pulling accessibility forward — into the prompt, into the rules, into the design system, into the build itself — so that the version the model produces is closer to right by default, and the manual work that remains is the work that was always going to require human judgment.",
+              },
+              {
+                kind: "paragraph",
+                text: "It's also the chapter where Adobe-specific resources matter most. The canonical references — the WCAG criteria, Adobe's bluelines toolkit, the corporate accessibility partners, the Stark plugin rollout — are concrete enough that a generic chapter would be doing the reader a disservice. Where earlier chapters held the Adobe specifics back, this one names them, because the work is Adobe's.",
+              },
             ],
           },
           {
-            heading: "Contrast and screen readers, in real conditions",
-            body: "Contrast checkers and screen-reader walk-throughs catch the issues that automated linters miss. Use VoiceOver, NVDA, or your platform of choice on a real device, not just an emulated one. The first time you hear an AI-generated form read aloud as a bag of unlabeled inputs, you stop skipping this step.",
+            heading: "Why accessibility breaks differently",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Visual fidelity, when it goes wrong, looks wrong. The designer who looks at the build can usually see the failure, even if they can't always articulate it.",
+              },
+              {
+                kind: "paragraph",
+                text: "Accessibility, when it goes wrong, is mostly invisible to the person who built it. A focus state that doesn't render is missing for everyone except keyboard users. A heading hierarchy that's flat to screen readers reads correctly to sighted users. A contrast failure looks fine to someone whose vision is in the median.",
+              },
+              {
+                kind: "lensCompare",
+                center: "The same build",
+                left: {
+                  label: "What you see",
+                  subtitle: "Visible failure modes",
+                  reveals: [
+                    "Spacing that's off",
+                    "Typography that's flat",
+                    "Color that doesn't carry",
+                    "Hierarchy that competes",
+                    "Motion that drags",
+                  ],
+                },
+                right: {
+                  label: "What you don't",
+                  subtitle: "Invisible failure modes",
+                  reveals: [
+                    "Missing focus states",
+                    "Heading hierarchy flattened",
+                    "Contrast below threshold",
+                    "Inputs without labels",
+                    "Motion that triggers vestibular discomfort",
+                  ],
+                },
+                caption:
+                  "Fidelity failures train the eye through observation. Accessibility failures don't — there's nothing to observe. Different skill, different practice.",
+              },
+              {
+                kind: "wink",
+                text: "Training your eye to see what your eye doesn't see by default is the harder craft. It's learnable through three things: knowing the criteria, building tools that check what you can't see, and partnering with people whose lived experience surfaces what you'd miss.",
+              },
+            ],
+          },
+          {
+            heading: "The 70% gap",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "There's a useful framing from Matthew Stephens's work on accessibility skills, worth naming explicitly because it shapes how you should think about tooling. Automated scanners — Lighthouse, axe, WAVE — can programmatically test about a third of WCAG success criteria. They check the things with a clear yes/no answer. The rest depends on judgment.",
+              },
+              {
+                kind: "stats",
+                items: [
+                  {
+                    value: "30%",
+                    label: "What scanners can verify",
+                    meta: "Alt text present. Contrast above threshold. Heading structure technically valid.",
+                  },
+                  {
+                    value: "70%",
+                    label: "What requires judgment",
+                    meta: "Is the alt text actually useful? Does the focus order make sense as a sequence? Does the error message help a user recover?",
+                  },
+                ],
+              },
+              {
+                kind: "pullquote",
+                text: "Treat accessibility as a scanner pass at the end, and you've covered the easy 30% and missed the hard 70%.",
+              },
+              {
+                kind: "paragraph",
+                text: "This is also why automated tooling alone won't close the gap, no matter how good it gets. The skills your team is building, and the skills referenced in Stephens's repository, work because they bring *judgment* into the loop — they're trained to ask the questions a scanner can't ask, and to surface the issues that require human review to actually fix.",
+              },
+            ],
+          },
+          {
+            heading: "Accessibility at prompt time",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "The single highest-leverage place to handle accessibility is in the prompt and in the rules — before any code gets generated. Every issue caught at prompt time is one less issue you fix in review, one less issue that reaches QE, one less issue that ships.",
+              },
+              {
+                kind: "cards",
+                columns: 2,
+                items: [
+                  {
+                    icon: "code",
+                    eyebrow: "Pattern 01",
+                    title: "Encode your floor as rules",
+                    text: "Minimum contrast ratios, required focus states, semantic HTML expectations, ARIA conventions. *All interactive elements must have visible focus states with a minimum 3:1 contrast against the background. Use semantic HTML before reaching for ARIA. Do not use div with onClick for actionable elements.*",
+                  },
+                  {
+                    icon: "spark",
+                    eyebrow: "Pattern 02",
+                    title: "Ask for the accessible version on the first pass",
+                    text: "*Build a modal that traps focus, restores focus on close, dismisses with Escape, and announces itself to screen readers.* The model is fully capable of producing this on the first attempt. It just won't if you don't ask.",
+                  },
+                  {
+                    icon: "x",
+                    eyebrow: "Pattern 03",
+                    title: "Name the failure modes you want to avoid",
+                    text: "*Do not use color as the only signal for state — pair color with iconography or text. Do not use placeholder text as a label. Do not put interactive elements inside elements that are themselves clickable.* Each line rules out a class of fix-in-review.",
+                  },
+                  {
+                    icon: "compass",
+                    eyebrow: "Pattern 04",
+                    title: "Reference the canonical patterns",
+                    text: "Where Adobe Design has documented patterns — landmarks, focus order, semantic structure — point to them. *Follow the heading hierarchy and landmark structure from the Adobe Design accessibility bluelines.* The anchor is stronger than any description.",
+                  },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "Compounding effect: rules + named patterns + canonical references produce builds where accessibility is roughly correct on the first pass. The remaining work is judgment work — the 70% — instead of mechanical fixing of the 30%.",
+              },
+            ],
+          },
+          {
+            heading: "Adobe's accessibility partners",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Accessibility is *not solely an engineering concern, and it's not solely a designer's concern*. It's a cross-functional concern, with partners in design, PM, legal, and inclusive design — and the right time to involve them is before the code is locked, not after.",
+              },
+              {
+                kind: "cards",
+                columns: 3,
+                items: [
+                  {
+                    icon: "spark",
+                    eyebrow: "Express",
+                    title: "Design + PM",
+                    text: "Julie Ip on the design side, Kate Eom on the PM side. The #express-accessibility Slack channel is where accessibility-related questions land for the org.",
+                  },
+                  {
+                    icon: "layers",
+                    eyebrow: "Inclusive Design",
+                    title: "Cross-org",
+                    text: "Timothy Bardlevans and Matt May. The team that thinks about accessibility as a design discipline before it becomes a compliance check.",
+                  },
+                  {
+                    icon: "target",
+                    eyebrow: "Accessibility PM",
+                    title: "Program",
+                    text: "Mary Ann Jawili and Elle Waters. Most product organizations across Adobe have equivalents — find yours before you need them.",
+                  },
+                ],
+              },
+              {
+                kind: "paragraph",
+                text: "The cadence the wiki documents, and the cadence that works in practice, has three checkpoints. Spending time at each saves more time later than it costs.",
+              },
+              {
+                kind: "pathway",
+                items: [
+                  {
+                    number: "01",
+                    title: "Directional review, early",
+                    description:
+                      "When the design problem is still open and you're choosing between approaches. Accessibility partners can flag which directions are feasible to make accessible and which will fight the implementation. Fifteen minutes here saves hours later.",
+                  },
+                  {
+                    number: "02",
+                    title: "Bluelines review, mid-build",
+                    description:
+                      "Bluelines are detailed accessibility specs — focus order numbers, ARIA roles and labels, landmark regions, heading levels, keyboard behavior. The bluelines toolkit on the Adobe Design wiki is the canonical starting point. Sample bluelines from Kino Johl and Jessie Smith are the fastest way to learn the conventions.",
+                  },
+                  {
+                    number: "03",
+                    title: "Experience audit, after shipping",
+                    description:
+                      "Accessibility partners can audit existing experiences and surface the gaps the build introduced or inherited. The screenshots and flow videos from your QE handoff (Chapter 9) are the artifacts an audit can work from.",
+                  },
+                ],
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "chat",
+                title: "Partners, not approvers",
+                text: "Accessibility partners are not a service function that signs off your designs. They're peers with expertise the designer doesn't have, and the cadence works best when the partnership is collaborative rather than approval-seeking. Same dynamic Chapter 9 described for the content team. Show the work in progress; ask for collaboration.",
+              },
+            ],
+          },
+          {
+            heading: "Stark in the Figma layer",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "In late 2024, Adobe Design rolled out Stark — a suite of integrated accessibility tools embedded inside Figma — to all designers across the organization. The rollout was led by the [Product Equity team](https://wiki.corp.adobe.com/pages/viewpage.action?spaceKey=AdobeDesign&title=Product+Equity+Team#9baffee3-9e0d-42eb-867a-0a75e660d677-2779257533) in partnership with Design Operations and the Accessibility team, and it's the first time Adobe Design has had a measurable accessibility standard applied at the design phase rather than only at implementation. The team's external-facing work lives at [adobe.design/ideas/product-equity](https://adobe.design/ideas/product-equity).",
+              },
+              {
+                kind: "paragraph",
+                text: "What Stark does, in practical terms, is move some of the 30% checkable layer into Figma — contrast checking, color blindness simulation, alt text auditing, focus order annotation — so designers can catch and fix the easy issues before any code exists. If you don't yet have access, [request a Stark seat through the intake form](https://forms.office.com/pages/responsepage.aspx?id=Wht7-jR7h0OUrtLBeN7O4dmDQYKiErBHjt6uDfzwzZpUNDg5NkhMTkMwWFlZQzQ0M0s5RTdRVU5STyQlQCN0PWcu&route=shorturl).",
+              },
+              {
+                kind: "balance",
+                left: {
+                  label: "Stark in Figma",
+                  text: "Establishes semantic intent. Annotations for focus order, ARIA labels, landmarks, contrast.",
+                },
+                right: {
+                  label: "Model in code",
+                  text: "Honors that intent in the build. Reads Stark annotations through the Figma MCP. Knows what each element is *meant to be*, not just what it looks like.",
+                },
+                tilt: "even",
+                caption:
+                  "Skipping Stark and asking the model to derive semantics from visual structure produces guesses that are close-but-wrong often enough to matter.",
+              },
+              {
+                kind: "callout",
+                tone: "accent",
+                icon: "figma",
+                title: "Two minutes in Stark, before you point the model at the frame",
+                text: "Run Stark. Fix the contrast issues, add focus order annotations, label the landmarks. The model will use what's there. A frame with Stark annotations produces dramatically better accessibility output than an unannotated frame, because the model has explicit signal about what each element is meant to be, semantically.",
+              },
+            ],
+          },
+          {
+            heading: "The skills frontier",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Every dimension of design has skills the model can be taught to handle. Visual fidelity has skills. Motion has skills. Content review has skills. Accessibility has skills, and the accessibility ones are some of the most useful being built right now — because the gap between *what an automated scanner catches* and *what an accessibility expert would catch* is exactly the gap that judgment-encoded skills are good at closing.",
+              },
+              {
+                kind: "cards",
+                columns: 2,
+                items: [
+                  {
+                    icon: "loop",
+                    eyebrow: "Inside Adobe",
+                    title: "The active work",
+                    text: "Your team and partners across corporate accessibility, legal, and product are actively building reusable Claude skills to review vibe-coded work — both the build itself and the Figma designs that fed into it. Legal contributes the regulatory framing, corporate accessibility contributes the WCAG and Adobe-specific standards, product contributes the workflow integration. Once mature, these become the canonical accessibility tooling for designer-led vibe coding at Adobe.",
+                  },
+                  {
+                    icon: "layers",
+                    eyebrow: "External reference",
+                    title: "Matthew Stephens's 33 skills",
+                    text: "A published suite covering accessibility audit, compliance, audience-specific lenses (older users, kids, DEI), ethics, test planning, screen reader scripting, and design-to-engineering handoff. Framed as a *small accessibility agency* — specialists, audience advocates, and an orchestrator that routes work across them. Worth reading even if you don't adopt the specific skills. Repo at github.com/matthewlarn/claude-skills.",
+                  },
+                ],
+              },
+              {
+                kind: "pullquote",
+                text: "Building good accessibility skills costs time. Shipping inaccessible products costs users.",
+              },
+              {
+                kind: "paragraph",
+                text: "Stephens is explicit about the limit: skills do not replace real assistive technology testing, do not replace research with disabled users, and do not replace the leadership decisions required to prioritize accessibility work. They lower the floor — they make the *baseline* of every prototype higher before it reaches a human reviewer. They don't raise the ceiling.",
+              },
+            ],
+          },
+          {
+            heading: "What skills can do, and what they can't",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Drawing the line is part of the chapter's argument. Skills are good at the work that compresses to rules, patterns, and structured judgments. They're not good at the work that requires being a person.",
+              },
+              {
+                kind: "checklist",
+                items: [
+                  {
+                    positive: true,
+                    title: "Check against criteria that compress to rules",
+                    text: "Contrast ratios, semantic HTML correctness, ARIA validity, touch target sizes, motion thresholds. The 30% — done thoroughly, every time.",
+                  },
+                  {
+                    positive: true,
+                    title: "Generate annotation content a designer would write by hand",
+                    text: "Focus order, landmarks, alt text drafts, screen reader scripts. The work that's mechanical when you know the answer and slow when you don't.",
+                  },
+                  {
+                    positive: true,
+                    title: "Pattern-match against known failure modes",
+                    text: "Color-as-only-signal, placeholder-as-label, click-handlers-on-non-interactive-elements. The mistakes that have a shape.",
+                  },
+                  {
+                    positive: true,
+                    title: "Produce structured remediation reports",
+                    text: "Severity, WCAG references, effort estimates. The artifact that lets a team prioritize the work.",
+                  },
+                  {
+                    positive: false,
+                    title: "Decide whether the product is *accessible enough*",
+                    text: "That's a judgment call that lives with the design lead, the accessibility partner, and (for products with regulatory exposure) legal.",
+                  },
+                  {
+                    positive: false,
+                    title: "Replace assistive technology testing with real users",
+                    text: "A skill can write a screen reader test script. It cannot tell you what a blind user actually experiences when they use your product.",
+                  },
+                  {
+                    positive: false,
+                    title: "Substitute for the cross-functional cadence",
+                    text: "Directional review, bluelines, experience audit. The partnership model is the practice. Skills support it; they don't replace it.",
+                  },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "The model's role, executed through skills, is to make sure the easy work is actually getting done — not to claim the hard work is finished.",
+              },
+            ],
+          },
+          {
+            heading: "A practical sequence",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "Pulling everything in this chapter together, here's the cadence that works in practice. Not every step every time — but most of these, most projects.",
+              },
+              {
+                kind: "flow",
+                label: "From rules to audit",
+                steps: [
+                  {
+                    title: "Before the build",
+                    meta: "Encode the accessibility floor in your rules and CLAUDE.md. Reference the bluelines toolkit. For new or complex surfaces, do the directional review with your accessibility partner first.",
+                  },
+                  {
+                    title: "In Figma, before the model sees it",
+                    meta: "Run Stark. Fix contrast, add focus order annotations, label landmarks. The model uses what's there.",
+                  },
+                  {
+                    title: "During the build",
+                    meta: "Prompt for accessibility explicitly — part of the original ask, not a follow-up pass. Use the skills your team is building, or the publicly available ones, to surface what the model wouldn't catch.",
+                  },
+                  {
+                    title: "Mid-build",
+                    meta: "When the structural shape is set, produce bluelines and review them with your accessibility partner before engineering handoff. Bluelines are the artifact that makes the partnership concrete.",
+                  },
+                  {
+                    title: "After shipping",
+                    meta: "Schedule an experience audit with your accessibility partner. The screenshots and flow videos from QE handoff (Chapter 9) are inputs. What the audit surfaces becomes the input to the next iteration.",
+                  },
+                ],
+              },
+              {
+                kind: "wink",
+                text: "None of these steps is the whole answer. All of them, together, are how accessibility gets done well in vibe-coded work — respecting the 70% that automated tooling can't reach, and using the model's leverage on the 30% it can.",
+              },
+            ],
+          },
+          {
+            heading: "What this chapter has been arguing",
+            blocks: [
+              {
+                kind: "pullquote",
+                text: "Accessibility is the dimension of design that fails most invisibly to the person who built it.",
+              },
+              {
+                kind: "paragraph",
+                text: "Treating it as a cleanup pass — running a scanner at the end, fixing what shows up — covers about 30% of what matters and misses the rest. The work this chapter is arguing for is the work of pulling accessibility into the prompt, into the rules, into the Figma frame, and into the partnership cadence with the people whose job it is to make products accessible.",
+              },
+              {
+                kind: "ratio",
+                caption:
+                  "Tooling raises the floor. Partnership and lived experience raise the ceiling. Both, together, are how accessibility gets done.",
+                rows: [
+                  {
+                    label: "The floor",
+                    left: { title: "Rules + Stark + skills", text: "Encoded constraints. Annotated frames. Judgment-trained reviewers. The baseline of every prototype is higher before a human sees it." },
+                    operator: "<",
+                    right: { title: "What used to ship", text: "Designer-only review. Scanner at the end. Spot-fixes where automation noticed gaps." },
+                    tone: "active",
+                  },
+                  {
+                    label: "The ceiling",
+                    left: { title: "Accessibility partners", text: "People who know your product and the criteria. The cadence — directional, bluelines, audit — that catches what the floor doesn't." },
+                    operator: "=",
+                    right: { title: "Disabled users", text: "Lived experience and feedback that shapes what you build. No amount of tooling replaces this." },
+                    tone: "active",
+                  },
+                ],
+              },
+              {
+                kind: "paragraph",
+                text: "Part 5 picks up from here, with the shipping discipline that makes accessibility — and all the other craft work the previous chapters have argued for — actually land in production rather than getting lost in the gap between the build and the release.",
+              },
+            ],
           },
         ],
       },
@@ -2966,7 +4439,7 @@ description: Run the accessibility floor before pushing for review. Use any time
     chapters: [
       {
         id: "quality-and-ownership",
-        number: 15,
+        number: 14,
         title: "Quality and ownership: avoiding AI slop",
         summary:
           "What slop looks like in design output, using Git as version history, and reviewing AI-generated code with the BLOCKER, MAJOR, MINOR, NIT habit.",
@@ -3004,7 +4477,7 @@ description: Run the accessibility floor before pushing for review. Use any time
       },
       {
         id: "working-as-a-team",
-        number: 16,
+        number: 15,
         title: "Working as a team",
         summary:
           "The AI pod rhythm, the design-build-review loop from the IFT playbook, cross-functional coordination, and automating the repetitive parts of your own process.",

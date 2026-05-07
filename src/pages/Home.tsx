@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { playbook, getTotalChapters } from "../data/playbook";
 import Seal from "../components/Seal";
+import { CountUp } from "../components/CountUp";
+import { MagneticLink } from "../components/MagneticLink";
 
 const minutesFromReadTime = (s: string) => parseInt(s.replace(/[^\d]/g, ""), 10);
 
@@ -109,7 +111,7 @@ export function Home() {
               A field guide to vibe coding, shipping, and everything between.
               For designers who want to stay opinionated.
             </p>
-            <Link
+            <MagneticLink
               to={`/${featuredPart.id}/${featured.id}`}
               className="hero-cta"
               viewTransition
@@ -118,7 +120,7 @@ export function Home() {
               <span className="hero-cta-arrow" aria-hidden="true">
                 →
               </span>
-            </Link>
+            </MagneticLink>
           </div>
 
           <Seal />
@@ -168,22 +170,26 @@ export function Home() {
 
           <ul className="stats">
             <li className="stat">
-              <span className="stat-value">{playbook.length}</span>
+              <CountUp className="stat-value" to={playbook.length} />
               <span className="stat-label">Parts</span>
               <span className="stat-meta">Foundations to shipping</span>
             </li>
             <li className="stat">
-              <span className="stat-value">{totalChapters}</span>
+              <CountUp className="stat-value" to={totalChapters} />
               <span className="stat-label">Chapters</span>
               <span className="stat-meta">Each one stands alone</span>
             </li>
             <li className="stat">
-              <span className="stat-value">~{totalMinutes}</span>
+              <CountUp
+                className="stat-value"
+                to={totalMinutes}
+                prefix="~"
+              />
               <span className="stat-label">Minutes</span>
               <span className="stat-meta">A weekend, not a year</span>
             </li>
             <li className="stat">
-              <span className="stat-value">0</span>
+              <CountUp className="stat-value" to={0} />
               <span className="stat-label">Hype</span>
               <span className="stat-meta">Opinions only</span>
             </li>
@@ -308,13 +314,13 @@ export function Home() {
             <br /> Use it on <em>Monday</em>.
           </h2>
           <div className="cta-actions">
-            <Link
+            <MagneticLink
               to={`/${featuredPart.id}/${featured.id}`}
               className="cta-button cta-button-primary"
               viewTransition
             >
               Start with Chapter 01
-            </Link>
+            </MagneticLink>
             <a
               href="#contents-heading"
               className="cta-button cta-button-ghost"
