@@ -1947,7 +1947,7 @@ export const playbook: Part[] = [
             blocks: [
               {
                 kind: "paragraph",
-                text: "If any of these terms are new, here's the short version. Skip the ones you already know. If you want a longer walkthrough, [Atlassian's Git tutorials](https://www.atlassian.com/git/tutorials/what-is-version-control) are the most designer-friendly primer on the open web.",
+                text: "If any of these terms are new, here's the short version. Skip the ones you already know. If you want a longer walkthrough on the git side, [Atlassian's Git tutorials](https://www.atlassian.com/git/tutorials/what-is-version-control) are the most designer-friendly primer on the open web. For the AI side — agents, MCPs, RAG, embeddings, and the rest of the vibe-coding lexicon — Claude Piché's [Vibe Lingo](https://www.peecho.design/vibe-lingo) keeps the definitions short, plain-language, and usable.",
               },
               {
                 kind: "table",
