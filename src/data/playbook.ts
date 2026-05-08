@@ -2146,10 +2146,10 @@ export const playbook: Part[] = [
               },
               {
                 kind: "callout",
-                tone: "neutral",
-                icon: "compass",
-                title: "Use approved tools, watch what you paste",
-                text: "Adobe maintains a list of approved AI tools — the obvious ones (ChatGPT Enterprise, Microsoft 365 Copilot, GitHub Copilot, Adobe's own products) plus a separate set of field-analysis licenses for tools being evaluated against Adobe offerings. Field-analysis tools have extra restrictions; the most important is no Adobe internal data. Read the [AI guidelines](https://inside.corp.adobe.com/adobe-and-generative-ai/ai-guidelines.html) once before you start, and check which list a tool is on before you use it for anything sensitive.",
+                tone: "accent",
+                icon: "target",
+                title: "Approved tools, and why the list exists",
+                text: "Adobe maintains a list of approved AI tools (ChatGPT Enterprise, Microsoft 365 Copilot, GitHub Copilot, Adobe's own products), plus a separate field-analysis set with extra restrictions — the biggest being *no Adobe internal data*. The reason behind the list is data leakage: assume anything not on it is logging what you paste, and treat uploading Adobe internal information into an unapproved tool as a policy violation, not a gray area. Easy-to-miss rule for vibe coding — source code is automatically *Adobe Confidential* the moment you write it, one level up from internal. Read the [AI guidelines](https://inside.corp.adobe.com/adobe-and-generative-ai/ai-guidelines.html) once before you start; the underlying policy lives in Adobe's Vendor Information Security Standard and section 3.3 of the Data Classification and Handling Standard.",
               },
               {
                 kind: "callout",
@@ -2271,8 +2271,8 @@ export const playbook: Part[] = [
                 rows: [
                   [
                     "MCP",
-                    "Capability — a thing the model can now read or do.",
-                    "When the model is missing access to information or an action.",
+                    "Capability — a thing the model can now read or do, external to the tool's own defaults.",
+                    "When the model is missing access to information or an action on your computer or in another application.",
                     "Configured per editor, often per project.",
                   ],
                   [
@@ -2367,7 +2367,7 @@ export const playbook: Part[] = [
             blocks: [
               {
                 kind: "paragraph",
-                text: "An MCP is a server that gives the assistant a new ability — to read your Figma file, query a service, browse the web, run a build, look something up in a private system. Without one, the model is guessing about your world. With the right ones wired in, it's working from primary sources.",
+                text: "An MCP is the connection between an LLM and an application — an API written for the model instead of for code. It gives the assistant a new ability that lives outside the editor's own defaults: read your Figma file, query a service, browse the web, run a build, look something up in a private system, take an action on your computer or in another tool. Without one, the model is guessing about your world. With the right ones wired in, it's working from primary sources.",
               },
               {
                 kind: "cards",
@@ -2532,7 +2532,7 @@ description: Run the accessibility floor before pushing for review. Use any time
             ],
           },
           {
-            heading: "CLAUDE.md, AGENTS.md, and the 150-line budget",
+            heading: "CLAUDE.md, AGENTS.md, and the always-on budget",
             blocks: [
               {
                 kind: "paragraph",
@@ -2540,18 +2540,18 @@ description: Run the accessibility floor before pushing for review. Use any time
               },
               {
                 kind: "paragraph",
-                text: "A practical budget is around 150 lines for the things that must always be true. Spend it carefully. Move everything else into skills (for procedures) or context that gets pasted in only when relevant (for one-off work).",
+                text: "The unit that actually matters is *tokens*, not lines — every word in the file is paid for on every turn, regardless of how it's wrapped. A practical budget is somewhere around 1,500 words (roughly 2,000 tokens), or whatever fits comfortably on two screens without scrolling. Spend it on the things that must always be true. Move everything else into skills (for procedures) or context that gets pasted in only when relevant (for one-off work).",
               },
               {
                 kind: "callout",
                 tone: "accent",
                 icon: "target",
-                title: "What earns a line in the budget",
+                title: "What earns a slot in the budget",
                 text: "Audience and voice. Design system pointers. Names of installed MCPs. The four or five rules the team has actually agreed to. Anything that should fail loudly if violated. Everything else can wait for a session that needs it.",
               },
               {
                 kind: "pullquote",
-                text: "Every line is read on every turn. Spend the budget on what must always be true.",
+                text: "Every word is read on every turn. Spend the budget on what must always be true.",
               },
               {
                 kind: "paragraph",
@@ -2562,7 +2562,7 @@ description: Run the accessibility floor before pushing for review. Use any time
                 tone: "neutral",
                 icon: "compass",
                 title: "Production mode: rules earn back the time",
-                text: "In new ideas and build-in-context, sparse rules are fine — drift is cheap. In production, drift compounds. The 150-line budget is the cheapest insurance against it.",
+                text: "In new ideas and build-in-context, sparse rules are fine — drift is cheap. In production, drift compounds. A tight always-on file — call it 1,500 words, give or take — is the cheapest insurance against it.",
                 image: {
                   src: "/images/guidelines-md-example.png",
                   alt: "Excerpt from a CLAUDE.md file in the firefly-platform repo, showing branch creation commands, local dev setup, and the typical contribution workflow.",
@@ -5738,9 +5738,18 @@ Example:
                   },
                   {
                     logo: { src: "/images/logo-github.svg", alt: "GitHub logo" },
-                    eyebrow: "Push and commits",
-                    title: "GitHub or Protopack",
-                    text: "GitHub for production work; Protopack as a faster on-ramp if the work is still in the prototype phase. The branch-and-PR loop from [Chapter 4](/setup-and-tooling/setting-up-your-environment) applies.",
+                    eyebrow: "Version control",
+                    title: "Git and GitHub",
+                    text: "Git tracks every change in the codebase; GitHub is where the pod collaborates on top of it — branches, pull requests, code review, history. The branch-and-PR loop from [Chapter 4](/setup-and-tooling/setting-up-your-environment) is how work is coordinated across builders, regardless of how the project was scaffolded.",
+                  },
+                  {
+                    logo: {
+                      src: "/images/logo-protopack.png",
+                      alt: "Protopack app icon",
+                    },
+                    eyebrow: "Project setup",
+                    title: "Protopack",
+                    text: "Sits on top of GitHub and handles project setup — repo, environment, templates, hosting. Earns its place on prototype and early-stage work. See [Chapter 5](/setup-and-tooling/ai-tooling-at-adobe).",
                   },
                   {
                     logo: { src: "/images/logo-notion.svg", alt: "Notion logo" },
