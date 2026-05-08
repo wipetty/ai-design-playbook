@@ -5,6 +5,7 @@ import Seal from "../components/Seal";
 import { CountUp } from "../components/CountUp";
 import { MagneticLink } from "../components/MagneticLink";
 import { RichText } from "../components/SectionBlocks";
+import CoffeeButton from "../components/CoffeeModal";
 
 const minutesFromReadTime = (s: string) => parseInt(s.replace(/[^\d]/g, ""), 10);
 
@@ -379,17 +380,12 @@ export function Home() {
               out.
             </aside>
 
-            <a
-              href="https://venmo.com/u/wipetty"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="about-author-coffee"
-            >
+            <CoffeeButton className="about-author-coffee">
               <span className="about-author-coffee-icon" aria-hidden="true">
                 ☕
               </span>
               If this helped, buy me a coffee
-            </a>
+            </CoffeeButton>
           </div>
         </div>
       </section>

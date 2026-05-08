@@ -2,6 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import type { ReactNode } from "react";
 import ThemeToggle from "./ThemeToggle";
 import BackToTop from "./BackToTop";
+import CoffeeButton from "./CoffeeModal";
 
 export function Layout({ children }: { children: ReactNode }) {
   const location = useLocation();
@@ -58,15 +59,13 @@ export function Layout({ children }: { children: ReactNode }) {
                 About
               </a>
             </nav>
-            <a
+            <CoffeeButton
               className="site-byline"
-              href="https://venmo.com/u/wipetty"
-              target="_blank"
-              rel="noopener noreferrer"
+              ariaLabel="Buy me a coffee, by @peitongc"
             >
               <span className="site-byline-label">By</span>
               <span className="site-byline-name">@peitongc</span>
-            </a>
+            </CoffeeButton>
             <ThemeToggle />
           </div>
         </div>
@@ -81,17 +80,12 @@ export function Layout({ children }: { children: ReactNode }) {
               Veronica Peitong Chen
             </span>
           </span>
-          <a
-            href="https://venmo.com/u/wipetty"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="site-footer-coffee"
-          >
+          <CoffeeButton className="site-footer-coffee">
             <span className="site-footer-coffee-icon" aria-hidden="true">
               ☕
             </span>
             Buy me a coffee
-          </a>
+          </CoffeeButton>
         </div>
       </footer>
       <BackToTop />
