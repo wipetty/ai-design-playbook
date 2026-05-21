@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import {
-  BrowserRouter,
+  HashRouter,
   Route,
   Routes,
   useLocation,
@@ -23,7 +23,7 @@ function ScrollToTop() {
 function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
+      <HashRouter>
         <ScrollToTop />
         <Layout>
           <Routes>
@@ -31,7 +31,7 @@ function App() {
             <Route path="/:partId/:chapterId" element={<ChapterPage />} />
           </Routes>
         </Layout>
-      </BrowserRouter>
+      </HashRouter>
     </ThemeProvider>
   );
 }
