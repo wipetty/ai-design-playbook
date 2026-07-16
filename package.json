@@ -1,5 +1,5 @@
 {
-  "name": "protopack-base-template",
+  "name": "ai-design-playbook",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -8,27 +8,16 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "tsc --noEmit && eslint .",
-    "preview": "vite preview",
-    "duplicate": "bash -c 'BASE_NAME=${1:-$(basename \"$PWD\")-copy}; NAME=$BASE_NAME; COUNTER=2; while [ -d \"../$NAME\" ]; do NAME=\"${BASE_NAME}-${COUNTER}\"; COUNTER=$((COUNTER + 1)); done; rsync -av --exclude=node_modules --exclude=.git --exclude=dist --exclude=build --exclude=.cache --exclude=.turbo --exclude=coverage --exclude=.auth --exclude=.worktrees --exclude=pnpm-lock.yaml --exclude=\"*.log\" . \"../$NAME\" && echo \"\\n✓ Duplicated to ../$NAME\\n\\nNext steps:\\n  cd ../$NAME\\n  pnpm install\\n  pnpm dev\"' _ ",
-    "playwright:auth": "tsx playwright.auth.smart.ts",
-    "playwright:extract-auth": "tsx playwright.extract-auth.ts",
-    "playwright:auth-manual": "tsx playwright.auth.setup.ts",
-    "playwright:test": "playwright test",
-    "playwright:clean": "node -e \"require('fs').rmSync('.auth/playwright-state.json', { force: true });\""
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@adtech/protopack-services-all": "latest",
-    "@identity/imslib": "^0.47.0",
-    "@react-spectrum/s2": "latest",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.15.0",
-    "uuid": "^13.0.0",
     "vite-console-forward-plugin": "^2.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
-    "@playwright/test": "^1.58.2",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
@@ -39,9 +28,7 @@
     "lightningcss": "^1.28.0",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
-    "unplugin-parcel-macros": "^0.2.0",
     "vite": "^6.2.0",
-    "vite-plugin-checker": "^0.11.0",
-    "vite-plugin-mkcert": "^1.17.8"
+    "vite-plugin-checker": "^0.11.0"
   }
 }

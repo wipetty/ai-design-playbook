@@ -21,12 +21,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# SSL Certificates
-certs/
-*.pem
-
-# Playwright
-.auth/
-playwright-report/
-test-results/
