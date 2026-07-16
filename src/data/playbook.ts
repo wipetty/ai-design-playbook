@@ -1012,6 +1012,55 @@ export const playbook: Part[] = [
               },
             ],
           },
+          {
+            heading: "A framework this playbook echoes",
+            blocks: [
+              {
+                kind: "paragraph",
+                text: "None of this is unique to design. Rick Dakan, Joseph Feller, and Anthropic describe the same shift as a general competency, not a designer-specific one — four interconnected skills for working with AI effectively, efficiently, ethically, and safely. This playbook is that framework applied to one job.",
+              },
+              {
+                kind: "figure",
+                image: {
+                  src: "/images/ai-fluency-framework.png",
+                  alt: "A one-page diagram of the AI Fluency Framework: four competencies — delegation, description, discernment, and diligence — plus three modes of AI interaction: automation, augmentation, and agency.",
+                },
+                eyebrow: "The 4D framework",
+                caption:
+                  "[Read the AI Fluency Framework](https://www-cdn.anthropic.com/334975cdec18f744b4fa511dc8518bd8d119d29d.pdf) — Rick Dakan, Joseph Feller, and Anthropic, 2025. Released under CC BY-NC-SA 4.0.",
+              },
+              {
+                kind: "cards",
+                columns: 2,
+                items: [
+                  {
+                    icon: "compass",
+                    eyebrow: "Delegation",
+                    title: "Deciding whether, when, and how",
+                    text: "Setting goals and choosing when AI belongs in the loop at all. Covered in [knowing which mode you're in](/foundations/knowing-which-mode-youre-in).",
+                  },
+                  {
+                    icon: "chat",
+                    eyebrow: "Description",
+                    title: "Describing goals, not solutions",
+                    text: "Prompting well enough that the model does useful work on the first pass. Covered in [prompting best practices](/working-with-ai/prompting-best-practices).",
+                  },
+                  {
+                    icon: "target",
+                    eyebrow: "Discernment",
+                    title: "Judging what comes back",
+                    text: "Treating output as a hypothesis, not a fact — the habit that keeps a plausible answer from becoming a shipped mistake. Covered in [planning and exploring options](/working-with-ai/planning-and-exploring-options).",
+                  },
+                  {
+                    icon: "check",
+                    eyebrow: "Diligence",
+                    title: "Owning what you ship",
+                    text: "Taking responsibility for the result, including the parts a prompt can't fully cover — accessibility chief among them. Covered in [accessibility as a prompt-time concern](/the-craft/accessibility-as-a-prompt-time-concern).",
+                  },
+                ],
+              },
+            ],
+          },
         ],
       },
       {
