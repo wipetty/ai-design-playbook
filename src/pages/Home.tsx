@@ -378,16 +378,6 @@ export function Home() {
               Collaboration is welcomed. If a chapter sparks a disagreement,
               a missing case, or a thread worth pulling on together, reach
               out.
-            </aside>
-
-            <div className="about-author-actions">
-              <CoffeeButton className="about-author-coffee">
-                <span className="about-author-coffee-icon" aria-hidden="true">
-                  ☕
-                </span>
-                If this helped, buy me a coffee
-              </CoffeeButton>
-
               <a
                 href="https://www.linkedin.com/in/peitongchen"
                 target="_blank"
@@ -408,6 +398,15 @@ export function Home() {
                 </svg>
                 Connect on LinkedIn
               </a>
+            </aside>
+
+            <div className="about-author-actions">
+              <CoffeeButton className="about-author-coffee">
+                <span className="about-author-coffee-icon" aria-hidden="true">
+                  ☕
+                </span>
+                If this helped, buy me a coffee
+              </CoffeeButton>
             </div>
           </div>
         </div>
