@@ -850,9 +850,9 @@ export const playbook: Part[] = [
                   {
                     key: "now",
                     label: "Now",
-                    eyebrow: "Adobe today",
+                    eyebrow: "Already happening",
                     title: "Pods shipping production this way",
-                    body: "Protopack, the Firefly Platform repo, the Spectrum MCP, the Image Frontier pods. The infrastructure is in place at Adobe, and cross-functional teams are already shipping features through the loop. This isn't a forecast — it's the current state.",
+                    body: "An internal prototyping tool, a shared product repo, an MCP server wired to the design system, cross-functional AI pods. The infrastructure is in place, and cross-functional teams are already shipping features through the loop. This isn't a forecast — it's the current state.",
                     meta: "Pattern: a designer makes the change directly, the engineer reviews and lands it.",
                   },
                 ],
@@ -875,15 +875,28 @@ export const playbook: Part[] = [
                   },
                   {
                     icon: "layers",
-                    eyebrow: "Adobe",
+                    eyebrow: "Already in place",
                     title: "The infrastructure is in place",
-                    text: "The infrastructure is in place at Adobe. Protopack, Spectrum, the Firefly Platform repo, the MCP servers that wire agents into the real codebase. Cross-functional AI pods like the Image Frontier Team — small groups of designers, engineers, and PMs working tightly together with AI as a shared tool — are already shipping features this way: designers shaping the build, engineers landing the change, all moving on the same loop. It's not theoretical.",
+                    text: "The infrastructure is already in place at companies doing this well: an internal prototyping tool, a design system, MCP servers that wire agents into the real codebase. Cross-functional AI pods — small groups of designers, engineers, and PMs working tightly together with AI as a shared tool — are already shipping features this way: designers shaping the build, engineers landing the change, all moving on the same loop. It's not theoretical.",
                     image: {
-                      src: "/images/protopack-community.png",
-                      alt: "Protopack community page showing a grid of starter projects from Adobe teams.",
+                      src: "/images/prototyping-tool-community-gradient.svg",
+                      alt: "Abstract gradient placeholder image.",
                     },
                   },
                 ],
+              },
+              {
+                kind: "paragraph",
+                text: "The swing didn't stop at \"agents wired in.\" People building the next generation of these tools are converging on a shared complaint: a chat box has no shape. It can't hold a plan, a scope, or a set of agents working in parallel — it just holds a conversation, and after enough hours in one, that starts to feel like a constraint rather than a feature.",
+              },
+              {
+                kind: "quote",
+                text: "Software still needs bones.",
+                attribution: "Amelia Wattenberger, on designing structure back into AI-native tools",
+              },
+              {
+                kind: "paragraph",
+                text: "That's the same instinct behind the rules, skills, and MCPs later in this playbook — they're what keeps a raw chat window from being the only shape vibe coding can take.",
               },
             ],
           },
@@ -947,7 +960,7 @@ export const playbook: Part[] = [
                               outcome: {
                                 eyebrow: "Path 1 of 4",
                                 title: "Start at the start. You will move faster than you think.",
-                                body: "Read the playbook end to end. Don't skip the setup chapter — the friction it removes is the friction that has kept this kind of work feeling out of reach. By [chapter 7](/working-with-ai/prompting-best-practices) you'll be having genuine conversations with the model. By [chapter 10](/the-craft/from-figma-to-working-ui) you'll be making changes inside a real codebase.",
+                                body: "Read the playbook end to end. Don't skip the setup chapter — the friction it removes is the friction that has kept this kind of work feeling out of reach. By [chapter 6](/working-with-ai/prompting-best-practices) you'll be having genuine conversations with the model. By [chapter 9](/the-craft/from-figma-to-working-ui) you'll be making changes inside a real codebase.",
                               },
                             },
                           },
@@ -957,7 +970,7 @@ export const playbook: Part[] = [
                               outcome: {
                                 eyebrow: "Path 2 of 4",
                                 title: "You already have the instinct. You just need the loop.",
-                                body: "Skim [chapter 4](/setup-and-tooling/setting-up-your-environment) for setup, then go to part 3 (Working with AI). You've shipped before, you understand what production-grade looks like — what's missing is the muscle memory of moving through a codebase with the model. That's chapters [7](/working-with-ai/prompting-best-practices)–[9](/working-with-ai/documenting-design-and-handing-it-off).",
+                                body: "Skim [chapter 4](/setup-and-tooling/setting-up-your-environment) for setup, then go to part 3 (Working with AI). You've shipped before, you understand what production-grade looks like — what's missing is the muscle memory of moving through a codebase with the model. That's chapters [6](/working-with-ai/prompting-best-practices)–[8](/working-with-ai/documenting-design-and-handing-it-off).",
                               },
                             },
                           },
@@ -975,7 +988,7 @@ export const playbook: Part[] = [
                               outcome: {
                                 eyebrow: "Path 3 of 4",
                                 title: "You're ready for the team chapter. That's the missing piece.",
-                                body: "Skim parts 1–4 for the framing, then read part 5 carefully. The hardest part of this work isn't writing prompts — it's working with engineering, content, brand, legal, and the rest of the org. [Chapter 13](/shipping-and-team/working-inside-an-ai-pod) is the pod model. [Chapter 15](/shipping-and-team/the-invisible-work) is the foundational service layer the pod is built on. Read them as the actual practice.",
+                                body: "Skim parts 1–4 for the framing, then read part 5 carefully. The hardest part of this work isn't writing prompts — it's working with engineering, content, brand, legal, and the rest of the org. [Chapter 12](/shipping-and-team/working-inside-an-ai-pod) is the pod model. [Chapter 14](/shipping-and-team/the-invisible-work) is the foundational service layer the pod is built on. Read them as the actual practice.",
                               },
                             },
                           },
@@ -985,7 +998,7 @@ export const playbook: Part[] = [
                               outcome: {
                                 eyebrow: "Path 4 of 4",
                                 title: "You're already doing this. Use the playbook to sharpen the parts you skip.",
-                                body: "Read parts 4 and 5 in detail. The craft chapters ([10](/the-craft/from-figma-to-working-ui)–[12](/the-craft/accessibility-as-a-prompt-time-concern)) are where most experienced practitioners discover what they've been doing on instinct, named explicitly — accessibility at prompt time, design system as canonical reference, how to read the build for system drift. Then part 5 to scale the practice across a team.",
+                                body: "Read parts 4 and 5 in detail. The craft chapters ([9](/the-craft/from-figma-to-working-ui)–[11](/the-craft/accessibility-as-a-prompt-time-concern)) are where most experienced practitioners discover what they've been doing on instinct, named explicitly — accessibility at prompt time, design system as canonical reference, how to read the build for system drift. Then part 5 to scale the practice across a team.",
                               },
                             },
                           },
@@ -1229,7 +1242,7 @@ export const playbook: Part[] = [
                               outcome: {
                                 eyebrow: "You're crossing the slope",
                                 title: "Mode 02, drifting toward 03",
-                                body: "This is where most projects get hurt. Build in mode 02, but mark the drift risk explicitly. Talk to engineering before the demo so the conversation about \"can we ship this\" doesn't catch you flat-footed. Read [chapter 13](/shipping-and-team/working-inside-an-ai-pod) (the pod) early.",
+                                body: "This is where most projects get hurt. Build in mode 02, but mark the drift risk explicitly. Talk to engineering before the demo so the conversation about \"can we ship this\" doesn't catch you flat-footed. Read [chapter 12](/shipping-and-team/working-inside-an-ai-pod) (the pod) early.",
                               },
                             },
                           },
@@ -1378,43 +1391,37 @@ export const playbook: Part[] = [
                   },
                   {
                     eyebrow: "Part 2 · Setup",
-                    front: "[Chapter 5](/setup-and-tooling/ai-tooling-at-adobe) — AI tooling at Adobe.",
-                    backLabel: "When it pays off",
-                    back: "All three modes. Knowing what's already in the building (Spectrum MCP, Firefly Platform repo, Protopack) saves time in mode 01, keeps your prototype believable in mode 02, and is the difference between fitting in or fighting the system in mode 03.",
-                  },
-                  {
-                    eyebrow: "Part 2 · Setup",
-                    front: "[Chapter 6](/setup-and-tooling/extending-your-ai) — Extending your AI.",
+                    front: "[Chapter 5](/setup-and-tooling/extending-your-ai) — Extending your AI.",
                     backLabel: "When it pays off",
                     back: "Mode 02 and 03. Skills, MCPs, and rules are an investment that compounds over weeks. Worth building once you find yourself doing the same setup work twice.",
                   },
                   {
                     eyebrow: "Part 3 · With AI",
-                    front: "Chapter [7](/working-with-ai/prompting-best-practices)–[9](/working-with-ai/documenting-design-and-handing-it-off) — Prompting, planning, handoff.",
+                    front: "Chapter [6](/working-with-ai/prompting-best-practices)–[8](/working-with-ai/documenting-design-and-handing-it-off) — Prompting, planning, handoff.",
                     backLabel: "When it pays off",
                     back: "All three modes. The conversation craft is the same regardless of stakes — what changes is how much rigor you bring to documentation. Read for prompting first, return for handoff when the work crosses into mode 02 or 03.",
                   },
                   {
                     eyebrow: "Part 4 · The craft",
-                    front: "[Chapter 10](/the-craft/from-figma-to-working-ui) — From Figma to working UI.",
+                    front: "[Chapter 9](/the-craft/from-figma-to-working-ui) — From Figma to working UI.",
                     backLabel: "When it pays off",
                     back: "Mode 02 and 03. The Figma-to-build loop only matters once the design system is in play and you're building inside the real product, not a sandbox.",
                   },
                   {
                     eyebrow: "Part 4 · The craft",
-                    front: "[Chapter 11](/the-craft/visual-design-fidelity) — Visual design fidelity.",
+                    front: "[Chapter 10](/the-craft/visual-design-fidelity) — Visual design fidelity.",
                     backLabel: "When it pays off",
                     back: "Mode 02 and 03 — and especially mode 03. Spacing, typography, color, motion drift is the slop everyone notices. Skip in mode 01 and people understand. Skip in mode 03 and the build looks broken.",
                   },
                   {
                     eyebrow: "Part 4 · The craft",
-                    front: "[Chapter 12](/the-craft/accessibility-as-a-prompt-time-concern) — Accessibility at prompt time.",
+                    front: "[Chapter 11](/the-craft/accessibility-as-a-prompt-time-concern) — Accessibility at prompt time.",
                     backLabel: "When it pays off",
                     back: "Mode 03 is non-negotiable; mode 02 is strongly recommended. Building accessibility in at prompt time costs minutes; bolting it on at the end costs days. Read this once and apply forever.",
                   },
                   {
                     eyebrow: "Part 5 · Team",
-                    front: "Chapter [13](/shipping-and-team/working-inside-an-ai-pod)–[15](/shipping-and-team/the-invisible-work) — Pod, service layer, what doesn't shift.",
+                    front: "Chapter [12](/shipping-and-team/working-inside-an-ai-pod)–[14](/shipping-and-team/the-invisible-work) — Pod, service layer, what doesn't shift.",
                     backLabel: "When it pays off",
                     back: "Mode 03 only. These chapters describe shipping production work with a team. If you're solo in mode 01 or 02, skim them so you know what you're heading toward — and read them carefully the day someone says \"can we ship this.\"",
                   },
@@ -1645,7 +1652,7 @@ export const playbook: Part[] = [
     number: 2,
     title: "Setup & Tooling",
     description:
-      "Get the machine ready and the codebase in front of you. Pick the editor, work inside a real repo, see what Adobe gives you, and put rules and skills in their right place.",
+      "Get the machine ready and the codebase in front of you. Pick the editor, work inside a real repo, see what your company already gives you, and put rules and skills in their right place.",
     chapters: [
       {
         id: "setting-up-your-environment",
@@ -1785,7 +1792,7 @@ export const playbook: Part[] = [
                 tone: "neutral",
                 icon: "figma",
                 title: "Don't forget the Figma MCP",
-                text: "The Figma MCP is the connector that lets the model in your editor see your Figma frames as more than screenshots. With it installed, you can paste a Figma link into a prompt and the model can read the layers, components, and tokens directly. Without it, you're describing your design in words — which works, but throws away most of what Figma is for. [Chapter 6](/setup-and-tooling/extending-your-ai) covers MCPs in detail.",
+                text: "The Figma MCP is the connector that lets the model in your editor see your Figma frames as more than screenshots. With it installed, you can paste a Figma link into a prompt and the model can read the layers, components, and tokens directly. Without it, you're describing your design in words — which works, but throws away most of what Figma is for. [Chapter 5](/setup-and-tooling/extending-your-ai) covers MCPs in detail.",
               },
             ],
           },
@@ -1805,7 +1812,7 @@ export const playbook: Part[] = [
                     eyebrow: "Sandbox",
                     title: "Fast to start, nothing to reference",
                     text: "The model has nothing to look at except what you paste in, so anything that needs to match the real product has to be reinvented every session.",
-                    meta: "e.g. a brand-new Protopack scaffold, or a one-off Vite app you spun up to try an idea.",
+                    meta: "e.g. a brand-new scaffold from an internal prototyping tool, or a one-off Vite app you spun up to try an idea.",
                   },
                   {
                     icon: "check",
@@ -1825,7 +1832,7 @@ export const playbook: Part[] = [
                 tone: "neutral",
                 icon: "arrow",
                 title: "Prototyping path? There's a shorter route",
-                text: "If most of your work is prototyping rather than landing changes inside a production codebase, Protopack is a faster on-ramp than a full repo clone. It handles the local environment, gives you Spectrum-aligned templates, and makes hosting easy. [Chapter 5](/setup-and-tooling/ai-tooling-at-adobe) walks through it; [#adp-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) is where the day-to-day questions get answered. Skim the next section and come back to it the day your work starts crossing into a real product repo.",
+                text: "If most of your work is prototyping rather than landing changes inside a production codebase, an internal prototyping tool is a faster on-ramp than a full repo clone — it handles the local environment, gives you design-system-aligned templates, and makes hosting easy. Look for one before defaulting to a full repo clone, and find the internal channel where the day-to-day questions get answered. Skim the next section and come back to it the day your work starts crossing into a real product repo.",
               },
             ],
           },
@@ -1842,26 +1849,14 @@ export const playbook: Part[] = [
                   {
                     title: "Ask for repo access",
                     text: "Find an engineer or tech lead on the team and ask them to add you to the GitHub repo. They'll need your GitHub username; you'll need a corp account linked to GitHub. The first time, this can take a day or two — start the ask before you actually need it.",
-                    image: {
-                      src: "/images/codebase-repo.png",
-                      alt: "GitHub Enterprise view of the Adobe-Firefly/firefly-platform repository, showing the main branch, file list, branches and tags counts, and the About panel.",
-                    },
                   },
                   {
                     title: "Clone the repo",
                     text: "From the Cursor welcome screen, paste the GitHub URL and pick a folder. From a terminal, it's git clone followed by the URL. Either way, you end up with the whole codebase as a local folder you can open in the editor.",
-                    image: {
-                      src: "/images/codebase-clone.png",
-                      alt: "GitHub Code dropdown open, showing the HTTPS clone URL for the firefly-platform repository alongside SSH and GitHub CLI tabs.",
-                    },
                   },
                   {
                     title: "Read the setup doc",
                     text: "Almost every repo has a README.md or guidelines.md at the root. Open it first. It tells you which package manager to use, which command starts the dev server, and any environment variables you need. Following that doc is the difference between a working environment and an hour of debugging install errors.",
-                    image: {
-                      src: "/images/codebase-readme.png",
-                      alt: "Rendered Firefly Platform README on GitHub, showing the package description, Demo link, and a numbered Consumer Setup section with npm and pnpm install commands.",
-                    },
                   },
                 ],
               },
@@ -1915,10 +1910,6 @@ export const playbook: Part[] = [
                   {
                     title: "Push for review when the bar fits the mode",
                     text: "Match the review intensity to the mode you're in. A mode-one prototype gets a quick look. A mode-three change gets the full review pass.",
-                    image: {
-                      src: "/images/loop-repo.png",
-                      alt: "GitHub Enterprise view of the Adobe-Firefly/firefly-platform repository, showing the main branch, file list, and the pull requests tab with hundreds of open PRs.",
-                    },
                   },
                 ],
               },
@@ -1927,7 +1918,7 @@ export const playbook: Part[] = [
                 tone: "neutral",
                 icon: "compass",
                 title: "Out of scope: AI code review",
-                text: "Tools like [Bugbot](https://cursor.com/bugbot), [CodeRabbit](https://www.coderabbit.ai/), and the review bots wired into Adobe repos can read a PR and flag issues before a human ever opens it. They're worth using, but the setup and the judgment around them sit in engineering territory. The fastest way in is to ask an engineering friend to walk you through what their team uses on a real PR of yours.",
+                text: "Tools like [Bugbot](https://cursor.com/bugbot), [CodeRabbit](https://www.coderabbit.ai/), and the review bots wired into your company's repos can read a PR and flag issues before a human ever opens it. They're worth using, but the setup and the judgment around them sit in engineering territory. The fastest way in is to ask an engineering friend to walk you through what their team uses on a real PR of yours.",
               },
               {
                 kind: "wink",
@@ -2026,225 +2017,7 @@ export const playbook: Part[] = [
                 tone: "neutral",
                 icon: "compass",
                 title: "What this chapter doesn't cover",
-                text: "Prompting practices, MCPs, skills, and rules live in [chapter 6](/setup-and-tooling/extending-your-ai). The Adobe-specific tooling — Protopack, Spectrum, the Adobe MCPs, license access — is [chapter 5](/setup-and-tooling/ai-tooling-at-adobe). How a pod actually works once setup is done is [chapter 14](/shipping-and-team/image-frontier-pod). Setup is the part you do once per project and mostly forget about. The rest of the playbook is what you do every day.",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: "ai-tooling-at-adobe",
-        number: 5,
-        title: "The Adobe AI landscape",
-        summary:
-          "What Adobe gives you and how to get to it: the tools, the access process, and the community where the actual help lives.",
-        readTime: "6 min",
-        sections: [
-          {
-            heading: "Start from what's already in the building",
-            blocks: [
-              {
-                kind: "paragraph",
-                text: "Adobe gives you a lot before you install anything from the outside. The Firefly Platform, Spectrum, Protopack, and a growing internal MCP landscape are all designed to make your assistant smarter about Adobe-shaped work — and to keep what you ship consistent with everything else shipping at the company. The canonical map of what's available lives on the [AI at Adobe Design wiki](https://wiki.corp.adobe.com/display/AdobeDesign/AI+at+Adobe+Design); the company-wide [AI guidelines](https://inside.corp.adobe.com/adobe-and-generative-ai/ai-guidelines.html) sit alongside it.",
-              },
-              {
-                kind: "figure",
-                image: {
-                  src: "/images/ai-at-adobe-design-wiki.png",
-                  alt: "AI at Adobe Design wiki landing page, showing the program mission, page contacts, quick links to AI tools, and a Slack invite to #ai-ad-experimenters.",
-                },
-                eyebrow: "AI at Adobe Design",
-                caption:
-                  "The program hub: mission, quick links, contacts, and the channel where the day-to-day conversation happens.",
-              },
-              {
-                kind: "pullquote",
-                text: "The platform already knows your design system, your auth, and your services. Use it before you build it.",
-              },
-              {
-                kind: "paragraph",
-                text: "External tools are useful and you'll reach for them. But starting with the internal platform means a working prototype on day one, not on day five.",
-              },
-            ],
-          },
-          {
-            heading: "What you actually have",
-            blocks: [
-              {
-                kind: "paragraph",
-                text: "The Adobe stack you'll touch as a designer breaks into four shapes: the everyday editors ([chapter 4](/setup-and-tooling/setting-up-your-environment) covered those), a prototyping environment, the production codebases you cross into when work goes real, and the model context layer that ties everything to the rest of the company. Treat the cards below as a map, not a checklist — install only what the work in front of you actually needs.",
-              },
-              {
-                kind: "cards",
-                columns: 2,
-                items: [
-                  {
-                    icon: "wand",
-                    eyebrow: "Firefly Platform",
-                    title: "Image, video, and creative model APIs",
-                    text: "Generate, edit, upscale, and composite — callable from a prototype with the same auth you already use. The fastest way to put a real model in a real flow.",
-                  },
-                  {
-                    icon: "layers",
-                    eyebrow: "Protopack",
-                    title: "Built for designers who don't want to think about npm",
-                    text: "The Adobe Design Technology team's answer to \"how do I prototype without spending a day on environment setup.\" Local dev environment, Spectrum-wired templates, and a hosting service so you can share what you've built. The right starting point for new ideas and build-in-context work.",
-                  },
-                  {
-                    icon: "ruler",
-                    eyebrow: "Spectrum (S2)",
-                    title: "The Adobe design system",
-                    text: "React Spectrum components for production UI, plus tokens, motion, and a11y patterns the assistant can pin to. You're not editing Spectrum, you're using it — which is what stops AI-generated UI from drifting away from the rest of Adobe.",
-                  },
-                  {
-                    icon: "compass",
-                    eyebrow: "Adobe MCPs",
-                    title: "Context the assistant can reach for",
-                    text: "Servers that let the model read services, designs, and internal docs without you pasting them in. The Figma MCP is the one most designers install first — it lets the model see your frames as more than screenshots. The canonical list lives on the [AI at Adobe Design wiki](https://wiki.corp.adobe.com/display/AdobeDesign/AI+at+Adobe+Design) and changes faster than this page can.",
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            heading: "How to get to it",
-            blocks: [
-              {
-                kind: "paragraph",
-                text: "Most of the access is gated behind a few standard requests and a couple of Slack channels. None of it is hard. The trick is doing all of it once, up front, instead of stumbling into each step the day you need it.",
-              },
-              {
-                kind: "steps",
-                items: [
-                  {
-                    title: "Install Protopack and the templates",
-                    text: "Install the Protopack plugin for Claude Code or Cursor. It pulls in the skills, agents, and templates the rest of the company is already using. The [AD AI Prototyping Quick Start](https://wiki.corp.adobe.com/spaces/AdobeDesign/pages/3650101698/AD+AI+Prototyping+Quick+Start) on the Adobe Design wiki walks through the install end to end.",
-                    image: {
-                      src: "/images/logo-protopack.png",
-                      alt: "Protopack app icon.",
-                      variant: "logo",
-                    },
-                  },
-                  {
-                    title: "Get GitHub and repo access (optional if you're just experimenting)",
-                    text: "Skip this step if you're poking at Protopack templates or running things locally — you don't need it. The day your work crosses into a real product repo, request access to the GitHub orgs and the specific product repos you'll work in, plus the dev tooling baseline. This usually means a self-serve request and an approval from your manager.",
-                  },
-                  {
-                    title: "Wire the MCPs you'll actually use",
-                    text: "[Figma MCP](https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server), the relevant service MCPs, anything tied to the product you ship. Skip the rest. A wired-in MCP you don't use is a tax on every session.",
-                  },
-                  {
-                    title: "Join the channels where help happens",
-                    text: "There's no central docs site that beats a Slack channel of people doing the same thing today. The starter set: [#ad-ai-collective](https://adobe.enterprise.slack.com/archives/C04MKDW961Z) for AI design across disciplines, [#ai-coding-assistant-users](https://adobe.enterprise.slack.com/archives/C06MW635SD8) for Cursor and Claude Code questions, [#adp-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) for Protopack, and [#external-ai-coding-cursor](https://adobe.enterprise.slack.com/archives/C07UL8NPFNK) for Cursor-specific chat. Lurk first, then ask.",
-                    image: {
-                      src: "/images/logo-slack.svg",
-                      alt: "Slack logo mark.",
-                      variant: "logo",
-                    },
-                  },
-                ],
-              },
-              {
-                kind: "callout",
-                tone: "accent",
-                icon: "target",
-                title: "Approved tools, and why the list exists",
-                text: "Adobe maintains a list of approved AI tools (ChatGPT Enterprise, Microsoft 365 Copilot, GitHub Copilot, Adobe's own products), plus a separate field-analysis set with extra restrictions — the biggest being *no Adobe internal data*. The reason behind the list is data leakage: assume anything not on it is logging what you paste, and treat uploading Adobe internal information into an unapproved tool as a policy violation, not a gray area. Easy-to-miss rule for vibe coding — source code is automatically *Adobe Confidential* the moment you write it, one level up from internal. Read the [AI guidelines](https://inside.corp.adobe.com/adobe-and-generative-ai/ai-guidelines.html) once before you start; the underlying policy lives in Adobe's Vendor Information Security Standard and section 3.3 of the Data Classification and Handling Standard.",
-              },
-              {
-                kind: "callout",
-                tone: "accent",
-                icon: "spark",
-                title: "Cue to ask for help",
-                text: "You've spent more than 30 minutes on the same setup error. Stop tweaking, post the error in the right channel, and keep going on something else. Someone almost always answers within the hour, and the answer is almost never written down anywhere yet.",
-              },
-            ],
-          },
-          {
-            heading: "Where the actual help lives",
-            blocks: [
-              {
-                kind: "paragraph",
-                text: "Adobe is large. Documentation is uneven. The fastest unblock is almost never a wiki page — it's a person who shipped the same thing yesterday. Knowing where those people gather is half the job.",
-              },
-              {
-                kind: "cards",
-                columns: 2,
-                items: [
-                  {
-                    icon: "chat",
-                    eyebrow: "Slack",
-                    title: "The working channels",
-                    text: "[#ad-ai-collective](https://adobe.enterprise.slack.com/archives/C04MKDW961Z) for AI design across disciplines, [#ai-coding-assistant-users](https://adobe.enterprise.slack.com/archives/C06MW635SD8) for Cursor and Claude Code, [#adp-protopack](https://adobe.enterprise.slack.com/archives/C08QHHYC5SR) for Protopack, and [#external-ai-coding-cursor](https://adobe.enterprise.slack.com/archives/C07UL8NPFNK) for Cursor's own team. Join all four before you need them.",
-                  },
-                  {
-                    icon: "layers",
-                    eyebrow: "Use Case Library",
-                    title: "The running record of what AD has built",
-                    text: "Figma plugins, internal demo apps, MCP servers, prototypes, content tools — the actual range of what colleagues have shipped is faster than any framework for understanding what's possible. Most entries name the designer who built them; reaching out is one of the highest-return investments you can make early on.",
-                  },
-                  {
-                    icon: "spark",
-                    eyebrow: "Ambassador & Spotlight",
-                    title: "The formal version of community",
-                    text: "Ambassadors get early access to new tools and a monthly forum to share what they're learning. Spotlight sessions are recorded and archived on SharePoint, and watching a designer walk through their actual workflow tells you things no how-to guide will.",
-                  },
-                  {
-                    icon: "target",
-                    eyebrow: "AI pods",
-                    title: "Cross-functional groups already shipping",
-                    text: "Teams like the Image Frontier Team mix designers, engineers, and PMs around a real product surface, with AI as a shared tool. Watching how they work compresses months of guessing.",
-                  },
-                ],
-              },
-              {
-                kind: "wink",
-                text: "The single biggest accelerator at Adobe is sitting next to someone who's a few weeks ahead of you. Find that person — in person or in Slack — and the rest of the playbook gets faster.",
-              },
-            ],
-          },
-          {
-            heading: "Don't reinvent what's already there",
-            blocks: [
-              {
-                kind: "paragraph",
-                text: "If you find yourself building login, restyling a button, or hand-rolling a service client, stop. The platform almost certainly already has it. Using the platform piece isn't just faster — it's how your work stays consistent with everything else shipping at the company.",
-              },
-              {
-                kind: "checklist",
-                items: [
-                  {
-                    positive: true,
-                    title: "Use Spectrum components instead of building UI from scratch",
-                    text: "React Spectrum gives you production-ready buttons, fields, dialogs, and tables that already match the rest of Adobe.",
-                  },
-                  {
-                    positive: true,
-                    title: "Use Protopack for IMS auth and the Adobe services kit",
-                    text: "One template covers login, tokens, and a wired-in services SDK. No bespoke auth code in your prototype.",
-                  },
-                  {
-                    positive: true,
-                    title: "Use Adobe3P for any LLM call (OpenAI, Gemini, Claude)",
-                    text: "Same interface, unified auth, no separate API keys. Skips a compliance conversation later.",
-                  },
-                  {
-                    positive: true,
-                    title: "Use the Firefly Platform for image and video generation",
-                    text: "If a model exists internally, use it. External APIs are a fallback, not a default.",
-                  },
-                ],
-              },
-              {
-                kind: "pullquote",
-                text: "Custom auth is a tax. Custom buttons are a tax. The platform exists so you can spend your attention elsewhere.",
-              },
-              {
-                kind: "callout",
-                tone: "neutral",
-                icon: "compass",
-                title: "What this chapter doesn't cover",
-                text: "Step-by-step setup for any single tool — each one has its own canonical doc, and reproducing them here would mean maintaining them in two places, badly. The full inventory of approved AI tools — it changes too fast and Inside Adobe is the source of truth. Discipline-specific workflows — the wiki has dedicated pages for Product Design, Prototyping, Content Strategy, and User Research. Start there if you're trying to figure out how AI fits your specific role.",
+                text: "Prompting practices, MCPs, skills, and rules live in [chapter 5](/setup-and-tooling/extending-your-ai). How a pod actually works once setup is done is [chapter 13](/shipping-and-team/image-frontier-pod). Setup is the part you do once per project and mostly forget about. The rest of the playbook is what you do every day.",
               },
             ],
           },
@@ -2252,7 +2025,7 @@ export const playbook: Part[] = [
       },
       {
         id: "extending-your-ai",
-        number: 6,
+        number: 5,
         title: "Extending your AI: MCPs, skills, and rules",
         summary:
           "What MCPs, skills, and rules each do, when to reach for which, and how CLAUDE.md or AGENTS.md hold them together.",
@@ -2341,7 +2114,7 @@ export const playbook: Part[] = [
                         outcome: {
                           eyebrow: "Reach for",
                           title: "A rule, in CLAUDE.md or AGENTS.md",
-                          body: "If something must always be true — \"never use plain HTML buttons,\" \"always import from @react-spectrum/s2,\" \"sentence case for all UI text\" — that's policy. It belongs in a rule at the repo root, not in your per-prompt instructions. Once it's there, you stop having to repeat it.",
+                          body: "If something must always be true — \"never use plain HTML buttons,\" \"always import components from the design system package,\" \"sentence case for all UI text\" — that's policy. It belongs in a rule at the repo root, not in your per-prompt instructions. Once it's there, you stop having to repeat it.",
                         },
                       },
                     },
@@ -2381,15 +2154,15 @@ export const playbook: Part[] = [
                   },
                   {
                     icon: "ruler",
-                    eyebrow: "Spectrum MCPs",
+                    eyebrow: "Design system MCP",
                     title: "Reach into the system",
-                    text: "`@react-spectrum/mcp` is the official S2 server — components, props, examples. `@adobe/spectrum-design-data-mcp` exposes tokens and component anatomy. `@adobe/s2-docs-mcp` exposes usage and accessibility. Wired alongside Figma, the model stops inventing close-but-wrong UI and starts using what's already approved.",
+                    text: "A growing category of tool (zeroheight, Supernova, and several open-source servers all do a version of this): one MCP server exposes components, props, and examples; another exposes tokens and component anatomy; another covers usage and accessibility guidance. Wired alongside Figma, the model stops inventing close-but-wrong UI and starts using what's already approved.",
                   },
                   {
                     icon: "wand",
                     eyebrow: "Service MCP",
                     title: "Call the platform",
-                    text: "Invoke Firefly, Adobe3P, internal APIs without you pasting in clients or tokens. Turns a prototype into something that actually does work.",
+                    text: "Invoke image/LLM generation, your org's API gateway, internal services without you pasting in clients or tokens. Turns a prototype into something that actually does work.",
                   },
                 ],
               },
@@ -2417,7 +2190,7 @@ export const playbook: Part[] = [
                     icon: "ruler",
                     eyebrow: "Design review",
                     title: "Critique against the system",
-                    text: "Compare the build to Spectrum, your tokens, and your voice. Surface the drift, not just the missing pieces.",
+                    text: "Compare the build to your design system, your tokens, and your voice. Surface the drift, not just the missing pieces.",
                   },
                   {
                     icon: "check",
@@ -2443,11 +2216,11 @@ export const playbook: Part[] = [
                 language: "markdown",
                 text: `---
 name: design-review
-description: Review the running build against Spectrum, tokens, and the brief. Use before opening a non-draft PR.
+description: Review the running build against the design system, tokens, and the brief. Use before opening a non-draft PR.
 ---
 
 1. Read the linked brief or PRD section in the PR description.
-2. Walk every interactive element. Flag any non-Spectrum component as a BLOCKER.
+2. Walk every interactive element. Flag any non-system component as a BLOCKER.
 3. Diff tokens against the design system: color, spacing, type scale, motion.
 4. Open the running app on localhost and compare each screen to the Figma frame.
 5. Post findings as PR comments tagged BLOCKER, MAJOR, MINOR, or NIT.
@@ -2499,7 +2272,7 @@ description: Run the accessibility floor before pushing for review. Use any time
                   {
                     positive: true,
                     title: "Pin to your design system",
-                    text: "\"Use Spectrum S2 components for all interactive UI. Don't introduce raw HTML buttons or inputs.\"",
+                    text: "\"Use the design system's components for all interactive UI. Don't introduce raw HTML buttons or inputs.\"",
                   },
                   {
                     positive: true,
@@ -2509,7 +2282,7 @@ description: Run the accessibility floor before pushing for review. Use any time
                   {
                     positive: true,
                     title: "Set the auth contract",
-                    text: "\"All Adobe API calls use the IMS token from the useIMS hook. Never hardcode keys.\"",
+                    text: "\"All internal API calls use the auth token from the useAuth hook. Never hardcode keys.\"",
                   },
                   {
                     positive: true,
@@ -2523,7 +2296,7 @@ description: Run the accessibility floor before pushing for review. Use any time
                 tone: "accent",
                 icon: "spark",
                 title: "Cue to write one",
-                text: "You've corrected the same drift in three sessions in a row — a hex value where a token should be, a div styled as a button, an exclamation point in copy, a custom card when Spectrum already has one. The right move isn't a sharper prompt or a longer review. It's a rule that says it once, in the place every session reads.",
+                text: "You've corrected the same drift in three sessions in a row — a hex value where a token should be, a div styled as a button, an exclamation point in copy, a custom card when the design system already has one. The right move isn't a sharper prompt or a longer review. It's a rule that says it once, in the place every session reads.",
               },
               {
                 kind: "wink",
@@ -2563,12 +2336,6 @@ description: Run the accessibility floor before pushing for review. Use any time
                 icon: "compass",
                 title: "Production mode: rules earn back the time",
                 text: "In new ideas and build-in-context, sparse rules are fine — drift is cheap. In production, drift compounds. A tight always-on file — call it 1,500 words, give or take — is the cheapest insurance against it.",
-                image: {
-                  src: "/images/guidelines-md-example.png",
-                  alt: "Excerpt from a CLAUDE.md file in the firefly-platform repo, showing branch creation commands, local dev setup, and the typical contribution workflow.",
-                  caption:
-                    "CLAUDE.md (firefly-platform) — real rules look mundane: branch, run, check.",
-                },
               },
             ],
           },
@@ -2585,7 +2352,7 @@ description: Run the accessibility floor before pushing for review. Use any time
     chapters: [
       {
         id: "prompting-best-practices",
-        number: 7,
+        number: 6,
         title: "Prompting best practices",
         summary:
           "Specificity, pointers, constraints, examples. The per-message craft of getting useful output, tuned to UI work.",
@@ -2635,7 +2402,7 @@ description: Run the accessibility floor before pushing for review. Use any time
                 after: {
                   label: "Specific",
                   steps: [
-                    "Generate a Spectrum 2 product card. 16 px padding, 8 px corner radius, 4:3 image at the top, two-line title in spectrum-body-m, price in spectrum-detail-l, a primary Add to cart button at the bottom. Match the spacing rhythm of src/components/ProductCard.tsx and use design tokens, not hex values.",
+                    "Generate a design-system product card. 16 px padding, 8 px corner radius, 4:3 image at the top, two-line title in text-body-m, price in text-detail-l, a primary Add to cart button at the bottom. Match the spacing rhythm of src/components/ProductCard.tsx and use design tokens, not hex values.",
                   ],
                 },
               },
@@ -2671,14 +2438,14 @@ description: Run the accessibility floor before pushing for review. Use any time
                     eyebrow: "Layer 03",
                     label: "Name the type ramp",
                     addition:
-                      "Two-line title in `spectrum-body-m`, price in `spectrum-detail-l`. Truncate the title with an ellipsis if it overflows.",
+                      "Two-line title in `text-body-m`, price in `text-detail-l`. Truncate the title with an ellipsis if it overflows.",
                   },
                   {
                     key: "behavior",
                     eyebrow: "Layer 04",
                     label: "Specify behavior + state",
                     addition:
-                      "Primary `Add to cart` button at the bottom, full-width on mobile. Hover lifts the card 4 px, focus shows a 2 px Spectrum focus ring, keyboard `Enter` activates the primary action.",
+                      "Primary `Add to cart` button at the bottom, full-width on mobile. Hover lifts the card 4 px, focus shows a 2 px design-system focus ring, keyboard `Enter` activates the primary action.",
                   },
                 ],
                 caption:
@@ -2788,7 +2555,7 @@ description: Run the accessibility floor before pushing for review. Use any time
                 label: "Prompt template",
                 lines: [
                   { text: "Constraints:", mark: 1 },
-                  { text: "- Use Spectrum 2 components from @react-spectrum/s2." },
+                  { text: "- Use components from the design system's package." },
                   { text: "- Use design tokens for color, type, and spacing. No hex values." },
                   { text: "- Match the file structure of src/components/ProductCard.tsx." },
                   { text: "- Keyboard accessible: tab, shift-tab, enter, space all work." },
@@ -2922,7 +2689,7 @@ description: Run the accessibility floor before pushing for review. Use any time
                     icon: "ruler",
                     eyebrow: "Audit",
                     title: "Check this screen",
-                    text: "Compare to Spectrum tokens. Flag every off-token color or non-system control.",
+                    text: "Compare to the design system's tokens. Flag every off-token color or non-system control.",
                   },
                   {
                     size: "wide",
@@ -2955,7 +2722,7 @@ description: Run the accessibility floor before pushing for review. Use any time
                     icon: "loop",
                     eyebrow: "Parallel builds",
                     title: "Three variations at the same time",
-                    text: "Three worktrees, three branches, three takes on the same screen — running concurrently instead of in series. Merge the switcher in last. This is the infrastructure for the variation pattern in [chapter 8](/working-with-ai/planning-and-exploring-options): instead of building A, then B, then C in sequence, you brief three agents on the same problem and compare what comes back in the same hour.",
+                    text: "Three worktrees, three branches, three takes on the same screen — running concurrently instead of in series. Merge the switcher in last. This is the infrastructure for the variation pattern in [chapter 7](/working-with-ai/planning-and-exploring-options): instead of building A, then B, then C in sequence, you brief three agents on the same problem and compare what comes back in the same hour.",
                   },
                   {
                     size: "small",
@@ -2969,16 +2736,23 @@ description: Run the accessibility floor before pushing for review. Use any time
                     icon: "check",
                     eyebrow: "Reviewer agents",
                     title: "A second pass on the diff",
-                    text: "Spawn an agent to read the change as a critic — token drift, voice slips, missed accessibility, Spectrum violations. It reads the diff, not the conversation.",
+                    text: "Spawn an agent to read the change as a critic — token drift, voice slips, missed accessibility, design-system violations. It reads the diff, not the conversation.",
                   },
                   {
                     size: "wide",
                     icon: "spark",
                     eyebrow: "Background and cloud agents",
                     title: "Hand off, walk away",
-                    text: "Long-running autonomous work. Convert every custom button to a Spectrum component. Review the last twenty PRs for copy issues. The unit of work shifts from a prompt to a brief that runs while you do something else.",
+                    text: "Long-running autonomous work. Convert every custom button to a design-system component. Review the last twenty PRs for copy issues. The unit of work shifts from a prompt to a brief that runs while you do something else.",
                   },
                 ],
+              },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "compass",
+                title: "Give the agents named roles",
+                text: "A useful shape for this, borrowed from how some AI-native tools structure multi-agent work: a coordinator agent researches and drafts the plan, implementer agents build against it, and a verifier agent checks their work before it comes back to you. Naming the roles up front stops three agents from quietly doing the same job three different ways — and the plan they're working from is worth treating as a living document you steer, not a one-shot prompt you fired and forgot.",
               },
               {
                 kind: "callout",
@@ -3039,7 +2813,7 @@ description: Run the accessibility floor before pushing for review. Use any time
       },
       {
         id: "planning-and-exploring-options",
-        number: 8,
+        number: 7,
         title: "Planning and exploring options",
         summary:
           "Touring the codebase, reading the data, sparring on decisions, and turning it into a plan the model can actually execute.",
@@ -3116,6 +2890,14 @@ description: Run the accessibility floor before pushing for review. Use any time
                 caption:
                   "Six pieces of work, one chapter. Skip them and the build still happens — just on weaker foundations than it needed.",
               },
+              {
+                kind: "pullquote",
+                text: "When anyone can build almost anything, \"can you build it\" stops being the interesting question. \"Should you\" is.",
+              },
+              {
+                kind: "paragraph",
+                text: "That's the shift this chapter is really about. Judgment — knowing what's worth the model's time and yours — is the scarce skill now, not execution. Precision beats completeness: shipping the one thing that earns its place beats a list of everything that was technically possible to build.",
+              },
             ],
           },
           {
@@ -3183,16 +2965,6 @@ description: Run the accessibility floor before pushing for review. Use any time
                     text: "The model is plausible, not authoritative. If a number ends up on a slide, it should come from the source, not the summary.",
                   },
                 ],
-              },
-              {
-                kind: "figure",
-                image: {
-                  src: "/images/analytics-funnel-benchmark.png",
-                  alt: "Funnel benchmark table comparing toolbar clickers, generate rate, response rate, and task success rate across tools like remove, upscale, expand, fill, annotate, precision flow, remove background, and instruct.",
-                },
-                eyebrow: "Funnel benchmark, all logged-in users",
-                caption:
-                  "Connect Claude to the Firefly analytics warehouse and it can pull a funnel like this on demand — toolbar clickers, generate rates, response rates, task success — and read it as a designer would. Where is intent breaking down? Which tools have a discovery problem versus a quality problem? Which surfaces are quietly carrying the product? The model turns the dashboard into a running conversation about which features deserve the next round of design work.",
               },
             ],
           },
@@ -3496,7 +3268,7 @@ description: Run the accessibility floor before pushing for review. Use any time
       },
       {
         id: "documenting-design-and-handing-it-off",
-        number: 9,
+        number: 8,
         title: "Documenting design and handing it off",
         summary:
           "Handoff isn't a single act. It's a network of small ones — to the model, to QE, to engineering, and to the next designer.",
@@ -3707,13 +3479,8 @@ description: Run the accessibility floor before pushing for review. Use any time
                 kind: "callout",
                 tone: "accent",
                 icon: "chat",
-                title: "Content strategy — bringing Marisa in early",
-              text: "The signal to loop Marisa in isn't \"the build is done\" — it's the moment the Figma frame is ready for review, well before the build settles. She comments on the source-of-truth frame on her own time, leaving content recommendations. The build is still being shaped while those threads land, so the decisions get folded in as the prototype evolves rather than retrofitted at the end. None of it would have surfaced in a static copy doc weeks later.",
-                image: {
-                  src: "/images/marisa-content-comment.png",
-                  alt: "Edit image empty state in Figma showing three sample image cards (Restyle an image, Precision flow beta, and a clothing render). A comment from Marisa Williams is open on the canvas suggesting five candidate microcopy options for the Precision flow card, ranging from \"Edit images using sliders for granular control\" to \"Edit your images with sliders.\"",
-                  caption: "Marisa's comment thread on the source-of-truth Figma frame — five candidate microcopy options for the same card, side by side, so the conversation lands on the design reference rather than scattered across the prototype.",
-                },
+                title: "Content strategy — bringing the content strategist in early",
+                text: "The signal to loop the content strategist in isn't \"the build is done\" — it's the moment the Figma frame is ready for review, well before the build settles. They comment on the source-of-truth frame on their own time, leaving content recommendations. The build is still being shaped while those threads land, so the decisions get folded in as the prototype evolves rather than retrofitted at the end. None of it would have surfaced in a static copy doc weeks later.",
               },
               {
                 kind: "callout",
@@ -3731,7 +3498,7 @@ description: Run the accessibility floor before pushing for review. Use any time
                 tone: "neutral",
                 icon: "loop",
                 title: "Preserve the decision conversation",
-                text: "Resolve the Figma comment thread with the decision in plain language — \"changed the CTA from Get started to Try a brush because Get started was already overloaded on the surface,\" \"swapped the photographic hero for an illustration to widen the audience read.\" The thread stays attached to the frame it's about, so the why lives on the surface itself. Future you, future Marisa, the asset team, and the next designer who picks this up all benefit from the reasoning, not just the final string.",
+                text: "Resolve the Figma comment thread with the decision in plain language — \"changed the CTA from Get started to Try a brush because Get started was already overloaded on the surface,\" \"swapped the photographic hero for an illustration to widen the audience read.\" The thread stays attached to the frame it's about, so the why lives on the surface itself. Future you, the content strategist, the asset team, and the next designer who picks this up all benefit from the reasoning, not just the final string.",
               },
               {
                 kind: "callout",
@@ -3764,21 +3531,12 @@ description: Run the accessibility floor before pushing for review. Use any time
                     eyebrow: "The PR",
                     title: "A description that explains why",
                     text: "What the code does and why this approach over alternatives — not just here is some code I wrote. Link the branch, a recording, and the stack of related PRs split by concern. A good description cuts review time in half.",
-                    image: {
-                      src: "/images/pr-handoff-slack-message.png",
-                      alt: "Slack message handing off a feature build to engineering. The message links the branch and a recording, then lists multiple PRs (Adding the empty state, Adding the cropping/aspect ratio, Color updates and dark mode fixes) and two PR mini items (Add plus icon to button, Fix cancel button color), each with review-status emoji.",
-                      position: "left top",
-                    },
                   },
                   {
                     icon: "spark",
                     eyebrow: "Design documentation",
                     title: "Capture what code can't show",
                     text: "A short screen recording — motion timing, hover states, the empty-to-loaded transition. Drop it in the PR, pin it on the frame. The recording is the spec for the things specs always miss.",
-                    image: {
-                      src: "/images/design-documentation-recording.png",
-                      alt: "Poster frame from a 56-second screen recording of the running prototype, showing four image cards arranged in a row on a dark canvas with the surrounding browser chrome visible.",
-                    },
                   },
                 ],
               },
@@ -3893,7 +3651,7 @@ description: Run the accessibility floor before pushing for review. Use any time
     chapters: [
       {
         id: "from-figma-to-working-ui",
-        number: 10,
+        number: 9,
         title: "From Figma to working UI and back",
         summary:
           "The design-to-code loop has four moments — starting, mid-build, review, shipping — each with a different right answer.",
@@ -4239,7 +3997,7 @@ description: Run the accessibility floor before pushing for review. Use any time
                 tone: "neutral",
                 icon: "layers",
                 title: "An /explorations file for the rest",
-                text: "Keep abandoned variations in a separate Figma file or page. Light annotation on each — *this version was rejected because the extra column made the table unreadable on smaller viewports* — turns each one from a dead end into institutional knowledge for the next designer who picks up the surface. Pairs with the variation pattern in [Chapter 8](/working-with-ai/planning-and-exploring-options) and the next-designer handoff in [Chapter 9](/working-with-ai/documenting-design-and-handing-it-off).",
+                text: "Keep abandoned variations in a separate Figma file or page. Light annotation on each — *this version was rejected because the extra column made the table unreadable on smaller viewports* — turns each one from a dead end into institutional knowledge for the next designer who picks up the surface. Pairs with the variation pattern in [Chapter 7](/working-with-ai/planning-and-exploring-options) and the next-designer handoff in [Chapter 8](/working-with-ai/documenting-design-and-handing-it-off).",
               },
             ],
           },
@@ -4260,7 +4018,7 @@ description: Run the accessibility floor before pushing for review. Use any time
       },
       {
         id: "visual-design-fidelity",
-        number: 11,
+        number: 10,
         title: "Visual design fidelity",
         summary:
           "AI lands every build in the *almost right* zone. Closing the gap means anchoring the model in spacing, typography, color, hierarchy, and motion.",
@@ -4410,7 +4168,7 @@ description: Run the accessibility floor before pushing for review. Use any time
               },
               {
                 kind: "paragraph",
-                text: "The full ramp — every `size-*` token, the t-shirt-sized layout sizes that scale with density, and the rules for when to reach for which — lives in the [S2 spacing reference](https://s2.spectrum.corp.adobe.com/page/spacing/). Point the model at it the same way you point it at the colors page: a single canonical source for the names, so the assistant stops inventing pixel values and starts reaching for tokens that already exist.",
+                text: "The full ramp — every `size-*` token, the t-shirt-sized layout sizes that scale with density, and the rules for when to reach for which — lives in your design system's spacing reference. Point the model at it the same way you point it at the colors page: a single canonical source for the names, so the assistant stops inventing pixel values and starts reaching for tokens that already exist.",
               },
             ],
           },
@@ -4540,7 +4298,7 @@ description: Run the accessibility floor before pushing for review. Use any time
             blocks: [
               {
                 kind: "paragraph",
-                text: "Spectrum 2's color system doesn't think in pages. It thinks in *layers*. The pasteboard is the frame outside the document. The base is the page itself. `layer-1` is a section or a well sitting on the page. `layer-2` is a card cluster sitting on `layer-1`. The elevated layer is the modal floating over everything. Each layer has a token. Each token resolves to a different value depending on the theme.",
+                text: "A mature design system's color system doesn't think in pages. It thinks in *layers*. The pasteboard is the frame outside the document. The base is the page itself. `layer-1` is a section or a well sitting on the page. `layer-2` is a card cluster sitting on `layer-1`. The elevated layer is the modal floating over everything. Each layer has a token. Each token resolves to a different value depending on the theme.",
               },
               {
                 kind: "pullquote",
@@ -4711,7 +4469,7 @@ description: Run the accessibility floor before pushing for review. Use any time
                 tone: "neutral",
                 icon: "compass",
                 title: "Use the system's vocabulary when there is one",
-                text: "If you're working in a system with its own motion vocabulary — Spectrum has motion tokens; your product may have its own — reach for those first. The principle is the same: reference an established vocabulary rather than describing motion from scratch. Framer Motion is the fallback, not the default.",
+                text: "If you're working in a system with its own motion vocabulary — many design systems ship motion tokens; your product may have its own — reach for those first. The principle is the same: reference an established vocabulary rather than describing motion from scratch. Framer Motion is the fallback, not the default.",
               },
               {
                 kind: "wink",
@@ -4732,7 +4490,7 @@ description: Run the accessibility floor before pushing for review. Use any time
               },
               {
                 kind: "paragraph",
-                text: "`@react-spectrum/mcp` is the front door. Alongside it, `spectrum-design-data-mcp` exposes the token graph and `s2-docs-mcp` covers usage. Wire all three with the Figma MCP and the system becomes the path of least resistance.",
+                text: "Your design system's MCP server is the front door. Alongside it, a token-graph server exposes tokens and component anatomy, and a docs server covers usage. Wire all three with the Figma MCP and the system becomes the path of least resistance.",
               },
               {
                 kind: "cards",
@@ -4742,19 +4500,19 @@ description: Run the accessibility floor before pushing for review. Use any time
                     icon: "wand",
                     eyebrow: "01 · MCP server",
                     title: "Live answers, on demand",
-                    text: "`@react-spectrum/mcp` answers component, prop, and accessibility queries in the working session.",
+                    text: "Your design system's MCP server answers component, prop, and accessibility queries in the working session.",
                   },
                   {
                     icon: "spark",
                     eyebrow: "02 · Agent Skill",
                     title: "Knowledge it can load",
-                    text: "`npx skills add https://react-spectrum.adobe.com` installs Spectrum as a skill the model pulls in when relevant.",
+                    text: "`npx skills add <your-design-system-docs-url>` installs the design system as a skill the model pulls in when relevant.",
                   },
                   {
                     icon: "compass",
                     eyebrow: "03 · Markdown + llms.txt",
                     title: "The docs as text",
-                    text: "Every React Spectrum page exposes a `.md` URL, and `llms.txt` lists them all. Best for offline work or one-shot prompts.",
+                    text: "Many design systems expose a `.md` URL per page, and an `llms.txt` that lists them all. Best for offline work or one-shot prompts.",
                   },
                 ],
               },
@@ -4800,25 +4558,25 @@ description: Run the accessibility floor before pushing for review. Use any time
                     title: "UNSAFE_style overrides",
                     drift: '<View UNSAFE_style={{ padding: 8, marginTop: 12 }}>',
                     fix: '<View padding="size-100" marginTop="size-200">',
-                    note: "Every inline override is a place the model didn't know the Spectrum way. The count scales with how lost it was.",
+                    note: "Every inline override is a place the model didn't know the system's way. The count scales with how lost it was.",
                   },
                   {
                     index: "02",
                     title: "Raw hex in component code",
                     drift: 'color: #1a1a1a;\nbackground: #e1e1e1;',
-                    fix: 'color: var(--spectrum-neutral-content-color-default);\nbackground: var(--spectrum-background-layer-2-color);',
+                    fix: 'color: var(--color-neutral-content-default);\nbackground: var(--color-background-layer-2);',
                     note: "A lone hex is the alias tier the model didn't reach for. Swapping to the alias fixes both light and dark in one move.",
                   },
                   {
                     index: "03",
-                    title: "S1 import labelled as S2",
-                    drift: 'import { Provider, defaultTheme } from "@adobe/react-spectrum";',
-                    fix: 'import { Provider } from "@react-spectrum/s2";',
-                    note: "A comment saying *Spectrum 2* sitting over an S1 import is the most common silent failure. The s2-docs-mcp exists to prevent this.",
+                    title: "Old import labelled as current version",
+                    drift: 'import { Provider, defaultTheme } from "design-system-v1";',
+                    fix: 'import { Provider } from "design-system/v2";',
+                    note: "A comment saying *v2* sitting over a v1 import is the most common silent failure. The design system's docs MCP exists to prevent this.",
                   },
                   {
                     index: "04",
-                    title: "HTML where a Spectrum component exists",
+                    title: "HTML where a design-system component exists",
                     drift: '<div className="btn btn-primary" onClick={save}>\n  Save\n</div>',
                     fix: '<Button variant="accent" onPress={save}>\n  Save\n</Button>',
                     note: "Output that looks correct in the preview can be rebuilt entirely in raw HTML underneath. The test fails the moment you open the file.",
@@ -4868,7 +4626,7 @@ description: Run the accessibility floor before pushing for review. Use any time
       },
       {
         id: "accessibility-as-a-prompt-time-concern",
-        number: 12,
+        number: 11,
         title: "Accessibility as a prompt-time concern",
         summary:
           "Accessibility is the deferral that costs the most. Pull it into the prompt, the rules, and the Figma frame instead.",
@@ -4891,52 +4649,52 @@ description: Run the accessibility floor before pushing for review. Use any time
               },
               {
                 kind: "paragraph",
-                text: "A current snapshot from the [DACE accessibility dashboard](https://dace-capstone-03dff.entapp.adproto.com/#), Adobe's central tracker for open accessibility issues:",
+                text: "A current snapshot of the web, from the WebAIM Million study, an annual scan of the accessibility of the top one million home pages:",
               },
               {
                 kind: "stats",
                 items: [
                   {
-                    value: "16,485",
-                    label: "Total issues tracked",
-                    meta: "Across products, surfaces, and severities.",
+                    value: "95.9%",
+                    label: "Home pages with WCAG failures",
+                    meta: "Detected automatically, against the top one million home pages.",
                   },
                   {
-                    value: "7,342",
-                    label: "Still open",
-                    meta: "Roughly 45% of everything ever logged.",
+                    value: "56.1",
+                    label: "Average errors per page",
+                    meta: "Up over 10% from the year before.",
                   },
                   {
-                    value: "35%",
-                    label: "Fixed",
-                    meta: "3,340 more were closed without a fix.",
+                    value: "83.9%",
+                    label: "Have low-contrast text",
+                    meta: "The single most common failure, found on nearly every site.",
                   },
                   {
-                    value: "544 days",
-                    label: "Average age of an open issue",
-                    meta: "Time to fix, when fixed, averages 289 days.",
+                    value: "96%",
+                    label: "Of all errors fall into six categories",
+                    meta: "The same six categories, seven years running.",
                   },
                 ],
               },
               {
                 kind: "paragraph",
-                text: "The shape of the backlog matters as much as the size. The top four categories — accessible names, keyboard and focus, color and contrast, semantics — account for the bulk of the open issues, and *every one of them is a category a model can be prompted to handle on the first pass*. The chart below shows where the work is.",
+                text: "The shape of the problem matters as much as the size. The same six categories — contrast, alt text, form labels, empty links, empty buttons, document language — account for the bulk of it every year, and *every one of them is a category a model can be prompted to handle on the first pass*. The table below shows where the work is.",
               },
               {
                 kind: "table",
-                columns: ["Category", "Issues", "Where it shows up"],
+                columns: ["Category", "Home pages affected", "Where it shows up"],
                 rows: [
-                  ["Accessible names & descriptions", "~5,500", "Missing or unhelpful labels on inputs, buttons, icons, and images."],
-                  ["Keyboard & focus", "~3,000", "Elements unreachable by Tab, focus order that doesn't match visual order, missing focus rings."],
-                  ["Color & contrast", "~2,200", "Text or interactive elements below the WCAG threshold against their background."],
-                  ["Semantics", "~1,800", "Divs and spans where headings, lists, landmarks, or buttons belong."],
-                  ["Navigation & structure", "~1,000", "Missing landmarks, broken heading hierarchy, no skip links."],
-                  ["Reflow & zoom", "~900", "Layouts that break or hide content at 200% zoom or narrow viewports."],
+                  ["Low contrast text", "83.9%", "Text or interactive elements below the WCAG AA contrast threshold against their background."],
+                  ["Missing alt text", "53.1%", "Images with no text alternative for screen reader users."],
+                  ["Missing form labels", "51.0%", "Inputs with no programmatic label, so screen readers announce nothing useful."],
+                  ["Empty links", "46.3%", "Links with no discernible text — icon-only, no accessible name."],
+                  ["Empty buttons", "30.6%", "Buttons with no accessible name, often an icon with nothing backing it up."],
+                  ["Missing document language", "13.5%", "No `lang` attribute, so screen readers guess at pronunciation."],
                 ],
               },
               {
                 kind: "wink",
-                text: "Most of the categories above are exactly what *prompt-time accessibility* prevents. The numbers are the chapter's argument in chart form: the deferral compounds, and the compounded debt is paid by users.",
+                text: "Every category above is exactly what *prompt-time accessibility* prevents. The numbers are the chapter's argument in chart form: the deferral compounds, and the compounded debt is paid by users.",
               },
               {
                 kind: "flipDeck",
@@ -5125,7 +4883,7 @@ description: Run the accessibility floor before pushing for review. Use any time
               },
               {
                 kind: "paragraph",
-                text: "Stark, rolled out across Adobe Design in late 2024 by the [Product Equity team](https://wiki.corp.adobe.com/pages/viewpage.action?spaceKey=AdobeDesign&title=Product+Equity+Team#9baffee3-9e0d-42eb-867a-0a75e660d677-2779257533), moves some of the 30% checkable layer into Figma — contrast, color blindness simulation, alt text, focus order, landmarks. The rollout matters because it makes accessibility a *design-phase* concern rather than an implementation cleanup. If you don't yet have access, [request a Stark seat through the intake form](https://forms.office.com/pages/responsepage.aspx?id=Wht7-jR7h0OUrtLBeN7O4dmDQYKiErBHjt6uDfzwzZpUNDg5NkhMTkMwWFlZQzQ0M0s5RTdRVU5STyQlQCN0PWcu&route=shorturl).",
+                text: "Stark, rolled out across the design org by the team that owns accessibility tooling, moves some of the 30% checkable layer into Figma — contrast, color blindness simulation, alt text, focus order, landmarks. The rollout matters because it makes accessibility a *design-phase* concern rather than an implementation cleanup. If you don't yet have access, request a Stark seat through your company's design-ops process.",
               },
               {
                 kind: "flow",
@@ -5174,9 +4932,9 @@ description: Run the accessibility floor before pushing for review. Use any time
                 items: [
                   {
                     icon: "loop",
-                    eyebrow: "Inside Adobe",
+                    eyebrow: "Inside a design org",
                     title: "The active work",
-                    text: "Your team and partners across corporate accessibility, legal, and product are actively building reusable Claude skills to review vibe-coded work — both the build itself and the Figma designs that fed into it. Legal contributes the regulatory framing, corporate accessibility contributes the WCAG and Adobe-specific standards, product contributes the workflow integration. Once mature, these become the canonical accessibility tooling for designer-led vibe coding at Adobe.",
+                    text: "Your team and partners across corporate accessibility, legal, and product can build reusable Claude skills to review vibe-coded work — both the build itself and the Figma designs that fed into it. Legal contributes the regulatory framing, corporate accessibility contributes the WCAG and company-specific standards, product contributes the workflow integration. Once mature, these become the canonical accessibility tooling for designer-led vibe coding at your company.",
                   },
                   {
                     icon: "layers",
@@ -5366,7 +5124,7 @@ Example:
                   },
                   {
                     title: "After shipping",
-                    meta: "Schedule an experience audit with your accessibility partner. The screenshots and flow videos from QE handoff ([Chapter 9](/working-with-ai/documenting-design-and-handing-it-off)) are inputs. What the audit surfaces becomes the input to the next iteration.",
+                    meta: "Schedule an experience audit with your accessibility partner. The screenshots and flow videos from QE handoff ([Chapter 8](/working-with-ai/documenting-design-and-handing-it-off)) are inputs. What the audit surfaces becomes the input to the next iteration.",
                   },
                 ],
               },
@@ -5411,7 +5169,7 @@ Example:
                     icon: "check",
                     eyebrow: "QE",
                     title: "Build quality and assistive tech",
-                    text: "Runs the keyboard-only path, the screen reader pass, the real-device coverage your laptop can't fake. Catches the issues that would otherwise show up in next quarter's DACE backlog.",
+                    text: "Runs the keyboard-only path, the screen reader pass, the real-device coverage your laptop can't fake. Catches the issues that would otherwise pile up in next quarter's accessibility backlog.",
                   },
                   {
                     icon: "ruler",
@@ -5456,7 +5214,7 @@ Example:
                     number: "03",
                     title: "Audit and bug bash, after shipping",
                     description:
-                      "Accessibility audit from a partner. QE bug bash on real devices with real assistive tech. Legal sign-off if the surface needed it. The screenshots and flow videos from your QE handoff ([Chapter 9](/working-with-ai/documenting-design-and-handing-it-off)) are inputs for all three.",
+                      "Accessibility audit from a partner. QE bug bash on real devices with real assistive tech. Legal sign-off if the surface needed it. The screenshots and flow videos from your QE handoff ([Chapter 8](/working-with-ai/documenting-design-and-handing-it-off)) are inputs for all three.",
                   },
                 ],
               },
@@ -5518,7 +5276,7 @@ Example:
     chapters: [
       {
         id: "working-inside-an-ai-pod",
-        number: 13,
+        number: 12,
         title: "Working inside an AI pod",
         summary:
           "What changes when vibe coding moves from a solo practice to a five-person pod — how a designer plugs in, and how quality holds up.",
@@ -5628,7 +5386,7 @@ Example:
               },
               {
                 kind: "paragraph",
-                text: "Underneath the core pod is the **foundational service layer** every Adobe product is built on — content, QE, brand, legal, accessibility, and the rest. The pod's job is to plug into that layer through one named contact per service, kept in the conversation from kickoff. The [next chapter](/shipping-and-team/the-invisible-work) picks it up in detail.",
+                text: "Underneath the core pod is the **foundational service layer** every product at a company this size is built on — content, QE, brand, legal, accessibility, and the rest. The pod's job is to plug into that layer through one named contact per service, kept in the conversation from kickoff. The [next chapter](/shipping-and-team/the-invisible-work) picks it up in detail.",
               },
               {
                 kind: "wink",
@@ -5709,7 +5467,7 @@ Example:
               },
               {
                 kind: "paragraph",
-                text: "Every builder reads it, edits it, and signs off on it before any work starts. The fifteen minutes of alignment friction here saves days of misalignment later. If you've done the planning work from [Chapter 8](/working-with-ai/planning-and-exploring-options), this will feel familiar — same gesture, applied to the team rather than to a solo task.",
+                text: "Every builder reads it, edits it, and signs off on it before any work starts. The fifteen minutes of alignment friction here saves days of misalignment later. If you've done the planning work from [Chapter 7](/working-with-ai/planning-and-exploring-options), this will feel familiar — same gesture, applied to the team rather than to a solo task.",
               },
             ],
           },
@@ -5748,8 +5506,8 @@ Example:
                       alt: "Protopack app icon",
                     },
                     eyebrow: "Project setup",
-                    title: "Protopack",
-                    text: "Sits on top of GitHub and handles project setup — repo, environment, templates, hosting. Earns its place on prototype and early-stage work. See [Chapter 5](/setup-and-tooling/ai-tooling-at-adobe).",
+                    title: "An internal prototyping tool",
+                    text: "Sits on top of GitHub and handles project setup — repo, environment, templates, hosting. Earns its place on prototype and early-stage work.",
                   },
                   {
                     logo: { src: "/images/logo-notion.svg", alt: "Notion logo" },
@@ -5776,7 +5534,7 @@ Example:
                     },
                     eyebrow: "Video recording",
                     title: "QuickTime, CapCut",
-                    text: "Or any screen recorder. Flow videos for QE, stakeholder review, and documenting what the build actually does. [Chapter 9](/working-with-ai/documenting-design-and-handing-it-off) handoff content, applied at pod scale.",
+                    text: "Or any screen recorder. Flow videos for QE, stakeholder review, and documenting what the build actually does. [Chapter 8](/working-with-ai/documenting-design-and-handing-it-off) handoff content, applied at pod scale.",
                   },
                   {
                     logo: {
@@ -5793,6 +5551,13 @@ Example:
                 kind: "wink",
                 text: "Every tool earns its place by reducing friction, not by adding ceremony. If a tool exists in the stack but you don't know what it's actively reducing friction *on*, that's a tool to drop.",
               },
+              {
+                kind: "callout",
+                tone: "neutral",
+                icon: "loop",
+                title: "Pods don't have to be planned in advance",
+                text: "One well-documented case: a single designer started exploring a working prototype solo, and it grew organically into a six-person collaboration with no central coordination planned. Nobody decided up front to adopt branches and pull requests — the moment six people were building on one living prototype at once, that structure stopped being optional. It emerged from the pressure of the work itself, not from a kickoff meeting.",
+              },
             ],
           },
           {
@@ -5807,27 +5572,17 @@ Example:
                 items: [
                   {
                     title: "Clone the product repo",
-                    text: "For Firefly Platform work, this means cloning `github.com/Adobe-Firefly/firefly-platform` (or whichever repo your pod is working in). The engineer in the pod will help you get access and set up local credentials if you don't have them.",
+                    text: "Clone whichever repo your pod is working in. The engineer in the pod will help you get access and set up local credentials if you don't have them.",
                   },
                   {
                     title: "Follow the repo's `guidelines.md`",
-                    text: "Most Adobe product repos include a `guidelines.md` (or equivalent — sometimes `CLAUDE.md`, `AGENTS.md`, or `CONTRIBUTING.md`) that documents the architecture, conventions, and how to set up your dev environment. Read it. The model uses it; you should too.",
+                    text: "Most product repos include a `guidelines.md` (or equivalent — sometimes `CLAUDE.md`, `AGENTS.md`, or `CONTRIBUTING.md`) that documents the architecture, conventions, and how to set up your dev environment. Read it. The model uses it; you should too.",
                   },
                   {
                     title: "Verify the dev environment runs",
                     text: "Before you start building, you should be able to run the product locally on your machine, hit a localhost URL, and see the actual product. If you can't, stop and fix this. Trying to build features against a dev environment that doesn't run is the most common source of wasted hours in pod onboarding.",
                   },
                 ],
-              },
-              {
-                kind: "figure",
-                image: {
-                  src: "/images/cursor-firefly-platform-setup.png",
-                  alt: "Cursor IDE with the firefly-platform repo open. The chat panel sits on the left with claude-4.6-opus selected, the Firefly Image Editor runs at localhost:3001 in the middle pane showing a Drag and drop your images empty state, and the file tree on the right is expanded into src/applications/image-editor with docs/guidelines.md highlighted.",
-                },
-                eyebrow: "Cursor · firefly-platform",
-                caption:
-                  "What set up actually looks like: the product repo cloned, the localhost build running, the chapter's `guidelines.md` open in the side panel — all in one window so the model and the human read the same thing.",
               },
               {
                 kind: "wink",
@@ -5859,7 +5614,7 @@ Example:
                     meta: "Pull latest from main. Branch (`<feature-name>/main`). Implement one isolated piece at a time. Test interactions and edge cases as you go. Make small commits — not one giant commit at the end. When the feature is reviewable, push and open a PR.",
                     image: {
                       src: "/images/loop-review-branches.png",
-                      alt: "Git branch picker in Cursor showing several iterative branches — annotationpf-fix-v1, precision-flux-v3, precision-flux-v2, new-annotation-tool-bar-v3, precision-flux-v1, new-annotation-tool-bar-v2 — each with a short commit description and the author handle peitongc_adobe.",
+                      alt: "Git branch picker in Cursor showing several iterative branches — annotationpf-fix-v1, precision-flux-v3, precision-flux-v2, new-annotation-tool-bar-v3, precision-flux-v1, new-annotation-tool-bar-v2 — each with a short commit description and an author handle.",
                     },
                   },
                   {
@@ -5984,7 +5739,7 @@ Example:
               },
               {
                 kind: "wink",
-                text: "[Chapter 14](/shipping-and-team/image-frontier-pod) walks through the pod itself: two weeks, two features, five people, and the texture behind every step in this chapter. Read it slowly — the moments are easier to remember than the principles.",
+                text: "[Chapter 13](/shipping-and-team/image-frontier-pod) walks through the pod itself: two weeks, two features, five people, and the texture behind every step in this chapter. Read it slowly — the moments are easier to remember than the principles.",
               },
             ],
           },
@@ -5992,7 +5747,7 @@ Example:
       },
       {
         id: "image-frontier-pod",
-        number: 14,
+        number: 13,
         title: "The Image Frontier pod",
         summary:
           "A two-week, five-person pod that shipped two image-editing features for Adobe Firefly — the worked example behind every pod principle.",
@@ -6003,7 +5758,7 @@ Example:
             blocks: [
               {
                 kind: "paragraph",
-                text: "The previous chapter described the structure: pod, service layer, design ↔ build loop, the wider rhythm. This chapter is the one pod that ran that structure end to end, in a tractable timeframe, on a real product surface. Two weeks. Five people. Two features that shipped to users. The reason to read it slowly is that almost every principle in [Chapter 13](/shipping-and-team/working-inside-an-ai-pod) has a corresponding moment in this pod's two weeks — and the moments are easier to remember than the principles.",
+                text: "The previous chapter described the structure: pod, service layer, design ↔ build loop, the wider rhythm. This chapter is the one pod that ran that structure end to end, in a tractable timeframe, on a real product surface. Two weeks. Five people. Two features that shipped to users. The reason to read it slowly is that almost every principle in [Chapter 12](/shipping-and-team/working-inside-an-ai-pod) has a corresponding moment in this pod's two weeks — and the moments are easier to remember than the principles.",
               },
             ],
           },
@@ -6064,7 +5819,7 @@ Example:
                   },
                 ],
                 caption:
-                  "The two features the pod shipped in the same two-week loop. Both prototyped in Figma, built in Cursor against the firefly-platform repo, and tested with creators in real time.",
+                  "The two features the pod shipped in the same two-week loop. Both prototyped in Figma, built in Cursor against the product repo, and tested with creators in real time.",
               },
               {
                 kind: "paragraph",
@@ -6100,7 +5855,7 @@ Example:
                 tone: "accent",
                 icon: "spark",
                 title: "What it produced",
-                text: "Two features ready for production launch, in two weeks, with the level of polish and cross-functional sign-off that traditional org work would have taken months to assemble. The features shipped externally not long after, alongside an Adobe blog post titled — fittingly — [New image editing features in Adobe Firefly get you from 'almost there' to 'exactly right'](https://blog.adobe.com/en/publish/2026/04/09/new-image-editing-features-adobe-firefly-get-you-from-almost-there-to-exactly-right). The headline could have been a description of vibe coding itself.",
+                text: "Two features ready for production launch, in two weeks, with the level of polish and cross-functional sign-off that traditional org work would have taken months to assemble. The features shipped externally not long after, covered in the product's public launch notes under a headline that could have doubled as a description of vibe coding itself: new capabilities that took the product from 'almost there' to 'exactly right.'",
                 image: {
                   src: "/images/firefly-blog-post.png",
                   alt: "Adobe Blog post titled 'New image editing features in Adobe Firefly get you from almost there to exactly right' by Mike Polner, dated 04-09-2026. The hero shows a fan of seven image variations of a cyclist, transitioning from a bright green grass field on the left to a snowy white scene on the right, with a 'Snow' slider underneath.",
@@ -6181,7 +5936,7 @@ Example:
                   {
                     eyebrow: "03",
                     title: "Visual design",
-                    text: "Spacing, typography, color, hierarchy. The [Chapter 11](/the-craft/visual-design-fidelity) content. Nobody else in the pod is going to catch the spacing rhythm being off.",
+                    text: "Spacing, typography, color, hierarchy. The [Chapter 10](/the-craft/visual-design-fidelity) content. Nobody else in the pod is going to catch the spacing rhythm being off.",
                     image: {
                       src: "/images/contribution-visual.png",
                       alt: "Vertical iridescent strands resolving into a tight grid — typographic rhythm, baseline grids, and visual hierarchy.",
@@ -6208,7 +5963,7 @@ Example:
                   {
                     eyebrow: "06",
                     title: "Accessibility",
-                    text: "From [Chapter 12](/the-craft/accessibility-as-a-prompt-time-concern), the prompt-time work and the partnership work. In a pod, accessibility lands with whoever has the most fluency in it — and that's usually the designer.",
+                    text: "From [Chapter 11](/the-craft/accessibility-as-a-prompt-time-concern), the prompt-time work and the partnership work. In a pod, accessibility lands with whoever has the most fluency in it — and that's usually the designer.",
                     image: {
                       src: "/images/contribution-accessibility.png",
                       alt: "Close-up of curved iridescent bands sweeping across a dark field — wide, generous arcs that read as inclusion and reach.",
@@ -6257,7 +6012,7 @@ Example:
                   {
                     positive: true,
                     title: "Design bug bashes",
-                    text: "Mid-feature, the pod runs a one-to-two-hour session where the team hammers on the in-progress build looking for issues. Bugs get filed, prioritized, fixed in the same session or the next day. The team-scale version of the QA habit [Chapter 9](/working-with-ai/documenting-design-and-handing-it-off) covered for individual handoffs.",
+                    text: "Mid-feature, the pod runs a one-to-two-hour session where the team hammers on the in-progress build looking for issues. Bugs get filed, prioritized, fixed in the same session or the next day. The team-scale version of the QA habit [Chapter 8](/working-with-ai/documenting-design-and-handing-it-off) covered for individual handoffs.",
                   },
                   {
                     positive: true,
@@ -6387,7 +6142,7 @@ Example:
             blocks: [
               {
                 kind: "paragraph",
-                text: "The pod shipped because the foundational service layer beneath it was already in motion — content, brand, legal, accessibility, monetization, the analytics layer. None of that shows up in the two-week story above, because none of it had to be negotiated mid-flight. The next chapter is about that layer: the centralized services every Adobe product is built on, and the named-contact pattern that lets a pod actually reach them.",
+                text: "The pod shipped because the foundational service layer beneath it was already in motion — content, brand, legal, accessibility, monetization, the analytics layer. None of that shows up in the two-week story above, because none of it had to be negotiated mid-flight. The next chapter is about that layer: the centralized services every product at a company this size is built on, and the named-contact pattern that lets a pod actually reach them.",
               },
             ],
           },
@@ -6395,10 +6150,10 @@ Example:
       },
       {
         id: "the-invisible-work",
-        number: 15,
+        number: 14,
         title: "The invisible work",
         summary:
-          "The foundational service layer every Adobe product is built on, and the named-contact pattern that lets a pod reach it without queues.",
+          "The foundational service layer every product at a company this size is built on, and the named-contact pattern that lets a pod reach it without queues.",
         readTime: "12 min",
         sections: [
           {
@@ -6406,7 +6161,7 @@ Example:
             blocks: [
               {
                 kind: "paragraph",
-                text: "[Chapter 13](/shipping-and-team/working-inside-an-ai-pod) was about the pod — the five people who actually build the thing — and [Chapter 14](/shipping-and-team/image-frontier-pod) walked through the Image Frontier pod as the lived example. This chapter is about what's underneath both of them. Every product team at Adobe is built on top of a foundational service layer — eight centralized functions that own the parts of shipping a feature that don't fit inside any one pod. The work this layer does doesn't show up on the pod's burndown. It shows up in whether the feature ships at all.",
+                text: "[Chapter 12](/shipping-and-team/working-inside-an-ai-pod) was about the pod — the five people who actually build the thing — and [Chapter 13](/shipping-and-team/image-frontier-pod) walked through the Image Frontier pod as the lived example. This chapter is about what's underneath both of them. Every product team at a company this size is built on top of a foundational service layer — eight centralized functions that own the parts of shipping a feature that don't fit inside any one pod. The work this layer does doesn't show up on the pod's burndown. It shows up in whether the feature ships at all.",
               },
               {
                 kind: "paragraph",
@@ -6418,7 +6173,7 @@ Example:
               },
               {
                 kind: "paragraph",
-                text: "There are two structural things to learn about this layer. The first is what it actually is — the eight services every Adobe product is built on, and what each of them does that doesn't fit inside the pod. The second is how to engage with it without getting buried by it: the named-contact pattern, which is the structural answer to the drag that centralized services produce when you talk to them through a queue.",
+                text: "There are two structural things to learn about this layer. The first is what it actually is — the eight services every product at a company this size is built on, and what each of them does that doesn't fit inside the pod. The second is how to engage with it without getting buried by it: the named-contact pattern, which is the structural answer to the drag that centralized services produce when you talk to them through a queue.",
               },
             ],
           },
@@ -6427,7 +6182,7 @@ Example:
             blocks: [
               {
                 kind: "paragraph",
-                text: "The layer doesn't stop at eight. Depending on the product, you might also lean on data science, security, localization, customer support, sales enablement, developer relations, or other centralized teams — and on a large enough product, all of them. The eight below are the ones every Adobe product touches, the load-bearing minimum for an AI feature shipping to users. Treat them as the floor, not the ceiling, and add the services your product actually depends on.",
+                text: "The layer doesn't stop at eight. Depending on the product, you might also lean on data science, security, localization, customer support, sales enablement, developer relations, or other centralized teams — and on a large enough product, all of them. The eight below are the ones every product at a company this size touches, the load-bearing minimum for an AI feature shipping to users. Treat them as the floor, not the ceiling, and add the services your product actually depends on.",
               },
               {
                 kind: "paragraph",
@@ -6442,7 +6197,7 @@ Example:
                     title: "Technology research",
                     visible: "Hands off the model.",
                     invisible:
-                      "Develops the model capability the feature depends on, often before the pod knows it needs it. Maintains the evaluation suite that says what the model is actually good at, where it fails, and which prompt patterns survive the next training run. Owns the capability roadmap — what's shipping next quarter, what's still a research demo that won't generalize, what's blocked. Knows which of the failure modes you're seeing in your prototype are bugs and which are fundamental. The closest thing Adobe has to authoritative documentation on what an AI feature can and can't do, and most of it lives in their heads.",
+                      "Develops the model capability the feature depends on, often before the pod knows it needs it. Maintains the evaluation suite that says what the model is actually good at, where it fails, and which prompt patterns survive the next training run. Owns the capability roadmap — what's shipping next quarter, what's still a research demo that won't generalize, what's blocked. Knows which of the failure modes you're seeing in your prototype are bugs and which are fundamental. The closest thing the company has to authoritative documentation on what an AI feature can and can't do, and most of it lives in their heads.",
                     blocks:
                       "Without research in early, the pod designs around a capability that doesn't exist yet, or builds on behavior the current model exhibits but the next version won't. The fix is a redesign mid-build, after the next model drops and the old prompts stop working.",
                   },
@@ -6505,7 +6260,7 @@ Example:
                     title: "Corporate accessibility",
                     visible: "Runs the WCAG scan.",
                     invisible:
-                      "Owns the audit cadence, the partner network, the assistive-technology coverage, and the formal sign-off process for products in regulated regions. Maintains the standards documents the pod is supposed to be coding against and updates them when the regulations move. Trains the rest of the org on what *good* looks like. Provides the named accessibility partner who reviews the bluelines from [Chapter 12](/the-craft/accessibility-as-a-prompt-time-concern).",
+                      "Owns the audit cadence, the partner network, the assistive-technology coverage, and the formal sign-off process for products in regulated regions. Maintains the standards documents the pod is supposed to be coding against and updates them when the regulations move. Trains the rest of the org on what *good* looks like. Provides the named accessibility partner who reviews the bluelines from [Chapter 11](/the-craft/accessibility-as-a-prompt-time-concern).",
                     blocks:
                       "Without accessibility in early, the audit comes back at launch week with a list of issues, half of them structural. The fix is rework, not polish — and the structural ones can hold the launch.",
                   },
@@ -6524,7 +6279,7 @@ Example:
             blocks: [
               {
                 kind: "paragraph",
-                text: "There's no single playbook for *working with content strategy* or *working with legal*, and this chapter isn't going to pretend to write one. Each service has its own people, its own institutional history at Adobe, its own rhythms. What a chapter can teach is not the relationships themselves — those you build by doing the work — but the *shape* of them. Recognize the shape and the service becomes navigable. Mistake the shape, and you'll make a category error that costs you trust you'll spend the rest of the year earning back.",
+                text: "There's no single playbook for *working with content strategy* or *working with legal*, and this chapter isn't going to pretend to write one. Each service has its own people, its own institutional history at the company, its own rhythms. What a chapter can teach is not the relationships themselves — those you build by doing the work — but the *shape* of them. Recognize the shape and the service becomes navigable. Mistake the shape, and you'll make a category error that costs you trust you'll spend the rest of the year earning back.",
               },
               {
                 kind: "paragraph",
@@ -6666,7 +6421,7 @@ Example:
               },
               {
                 kind: "paragraph",
-                text: "The drag is the cost of treating cross-functional work as ticketed work. Even when each individual ticket is reasonable — fifteen minutes of someone's time, a week's wait — the aggregate across eight functions is enough to consume the time advantage the pod created in the first place. A two-week pod cycle that needs eight cross-functional reviews, each on a one-week ticket loop, is structurally a ten-week feature. Which means the speed the pod paid for in [chapter 13](/shipping-and-team/working-inside-an-ai-pod) doesn't actually arrive.",
+                text: "The drag is the cost of treating cross-functional work as ticketed work. Even when each individual ticket is reasonable — fifteen minutes of someone's time, a week's wait — the aggregate across eight functions is enough to consume the time advantage the pod created in the first place. A two-week pod cycle that needs eight cross-functional reviews, each on a one-week ticket loop, is structurally a ten-week feature. Which means the speed the pod paid for in [chapter 12](/shipping-and-team/working-inside-an-ai-pod) doesn't actually arrive.",
               },
               {
                 kind: "pullquote",
@@ -6841,7 +6596,7 @@ Example:
                 items: [
                   {
                     title: "Inventory the eight services for your product",
-                    text: "Some products will skip a few — a B2B tool with no monetization story, an internal preview with no marketing beat, a feature built on a stable existing model that doesn't need an active research contact. Most will have all eight. For each service, identify the team that owns it inside Adobe and the specific person who already has context on your product or domain.",
+                    text: "Some products will skip a few — a B2B tool with no monetization story, an internal preview with no marketing beat, a feature built on a stable existing model that doesn't need an active research contact. Most will have all eight. For each service, identify the team that owns it inside your org and the specific person who already has context on your product or domain.",
                   },
                   {
                     title: "Ask, don't assign",

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { shareOnLinkedIn } from "../utils/linkedinShare";
 
 type CoffeeButtonProps = {
   className?: string;
@@ -216,6 +217,51 @@ export function CoffeeButton({
                   <span className="coffee-handle-link">@wipetty</span> on
                   Venmo.
                 </p>
+
+                <div className="coffee-linkedin-row">
+                  <a
+                    href="https://www.linkedin.com/in/peitongchen"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="coffee-linkedin"
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z" />
+                    </svg>
+                    Connect on LinkedIn
+                  </a>
+
+                  <button
+                    type="button"
+                    className="coffee-linkedin"
+                    onClick={shareOnLinkedIn}
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7" />
+                      <path d="M16 6l-4-4-4 4" />
+                      <path d="M12 2v13" />
+                    </svg>
+                    Share on LinkedIn
+                  </button>
+                </div>
               </div>
             </div>
           </div>,

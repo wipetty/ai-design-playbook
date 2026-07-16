@@ -1632,11 +1632,19 @@ em {
   margin-bottom: 6px;
 }
 
+.about-author-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 24px 0 0;
+}
+
 .about-author-coffee {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin: 24px 0 0;
+  margin: 0;
   padding: 10px 18px;
   font-size: 14px;
   font-weight: 500;
@@ -1657,6 +1665,32 @@ em {
 .about-author-coffee-icon {
   font-size: 16px;
   line-height: 1;
+}
+
+.about-author-linkedin {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg-on-alt);
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.about-author-linkedin:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--fg-on-alt);
+  color: var(--accent);
+}
+
+.about-author-linkedin-icon {
+  flex-shrink: 0;
 }
 
 @media (max-width: 720px) {
@@ -1706,6 +1740,17 @@ em {
   color: var(--fg);
   font-weight: 500;
   text-transform: uppercase;
+  text-decoration: none;
+}
+
+.site-footer-credit-name:hover {
+  text-decoration: underline;
+}
+
+.site-footer-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
 }
 
 .site-footer-coffee {
@@ -1729,6 +1774,54 @@ em {
   font-size: 14px;
   line-height: 1;
   text-transform: none;
+}
+
+.site-footer-share {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  appearance: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 160ms ease;
+}
+
+.site-footer-share:hover,
+.site-footer-share:focus-visible {
+  color: var(--accent);
+}
+
+.site-footer-share-icon {
+  flex-shrink: 0;
+}
+
+.site-footer-share-label {
+  display: inline-block;
+  max-width: 0;
+  margin-left: 0;
+  overflow: hidden;
+  opacity: 0;
+  white-space: nowrap;
+  transition: max-width 220ms ease, opacity 180ms ease, margin-left 220ms ease;
+}
+
+.site-footer-share:hover .site-footer-share-label,
+.site-footer-share:focus-visible .site-footer-share-label {
+  max-width: 140px;
+  margin-left: 8px;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-footer-share-label {
+    transition: none;
+  }
 }
 
 @media (max-width: 600px) {
@@ -2257,6 +2350,11 @@ button.site-footer-coffee {
   text-transform: uppercase;
 }
 
+button.about-author-coffee {
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .coffee-overlay {
   position: fixed;
   inset: 0;
@@ -2464,6 +2562,38 @@ button.site-footer-coffee {
 .coffee-handle-link {
   color: var(--fg);
   font-weight: 500;
+}
+
+.coffee-linkedin-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0 0;
+}
+
+.coffee-linkedin {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--fg);
+  text-decoration: none;
+  cursor: pointer;
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.coffee-linkedin:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--fg);
+  color: var(--accent);
 }
 
 @media (max-width: 600px) {
